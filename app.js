@@ -1,22 +1,41 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const PORT = 8080;
-const db = require("./models");
 
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.set("views", "./views");
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use("/static", express.static(__dirname + "/static"));
 
-const indexRouter = require("./routes");
-app.use("/", indexRouter);
+app.use("/static", express.static(path.join(__dirname, "static")));
 
-db.sequelize.sync({ force: false }).then(() => {
-    console.log("db연결 성공");
+app.get("/", (req, res) => {
+    res.render("index");
+});
+app.get("/food", (req, res) => {
+    res.render("food");
+});
+app.get("/nav", (req, res) => {
+    res.render("nav");
 });
 
-// --------------------------------------------------------------
+app.get("/login", (req, res) => {
+    res.render("login", { username: "", password: "" });
+});
+
+app.get("/join", (req, res) => {
+    res.render("join", {
+        username: "",
+        nickname: "",
+        password: "",
+        confirmPassword: "",
+        number: "",
+        email: "",
+        isUsernameChecked: false,
+        isNicknameChecked: false,
+        passwordMatchError: false,
+    });
+});
+
 app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
