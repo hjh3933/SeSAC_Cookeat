@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./static/login.css" />
+  </head>
+  <body>
+    <!-- views/login.ejs -->
+
+    <div class="myapp-login-box">
+      <h2>로그인</h2>
+      <form>
+        <div class="user-box">
+          <input
+            type="text"
+            name="username"
+            required
+            value="<%= username %>"
+            oninput="setUsername(this.value)"
+          />
+          <label>사용자 이름</label>
+        </div>
+        <div class="user-box">
+          <input
+            type="password"
+            name="password"
+            required
+            value="<%= password %>"
+            oninput="setPassword(this.value)"
+          />
+          <label>비밀번호</label>
+        </div>
+        <button
+          class="myapp-submit-button"
+          type="submit"
+          onclick="handleLogin(event)"
+        >
+          로그인
+        </button>
+        <br />
+      </form>
+      <p>
+        아직 회원이 아니신가요?
+        <a href="/join">회원가입 페이지로 이동</a>
+      </p>
+    </div>
+
+    <script>
+      const setUsername = (value) => {
+        // 클라이언트 측 리액트 코드에서 사용되는 setUsername 함수
+      };
+
+      const setPassword = (value) => {
+        // 클라이언트 측 리액트 코드에서 사용되는 setPassword 함수
+      };
+
+      const handleLogin = async (event) => {
+        event.preventDefault();
+
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/login",
+            {
+              username: document.querySelector('[name="username"]').value,
+              password: document.querySelector('[name="password"]').value,
+            },
+            {
+              withCredentials: true,
+            }
+          );
+
+          const token = response.data;
+          if (response.status === 200) {
+            // 로그인 성공 시
+            // Redux와 로컬 스토리지 처리
+            dispatch(setTokenAction(token));
+            localStorage.setItem("token", token);
+            // 홈으로 이동
+            location.href = "/";
+          }
+        } catch (error) {
+          console.error("로그인 실패:", error);
+          alert(error.message);
+        }
+      };
+    </script>
+  </body>
+</html>
