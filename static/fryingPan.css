@@ -1,0 +1,176 @@
+body {
+    background-color: transparent;
+    /* background-color: #ffdd59; */
+}
+
+#container {
+    /*position:absolute;
+    margin: auto;
+    left: 40%; 
+    right: 50%; 
+    top:50%;
+    botton:50%;*/
+    height: 20px;
+    width: 200px;
+    background-color: orange;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+#fryingpanouter {
+    height: 200px;
+    width: 200px;
+    top: -100px;
+    left: 0%;
+    background-color: #1e272e;
+    border-radius: 50%;
+    position: absolute;
+    border: 5px solid #131a21;
+}
+
+#innerfryingpan {
+    height: 175px;
+    width: 175px;
+    top: -80px;
+    left: 10%;
+    background-color: #262e38;
+    border-radius: 50%;
+    position: absolute;
+}
+
+#handletop {
+    height: 25px;
+    width: 160px;
+    background-color: #fcb263;
+    position: absolute;
+    left: 205px;
+    top: -15px;
+    border-radius: 0% 20% 20% 3%;
+}
+
+#handlebottom {
+    height: 14px;
+    width: 160px;
+    background-color: #e4a15a;
+    position: absolute;
+    top: 0px;
+    border-radius: 00% 20% 0% 3%;
+}
+
+#handlebridge {
+    height: 25px;
+    width: 30px;
+    background-color: #131a21;
+    position: absolute;
+    left: 203px;
+    top: -15px;
+    border: 0px solid #131a21;
+    border-radius: 0%;
+}
+
+#handlehole {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #ffdd59;
+    position: absolute;
+    left: 87%;
+    top: 20%;
+}
+
+#eggcontainer {
+    height: 50px;
+    width: 50px;
+    top: 5px;
+    left: -20px;
+    position: relative;
+    animation-name: movingegg;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-fill-mode: none;
+    animation-play-state: running;
+}
+
+@keyframes movingegg {
+    0% {
+        left: -10px;
+        top: 3px;
+    }
+
+    100% {
+        left: -20px;
+        top: -3px;
+    }
+}
+
+#egg1 {
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    top: 50px;
+    left: 55px;
+    position: absolute;
+    transform: skew(25deg, -20deg, 5deg);
+    animation: eggcolor 5s infinite;
+}
+
+/* @keyframes eggcolor {
+     {
+        0% {
+            background-color: red;
+        }
+        25% {
+            background-color: yellow;
+        }
+
+        50% {
+            background-color: blue;
+        }
+        75% {
+            background-color: green;
+        }
+        100% {
+            background-color: red;
+        }
+    }
+} */
+
+#egg2 {
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    top: 30px;
+    left: 75px;
+    position: absolute;
+    transform: skew(15deg, -20deg);
+}
+
+#egg3 {
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    top: 60px;
+    left: 90px;
+    position: absolute;
+    transform: skew(5deg, -20deg);
+}
+
+#yolk {
+    background-color: #ffca00;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 60px;
+    left: 90px;
+    border-radius: 50%;
+    transform: skew(20deg, -5deg, -10deg);
+}

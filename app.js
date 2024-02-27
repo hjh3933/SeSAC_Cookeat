@@ -16,6 +16,9 @@ app.get("/", (req, res) => {
 app.get("/food", (req, res) => {
     res.render("food");
 });
+app.get("/fryingPan", (req, res) => {
+    res.render("fryingPan");
+});
 app.get("/nav", (req, res) => {
     res.render("nav");
 });
