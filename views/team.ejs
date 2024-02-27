@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Include FontAwesome CSS -->
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %>
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+            integrity="sha512-5JNjb/5O8rOXCudzCC7aO6Oufud9UZl8p3WMMRMEsVOX8jjb7v6k1WhlwE1e3q4+QrS+RdYj6egj2jWp2p0jQ=="
+            crossorigin="anonymous"
+        />
+
+        <link rel="stylesheet" href="./static/team.css" />
+        <title>Document</title>
+    </head>
+    <body>
+        <!-- views/team.ejs -->
+        <div class="container">
+            <div class="row">
+                <% teamMembers.forEach(function(member) { %>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 our-team">
+                    <div class="picture">
+                        <img
+                            class="img-fluid"
+                            src="<%= member.imageUrl %>"
+                            alt="<%= member.name %>"
+                        />
+                    </div>
+                    <div class="team-content">
+                        <h3 class="name"><%= member.name %></h3>
+                        <h4 class="title"><%= member.title %></h4>
+                        <h4 class="teamleader"><%= member.teamleader %></h4>
+                    </div>
+                    <ul class="social">
+                        <% if (member.githubUsername) { %>
+                        <li>
+                            <a
+                                href="https://github.com/<%= member.githubUsername %>"
+                                target="_blank"
+                            >
+                                <img src="./static/github.png" alt="GitHub" />
+                            </a>
+                        </li>
+                        <% } %> <% if (member.googleEmail) { %>
+                        <li>
+                            <a
+                                href="mailto:<%= member.googleEmail %>"
+                                target="_blank"
+                            >
+                                <img src="./static/mail.png" alt="Google" />
+                            </a>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div>
+                <% }); %>
+
+                <!-- Repeat the structure for the next 3 team members -->
+            </div>
+        </div>
+    </body>
+</html>

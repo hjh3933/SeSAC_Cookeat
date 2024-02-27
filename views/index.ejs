@@ -3,11 +3,42 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Cook Eat MainPage</title>
+        <link rel="stylesheet" href="./static/index.css" />
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %>
     </head>
     <body>
-        <a href="/login">로그인</a>
+        <!-- <a href="/login">로그인</a>
         <a href="/join">회원가입</a>
-        <h3>추후에 네비게이션 바에 넣겠습니다!</h3>
+        <h3>추후에 네비게이션 바에 넣겠습니다!</h3> -->
+        <div class="a">
+            <ul class="index-ul">
+                <li class="index-li"></li>
+                <li class="index-li"></li>
+                <li class="index-li"></li>
+            </ul>
+        </div>
+        <div class="content-index">
+            <h1>Cook Eat🍴</h1>
+            <h3>recipe 공유 사이트</h3>
+            <p>~ Be전공자</p>
+        </div>
+        <div class="spinner-container">
+            <div class="spinner">
+                <div class="bubble bubble--1"></div>
+                <div class="bubble bubble--2"></div>
+                <div class="bubble bubble--4"></div>
+                <div class="bubble bubble--3"></div>
+                <div class="bubble bubble--5"></div>
+                <div class="bubble bubble--6"></div>
+                <div class="aliment aliment--1"></div>
+                <div class="aliment aliment--2"></div>
+                <div class="aliment aliment--3"></div>
+                <div class="stove">
+                    <div class="stove--handle"></div>
+                    <div class="stove--base"></div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

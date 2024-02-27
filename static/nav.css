@@ -16,7 +16,7 @@ body {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.content {
+.content-nav {
     display: flex;
     align-items: center;
     width: 100%;
@@ -156,7 +156,9 @@ body {
 
 #primary_nav_wrap ul li a:hover {
     margin-top: 10px;
-
+    /* margin-bottom: 10px; */
+    /* position: relative; */
+    top: 100%;
     background: transparent;
     border-bottom: 3px solid #a59172; /* 메뉴에 마우스 호버 시 흰색 밑줄 추가 */
 }
@@ -165,4 +167,7 @@ body {
     margin-top: 10px;
 
     border-bottom: 3px solid #6aaf5f; /* 현재 메뉴에 흰색 밑줄 스타일 유지 및 메뉴 클릭 시 흰색 밑줄 추가 */
+}
+.img {
+    width: 30px;
 }

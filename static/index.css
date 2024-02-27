@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap");
+
+body {
+    display: block;
+    box-sizing: content-box;
+    z-index: auto;
+    width: 320px;
+    height: 320px;
+    position: static;
+    cursor: default;
+    opacity: 1;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    font-family: raleway;
+    color: rgba(255, 255, 255, 1);
+    text-overflow: clip;
+    background: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0) 79px,
+            rgb(171, 206, 212) 79px,
+            rgb(171, 206, 212) 81px,
+            rgba(0, 0, 0, 0) 81px
+        ),
+        linear-gradient(0deg, rgb(238, 238, 238) 0.1em, rgba(0, 0, 0, 0) 0.1em),
+        rgb(255, 255, 255);
+    background-position: auto auto;
+    -webkit-background-origin: padding-box;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-size: 100% 1.2em;
+    transform-origin: 50% 50% 0;
+}
+.a {
+    width: 50px;
+    height: 100vh;
+    background-color: #cccccc30;
+    position: fixed;
+    overflow: hidden;
+    border-right: 0.5px solid #cccccc40;
+}
+.index-li {
+    font-size: 49px;
+    color: silver;
+    margin: 20vh 25px;
+    filter: drop-shadow(0.7px -1px 0.7px #000);
+}
+.content-index {
+    width: 90vw;
+    color: #000033;
+    padding: 5vh 15.9vh;
+    font-size: calc(1.2vh + 1.2vw + 1.2vmin);
+    font-family: raleway;
+    transform: rotate(-3.5deg);
+}
+h3 {
+    line-height: 0.8em;
+    font-style: italic;
+}
+p {
+    text-align: center;
+    transform: rotate(3.5deg);
+    font-family: raleway;
+    font-weight: 700;
+}
