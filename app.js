@@ -54,8 +54,8 @@ exports.teamMembers = [
         githubUsername: "yhs0329",
         googleEmail: "scar0329@gmail.com",
     },
-    // Add other team members here...
 ];
+
 // -----------------------------------------------------------------
 app.get("*", (req, res) => {
     res.render("404");

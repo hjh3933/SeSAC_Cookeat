@@ -21,13 +21,16 @@ router.get("/fryingPan", (req, res) => {
 router.get("/nav", (req, res) => {
     res.render("nav");
 });
+router.get("/profile", (req, res) => {
+    res.render("profile");
+});
 router.get("/footer", (req, res) => {
     res.render("footer");
 });
 
 router.get("/team", (req, res) => {
     res.render("team", {
-        teamMembers,
+        teamMembers: teamMembers,
         faGithub: "faGithub",
         faGoogle: "faGoogle",
     });
