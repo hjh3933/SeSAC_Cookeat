@@ -26,6 +26,9 @@ router.get("/profile", (req, res) => {
 router.get("/footer", (req, res) => {
     res.render("footer");
 });
+router.get("/profileEdit", (req, res) => {
+    res.render("profileEdit");
+});
 
 const teamMembers = [
     {

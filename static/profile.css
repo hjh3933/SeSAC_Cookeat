@@ -98,7 +98,7 @@ div.portfoliocard ul.contact_information li {
 div.portfoliocard ul.contact_information li:before {
     content: "";
     width: 25px;
-    height: 25px;
+    /* height: 25px; */
     display: block;
     float: left;
     background-position: center;
@@ -136,4 +136,37 @@ div.portfoliocard div.follow_count {
     font-weight: 400;
     font-size: 25px;
     color: rgba(140, 140, 140, 1);
+}
+label {
+    font-size: 12px;
+}
+.save-button,
+.edit-button {
+    position: relative;
+    top: 70px;
+    right: 0;
+    padding: 5px 10px;
+    font-size: 20px;
+    color: #82745e;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.name input[type="text"],
+.location input[type="text"],
+.nickname input[type="text"],
+.mail input[type="email"],
+.phone input[type="tel"] {
+    width: 100%;
+    /* padding: 10px 0; */
+    font-size: 15px;
+    /* color: #433d3d; */
+    margin-bottom: 15px;
+    border: none;
+    /* border-bottom: 1px solid #d8d8d8; */
+    outline: none;
+    background: transparent;
 }

@@ -3,6 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Profile</title>
+
         <link rel="stylesheet" type="text/CSS" href="style.css" />
         <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('fryingPan.ejs') %> <%-
         include('account.ejs') %>
@@ -13,7 +15,6 @@
         />
         <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
 
-        <title>Profile</title>
         <link rel="stylesheet" href="./static/profile.css" />
     </head>
     <body>
@@ -29,24 +30,26 @@
                     <div class="follow_count">123</div>
                     Following
                 </div>
+                <button id="editButton" class="edit-button">Edit</button>
             </div>
             <div class="right_col">
                 <h2 class="name">Cook Eat</h2>
                 <h3 class="location">Seoul, Korea</h3>
                 <ul class="contact_information">
-                    <li class="work">CEO</li>
-                    <li class="website"><a class="nostyle" href="#">www.apple.com</a></li>
+                    <label for="nickNameInput">Nickname</label>
+                    <li class="nickName">꾸깃</li>
+                    <label for="nickNameInput">Mail</label>
                     <li class="mail">john.doe@apple.com</li>
+                    <label for="nickNameInput">Phone</label>
                     <li class="phone">1-(732)-757-2923</li>
-                    <li class="resume"><a href="#" class="nostyle">download resume</a></li>
+                    <!-- <li class="resume"><a href="#" class="nostyle">download resume</a></li> -->
                 </ul>
-                <button id="editButton" class="edit-button">Edit</button>
             </div>
         </div>
         <script>
             // 수정: Edit 버튼 클릭 시 /edit 페이지로 이동
             document.getElementById("editButton").addEventListener("click", function () {
-                window.location.href = "/edit";
+                window.location.href = "/profileEdit";
             });
         </script>
     </body>
