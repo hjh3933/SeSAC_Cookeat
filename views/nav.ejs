@@ -5,6 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
         <link rel="stylesheet" href="./static/nav.css" />
+        <%- include('account.ejs') %>
+        <style>
+            \ #cssmenu ul li ul {
+                display: none;
+            }
+            #cssmenu ul li.active ul {
+                display: block;
+            }
+        </style>
     </head>
     <body>
         <div class="nav-bg-container">
@@ -21,17 +30,44 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/login">login</a>
-                        </li>
-                        <li>
-                            <a href="/join">join</a>
-                        </li>
-                        <li>
                             <a href="/community">Community</a>
                         </li>
                     </ul>
                 </nav>
             </div>
+            <div id="cssmenu">
+                <ul>
+                    <li class="has-sub" id="profileBtn">
+                        <img
+                            src="./static/account.png"
+                            alt="Profile"
+                            style="width: 30px; height: 30px"
+                        />
+
+                        <ul>
+                            <li>
+                                <a href="/login"><span>Login</span></a>
+                            </li>
+                            <li>
+                                <a href="/Join"><span>Join</span></a>
+                            </li>
+                            <li>
+                                <a href="/profile"><span>Mypage</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var profileBtn = document.getElementById("profileBtn");
+
+                profileBtn.addEventListener("click", function () {
+                    profileBtn.classList.toggle("active");
+                });
+            });
+        </script>
     </body>
 </html>

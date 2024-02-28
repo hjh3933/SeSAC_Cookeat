@@ -1,0 +1,196 @@
+#cssmenu {
+    height: 37px;
+    display: block;
+    width: 80px;
+    padding: 0;
+    margin: 7px;
+    float: right;
+    border: 1px solid;
+    border-radius: 5px;
+    z-index: 50;
+    background: url("/static/spoon.png") no-repeat center center; /* 이미지 경로를 지정하세요 */
+    transition: background 0.3s ease; /* hover 전 후의 전환 효과 */
+}
+
+#cssmenu:hover {
+    background: url("/static/spoon.png") no-repeat center center; /* 이미지 경로를 지정하세요 */
+}
+
+#cssmenu > ul > li > a {
+    outline: none;
+    display: block;
+    position: relative;
+    padding: 12px 20px;
+    font: bold 13px/100% Arial, Helvetica, sans-serif;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.has-sub > a:hover {
+    background: #3f3f3f;
+    border-color: #3f3f3f;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    top: 0px;
+    z-index: 999;
+}
+
+#cssmenu ul li.has-sub:hover > ul,
+.cssmenu ul li.has-sub:hover > div {
+    display: block;
+}
+
+.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    border: 5px solid transparent;
+    border-top: 5px solid #fff;
+}
+
+#cssmenu > ul > li > ul > li.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    border: 5px solid transparent;
+    border-top: 5px solid #fff;
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+#cssmenu > ul > li.has-sub:hover > a:before {
+    top: 19px;
+}
+
+#cssmenu ul li.has-sub:hover > a {
+    background: #3f3f3f;
+    border-color: #3f3f3f;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    top: 0px;
+    z-index: 999;
+}
+
+#cssmenu ul li > ul,
+#cssmenu ul li > div {
+    display: none;
+    width: auto;
+    position: absolute;
+    top: 38px;
+    padding: 5px 0;
+    background: #3f3f3f;
+    border-radius: 0px 5px 5px 5px;
+    z-index: 999;
+}
+
+#cssmenu ul li > ul {
+    width: 200px;
+}
+
+#cssmenu ul li > ul li {
+    display: block;
+    list-style: inside none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+#cssmenu ul li > ul li a {
+    outline: none;
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 13px 13px;
+    font: 10pt Arial, Helvetica, sans-serif;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+#cssmenu,
+#cssmenu > ul > li > ul > li a:hover {
+    background: #a4c531;
+    /* background: -moz-linear-gradient(top, #a4c531 0%, 0.8da408 100%); */
+    /* background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0%, #a4c531),
+        color-stop(100%, #8da408)
+    ); */
+    /* background: -webkit-linear-gradient(top, #a4c531 0%, #8da408 100%); */
+    /* background: -o-linear-gradient(top, #a4c531 0%, #8da408 100%); */
+    /* background: -ms-linear-gradient(top, #a4c531 0%, #8da408 100%); */
+    background: linear-gradient(top, #a4c531 0%, #8da408 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#A4C531', endColorstr='#8da408',GradientType=0 );
+}
+
+#cssmenu > ul > li > a {
+    border-right: 1px solid #647306;
+    color: #fff;
+}
+
+#cssmenu > ul > li > a:hover {
+    background: #7fa208;
+}
+
+#cssmenu > ul > li > ul:before {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+
+#cssmenu > ul > li:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    position: absolute;
+    border-radius: 0 0 5px 5px;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    box-shadow: none;
+}
+
+#cssmenu > ul > li > ul {
+    width: 200px;
+    position: absolute;
+}
+
+#cssmenu > ul > li > ul > li {
+    float: none;
+    position: relative;
+}
+
+#cssmenu > ul > li > ul > li > ul {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+
+#cssmenu > ul > li > ul > li:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    position: absolute;
+}
+
+#cssmenu > ul > li > ul > li > ul {
+    /* left: 200px; */
+    left: auto;
+    right: -200px;
+    top: 0px;
+    width: 200px;
+    background: #707070;
+}
+
+#cssmenu > ul > li > ul {
+    left: auto; /* Remove the left property */
+    right: 0; /* Add right property with value 0 */
+}
+
+#cssmenu > ul > li > ul > li > ul > li {
+    float: none;
+}

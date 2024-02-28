@@ -13,8 +13,8 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.get("/food", (req, res) => {
-    res.render("food");
+app.get("/account", (req, res) => {
+    res.render("account");
 });
 app.get("/fryingPan", (req, res) => {
     res.render("fryingPan");
@@ -25,6 +25,10 @@ app.get("/nav", (req, res) => {
 app.get("/footer", (req, res) => {
     res.render("footer");
 });
+app.get("/profile", (req, res) => {
+    res.render("profile");
+});
+
 const teamMembers = [
     {
         name: "김명현",
