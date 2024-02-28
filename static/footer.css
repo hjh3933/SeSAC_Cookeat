@@ -1,0 +1,41 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.wrapper {
+    position: relative;
+    padding-bottom: 40px;
+    box-sizing: border-box; /* 패딩을 전체 높이에 포함 */
+}
+
+.footer-container {
+    width: 100%;
+    height: 40px;
+    background-color: #f4f4f4;
+    position: fixed;
+    left: 0;
+    bottom: 0%; /* 하단에 위치하도록 수정 */
+    align-items: center;
+    z-index: 90;
+}
+
+.footer-section1 {
+    margin-bottom: 10px;
+}
+
+.button-link {
+    display: inline-block;
+    background-color: transparent;
+    color: rgb(101, 116, 167);
+    text-decoration: none;
+    border: none;
+    font-size: 15px;
+    position: absolute;
+    top: 50%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

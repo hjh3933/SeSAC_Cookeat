@@ -1,86 +1,79 @@
+<!-- views/join.ejs -->
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <!-- views/join.ejs -->
-
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
+    <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="./static/Join.css" />
-        <title>회원가입 페이지</title>
-      </head>
-      <body>
+        <title>Join Page</title>
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %>
+    </head>
+    <body>
         <div class="myapp-join-box">
-          <h2>회원가입 페이지</h2>
+            <h2>회원가입 페이지</h2>
 
-          <div class="join-input-container">
-            <button
-              class="join-check-button"
-              onclick="handleUsernameDuplicationCheck()"
-            >
-              ID 확인
-            </button>
-            <input
-              id="username"
-              type="text"
-              value="<%= username %>"
-              oninput="setUsername(this.value)"
-              required
-            />
-            <label for="username">아이디</label>
-          </div>
+            <div class="join-input-container">
+                <button
+                    class="join-check-button"
+                    onclick="handleUsernameDuplicationCheck()"
+                >
+                    ID 확인
+                </button>
+                <input
+                    id="username"
+                    type="text"
+                    value="<%= username %>"
+                    oninput="setUsername(this.value)"
+                    required
+                />
+                <label for="username">아이디</label>
+            </div>
 
-          <div class="join-input-container">
-            <button
-              class="join-check-button"
-              onclick="handleNicknameDuplicationCheck()"
-            >
-              닉네임 확인
-            </button>
-            <input
-              id="nickname"
-              type="text"
-              value="<%= nickname %>"
-              oninput="setNickname(this.value)"
-              required
-            />
-            <label for="nickname">닉네임</label>
-          </div>
+            <div class="join-input-container">
+                <button
+                    class="join-check-button"
+                    onclick="handleNicknameDuplicationCheck()"
+                >
+                    닉네임 확인
+                </button>
+                <input
+                    id="nickname"
+                    type="text"
+                    value="<%= nickname %>"
+                    oninput="setNickname(this.value)"
+                    required
+                />
+                <label for="nickname">닉네임</label>
+            </div>
 
-          <div class="join-input-container">
-            <input
-              id="password"
-              type="password"
-              value="<%= password %>"
-              oninput="setPassword(this.value)"
-              required
-            />
-            <label for="password">비밀번호</label>
-          </div>
-          <div class="join-input-container">
-            <input
-              id="confirm-password"
-              type="password"
-              value="<%= confirmPassword %>"
-              oninput="setConfirmPassword(this.value); setPasswordMatchError('<%= password !== confirmPassword %>');"
-              required
-            />
-            <label for="confirm-password">비밀번호 확인</label>
-            <% if (passwordMatchError) { %>
-            <p class="error-message">
-              비밀번호와 비밀번호 확인 입력값이 다릅니다.
-            </p>
-            <% } %>
-          </div>
+            <div class="join-input-container">
+                <input
+                    id="password"
+                    type="password"
+                    value="<%= password %>"
+                    oninput="setPassword(this.value)"
+                    required
+                />
+                <label for="password">비밀번호</label>
+            </div>
+            <div class="join-input-container">
+                <input
+                    id="confirm-password"
+                    type="password"
+                    value="<%= confirmPassword %>"
+                    oninput="setConfirmPassword(this.value); setPasswordMatchError('<%= password !== confirmPassword %>');"
+                    required
+                />
+                <label for="confirm-password">비밀번호 확인</label>
+                <% if (passwordMatchError) { %>
+                <p class="error-message">
+                    비밀번호와 비밀번호 확인 입력값이 다릅니다.
+                </p>
+                <% } %>
+            </div>
 
-          <!-- <div class="join-input-container double-input">
+            <!-- <div class="join-input-container double-input">
             <div class="double-input-inner">
               <input
                 id="number"
@@ -104,64 +97,62 @@
             </div>
           </div> -->
 
-          <button class="join-submit-button" onclick="handleJoin()">
-            제출
-          </button>
-          <br />
-          <p class="login-link">
-            이미 회원이신가요? <a href="/login"> 로그인 페이지로 이동</a>
-          </p>
+            <button class="join-submit-button" onclick="handleJoin()">
+                제출
+            </button>
+            <br />
+            <p class="login-link">
+                이미 회원이신가요? <a href="/login"> 로그인 페이지로 이동</a>
+            </p>
         </div>
 
         <script>
-          // 클라이언트 측에서 동작하는 코드들을 여기에 추가
-          // 예: 이벤트 핸들러, API 호출 등
-          function setUsername(value) {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            // 클라이언트 측에서 동작하는 코드들을 여기에 추가
+            // 예: 이벤트 핸들러, API 호출 등
+            function setUsername(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function setNickname(value) {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function setNickname(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function setPassword(value) {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function setPassword(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function setConfirmPassword(value) {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function setConfirmPassword(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function setNumber(value) {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function setNumber(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function setEmail(value) {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function setEmail(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function handleJoin() {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function handleJoin() {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function handleUsernameDuplicationCheck() {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function handleUsernameDuplicationCheck() {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
 
-          function handleNicknameDuplicationCheck() {
-            // 클라이언트 측에서 수행해야 할 동작
-            // ...
-          }
+            function handleNicknameDuplicationCheck() {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
         </script>
-      </body>
-    </html>
-  </body>
+    </body>
 </html>
