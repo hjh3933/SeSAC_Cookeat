@@ -12,26 +12,12 @@ app.use(express.json());
 db.sequelize.sync({ force: false }).then((result) => {
     console.log("db연결 성공");
 });
-
 app.use("/static", express.static(path.join(__dirname, "static")));
 
-app.get("/", (req, res) => {
-    res.render("index");
-});
+const indexRouter = require("./routes");
+app.use("/", indexRouter);
 
-app.get("/food", (req, res) => {
-    res.render("food");
-});
-app.get("/fryingPan", (req, res) => {
-    res.render("fryingPan");
-});
-app.get("/nav", (req, res) => {
-    res.render("nav");
-});
-app.get("/footer", (req, res) => {
-    res.render("footer");
-});
-const teamMembers = [
+exports.teamMembers = [
     {
         name: "김명현",
         title: "Front-End Developer",
@@ -70,31 +56,7 @@ const teamMembers = [
     },
     // Add other team members here...
 ];
-app.get("/team", (req, res) => {
-    res.render("team", {
-        teamMembers,
-        faGithub: "faGithub",
-        faGoogle: "faGoogle",
-    });
-});
-
-app.get("/login", (req, res) => {
-    res.render("login", { username: "", password: "" });
-});
-
-app.get("/join", (req, res) => {
-    res.render("join", {
-        username: "",
-        nickname: "",
-        password: "",
-        confirmPassword: "",
-        number: "",
-        email: "",
-        isUsernameChecked: false,
-        isNicknameChecked: false,
-        passwordMatchError: false,
-    });
-});
+// -----------------------------------------------------------------
 app.get("*", (req, res) => {
     res.render("404");
 });
