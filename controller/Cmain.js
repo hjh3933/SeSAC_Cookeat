@@ -13,10 +13,13 @@ exports.getCreatePost = (req, res) => {
     res.render("createPost");
 };
 exports.postJoin = (req, res) => {
-    // {
-    //     ”userId” : “cocoa1234” ,
-    //     "password" : "cocoa@1234",
-    //      "username" : "코코아"
-    //      }
     console.log("회원가입 정보", req.body);
+    models.Users.create({
+        userId: req.body.userId,
+        password: req.body.password,
+        userName: req.body.userName,
+    }).then((result) => {
+        console.log(result);
+        res.send({ msg: "회원가입 완료!", statusCode: 200 });
+    });
 };
