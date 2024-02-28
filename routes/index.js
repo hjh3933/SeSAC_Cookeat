@@ -4,9 +4,13 @@ const controller = require("../controller/Cmain");
 const teamMembers = require("../app");
 
 //router작성
-router.get("/", (req, res) => {
-    res.render("index");
-});
+router.get("/", controller.main);
+router.get("/login", controller.getLogin);
+router.get("/join", controller.getJoin);
+router.get("/post", controller.getCreatePost);
+
+//회원가입 - 주희
+router.post("/join", controller.postJoin);
 
 router.get("/food", (req, res) => {
     res.render("food");
@@ -26,24 +30,6 @@ router.get("/team", (req, res) => {
         teamMembers,
         faGithub: "faGithub",
         faGoogle: "faGoogle",
-    });
-});
-
-router.get("/login", (req, res) => {
-    res.render("login", { username: "", password: "" });
-});
-
-router.get("/join", (req, res) => {
-    res.render("join", {
-        username: "",
-        nickname: "",
-        password: "",
-        confirmPassword: "",
-        number: "",
-        email: "",
-        isUsernameChecked: false,
-        isNicknameChecked: false,
-        passwordMatchError: false,
     });
 });
 
