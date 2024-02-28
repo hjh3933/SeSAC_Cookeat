@@ -155,7 +155,7 @@ body {
 }
 
 #primary_nav_wrap ul li a:hover {
-    margin-top: 10px;
+    margin-top: 20px;
     /* margin-bottom: 10px; */
     /* position: relative; */
     top: 100%;
@@ -170,4 +170,249 @@ body {
 }
 .img {
     width: 30px;
+}
+
+/* account.css */
+
+#cssmenu {
+    height: 37px;
+    display: block;
+    width: 80px;
+    padding: 0;
+    margin: 7px;
+    float: right;
+    /* border: 1px solid; */
+    border-radius: 5px;
+    z-index: 50;
+}
+#cssmenu > ul {
+    list-style: inside none;
+    padding: 0;
+    margin: 0;
+}
+/* \ */
+
+#cssmenu > ul > li {
+    list-style: inside none;
+    padding: 0;
+    margin: 0;
+    float: right;
+    display: block;
+    position: relative;
+}
+#cssmenu > ul > li > a {
+    outline: none;
+    display: block;
+    position: relative;
+    padding: 12px 20px;
+    font: bold 18px/100% Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+#cssmenu > ul > li:first-child > a {
+    border-radius: 5px 0 0 5px;
+}
+#cssmenu > ul > li > a:after {
+    content: "";
+    position: absolute;
+    /* border-right: 1px solid; */
+    top: -1px;
+    bottom: -1px;
+    right: -2px;
+    z-index: 99;
+}
+#cssmenu ul li.has-sub:hover > a:after {
+    top: 0;
+    bottom: 0;
+}
+#cssmenu > ul > li.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    border: 5px solid transparent;
+    border-top: 5px solid #fff;
+}
+#cssmenu > ul > li > ul > li.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    border: 5px solid transparent;
+    border-top: 5px solid #fff;
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+.has-sub > a:before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 6px;
+    border: 5px solid transparent;
+    border-top: 5px solid #fff;
+}
+#cssmenu > ul > li.has-sub:hover > a:before {
+    top: 30px;
+}
+#cssmenu ul li.has-sub:hover > a {
+    background: #3f3f3f;
+    border-color: #3f3f3f;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    top: 0px;
+    z-index: 999;
+}
+#cssmenu ul li.has-sub:hover > ul,
+#cssmenu ul li.has-sub.hover > ul {
+    /* 추가된 부분 */
+    display: block;
+}
+#cssmenu ul li.has-sub:hover > ul,
+.cssmenu ul li.has-sub:hover > div {
+    display: block;
+}
+/* #cssmenu ul li.has-sub > a:hover {
+    background: #3f3f3f;
+    border-color: #3f3f3f;
+    background: transparent;
+    background: -moz-linear-gradient(top, #a4c531 0%, 0.8da408 100%);
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0%, #a4c531),
+        color-stop(100%, #8da408)
+    );
+    background: -webkit-linear-gradient(top, #a4c531 0%, #8da408 100%);
+    background: -o-linear-gradient(top, #a4c531 0%, #8da408 100%);
+    background: -ms-linear-gradient(top, #a4c531 0%, #8da408 100%);
+    background: linear-gradient(top, #a4c531 0%, #8da408 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#A4C531', endColorstr='#8da408',GradientType=0 );
+} */
+#cssmenu ul li > ul,
+#cssmenu ul li > div {
+    display: none;
+    width: auto;
+    position: absolute;
+    top: 38px;
+    /* border-radius: 10%; */
+    padding: 5px 0;
+    background: #ffffff;
+    border-radius: 10px 10px 10px 10px;
+    z-index: 999;
+}
+
+#cssmenu ul li > ul {
+    width: 200px;
+}
+#cssmenu ul li > ul li {
+    display: block;
+    list-style: inside none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+#cssmenu ul li > ul li a {
+    outline: none;
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 13px 13px;
+    font: 10pt Arial, Helvetica, sans-serif;
+    color: #000000;
+    text-decoration: none;
+    /* text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5); */
+}
+#cssmenu ul li > ul li a:hover {
+    background-color: #f4f4f4; /* 원하는 배경색으로 변경 */
+    height: 20px;
+    border-radius: 10px 10px 10px 10px;
+    /* 다른 스타일 속성 추가 가능 */
+}
+
+#cssmenu,
+#cssmenu > ul > li > ul > li a:hover {
+    /* background: #a4c531; */
+    /* background: -moz-linear-gradient(top, #a4c531 0%, 0.8da408 100%); */
+    /* background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0%, #a4c531),
+        color-stop(100%, #8da408)
+    ); */
+    /* background: -webkit-linear-gradient(top, #a4c531 0%, #8da408 100%); */
+    background: -o-linear-gradient(top, #a4c531 0%, #8da408 100%);
+    background: -ms-linear-gradient(top, #a4c531 0%, #8da408 100%);
+    background: linear-gradient(top, #a4c531 0%, #8da408 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#A4C531', endColorstr='#8da408',GradientType=0 );
+}
+/* #cssmenu {
+    border-color: #647306;
+} */
+#cssmenu > ul > li > a {
+    /* border-right: 1px solid #647306; */
+    color: #000000;
+}
+/* #cssmenu > ul > li > a:after {
+    border-color: #c2f224;
+} */
+#cssmenu > ul > li > a:hover {
+    background: #7fa208;
+}
+
+#cssmenu > ul > li > ul:before {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+#cssmenu > ul > li:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    position: absolute;
+    border-radius: 10px 10px 10px 10px;
+    /* border: solid 1px black; */
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 그림자 설정 */
+}
+#cssmenu > ul > li > ul {
+    width: 200px;
+    /* border: solid 1px black; */
+    position: absolute;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 그림자 설정 */
+}
+#cssmenu > ul > li > ul > li {
+    float: none;
+    position: relative;
+}
+#cssmenu > ul > li > ul > li > ul {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
+#cssmenu > ul > li > ul > li:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    position: absolute;
+}
+#cssmenu > ul > li > ul > li > ul {
+    /* left: 200px; */
+    left: auto;
+    right: -200px;
+    top: 0px;
+    width: 200px;
+    background: #707070;
+}
+#cssmenu > ul > li > ul {
+    left: auto;
+    right: 0;
+}
+
+#cssmenu > ul > li > ul > li > ul > li {
+    float: none;
 }
