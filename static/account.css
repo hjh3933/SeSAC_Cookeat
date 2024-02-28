@@ -47,10 +47,10 @@
     right: -2px;
     z-index: 99;
 }
-#cssmenu ul li.has-sub:hover > a:after {
+/* #cssmenu ul li.has-sub:hover > a:after {
     top: 0;
     bottom: 0;
-}
+} */
 #cssmenu > ul > li.has-sub > a:before {
     content: "";
     position: absolute;
@@ -77,21 +77,21 @@
     border: 5px solid transparent;
     border-top: 5px solid #fff;
 }
-#cssmenu > ul > li.has-sub:hover > a:before {
+/* #cssmenu > ul > li.has-sub:hover > a:before {
     top: 19px;
-}
-#cssmenu ul li.has-sub:hover > a {
+} */
+/* #cssmenu ul li.has-sub:hover > a {
     background: #3f3f3f;
     border-color: #3f3f3f;
     padding-bottom: 13px;
     padding-top: 13px;
     top: 0px;
     z-index: 999;
-}
-#cssmenu ul li.has-sub:hover > ul,
+} */
+/* #cssmenu ul li.has-sub:hover > ul,
 .cssmenu ul li.has-sub:hover > div {
     display: block;
-}
+} */
 /* #cssmenu ul li.has-sub > a:hover {
     background: #3f3f3f;
     border-color: #3f3f3f;
@@ -143,23 +143,14 @@
     text-decoration: none;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
 }
-#cssmenu,
-#cssmenu > ul > li > ul > li a:hover {
-    /* background: #a4c531; */
-    /* background: -moz-linear-gradient(top, #a4c531 0%, 0.8da408 100%); */
-    /* background: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0%, #a4c531),
-        color-stop(100%, #8da408)
-    ); */
-    /* background: -webkit-linear-gradient(top, #a4c531 0%, #8da408 100%); */
+/* #cssmenu, */
+/* #cssmenu > ul > li > ul > li a:hover {
+   
     background: -o-linear-gradient(top, #a4c531 0%, #8da408 100%);
     background: -ms-linear-gradient(top, #a4c531 0%, #8da408 100%);
     background: linear-gradient(top, #a4c531 0%, #8da408 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#A4C531', endColorstr='#8da408',GradientType=0 );
-}
+} */
 /* #cssmenu {
     border-color: #647306;
 } */
@@ -170,16 +161,16 @@
 /* #cssmenu > ul > li > a:after {
     border-color: #c2f224;
 } */
-#cssmenu > ul > li > a:hover {
+/* #cssmenu > ul > li > a:hover {
     background: #7fa208;
-}
+} */
 
 #cssmenu > ul > li > ul:before {
     opacity: 0;
     visibility: hidden;
     position: absolute;
 }
-#cssmenu > ul > li:hover > ul {
+/* #cssmenu > ul > li:hover > ul {
     opacity: 1;
     visibility: visible;
     position: absolute;
@@ -189,7 +180,7 @@
     -moz-box-shadow: none;
     -ms-box-shadow: none;
     box-shadow: none;
-}
+} */
 #cssmenu > ul > li > ul {
     width: 200px;
     position: absolute;
@@ -203,11 +194,11 @@
     visibility: hidden;
     position: absolute;
 }
-#cssmenu > ul > li > ul > li:hover > ul {
+/* #cssmenu > ul > li > ul > li:hover > ul {
     opacity: 1;
     visibility: visible;
     position: absolute;
-}
+} */
 #cssmenu > ul > li > ul > li > ul {
     /* left: 200px; */
     left: auto;

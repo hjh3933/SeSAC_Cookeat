@@ -4,6 +4,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="./static/Join.css" />
         <title>Join Page</title>
@@ -20,7 +22,7 @@
                 <input
                     id="username"
                     type="text"
-                    value=""
+                    value="<%#= username %>"
                     oninput="setUsername(this.value)"
                     required
                 />
@@ -34,7 +36,7 @@
                 <input
                     id="nickname"
                     type="text"
-                    value=""
+                    value="<%#= nickName %>"
                     oninput="setNickname(this.value)"
                     required
                 />
@@ -45,7 +47,7 @@
                 <input
                     id="password"
                     type="password"
-                    value=""
+                    value="<%#= password %>"
                     oninput="setPassword(this.value)"
                     required
                 />
@@ -55,14 +57,14 @@
                 <input
                     id="confirm-password"
                     type="password"
-                    value=""
-                    oninput="setConfirmPassword(this.value); setPasswordMatchError('');"
+                    value="<%#= confirmPassword %>"
+                    oninput="setConfirmPassword(this.value); setPasswordMatchError('<%#= password !== confirmPassword %>');"
                     required
                 />
                 <label for="confirm-password">비밀번호 확인</label>
-                <% if (passwordMatchError) { %>
-                <p class="error-message">비밀번호와 비밀번호 확인 입력값이 다릅니다.</p>
-                <% } %>
+                <%# if (passwordMatchError) { %>
+                <!-- <p class="error-message">비밀번호와 비밀번호 확인 입력값이 다릅니다.</p> -->
+                <%# } %>
             </div>
 
             <!-- <div class="join-input-container double-input">
@@ -70,6 +72,7 @@
               <input
                 id="number"
                 type="tel"
+                value="<%#= number %>"
                 oninput="setNumber(this.value)"
                 required
               />
@@ -80,6 +83,7 @@
               <input
                 id="email"
                 type="email"
+                value="<%#= email %>"
                 oninput="setEmail(this.value)"
                 required
               />

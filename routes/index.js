@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller/Cmain");
-const teamMembers = require("../app");
-
-//router작성
+// const app = require("../app");
+// router작성
 router.get("/", controller.main);
 router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
@@ -28,9 +27,48 @@ router.get("/footer", (req, res) => {
     res.render("footer");
 });
 
+const teamMembers = [
+    {
+        name: "김명현",
+        title: "Front-End Developer",
+        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        githubUsername: "Myun9hyun",
+        googleEmail: "kimmh970808@gmail.com",
+    },
+    {
+        name: "윤대정",
+        title: "Front-End Developer",
+        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        githubUsername: "beussae",
+        googleEmail: "dbseowjd12@gmail.com",
+    },
+    {
+        name: "홍주희",
+        title: "Back-End Developer",
+        teamleader: "TeamLeader",
+        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        githubUsername: "hjh3933",
+        googleEmail: "hkh3933@naver.com",
+    },
+    {
+        name: "김보아",
+        title: "Back-End Developer",
+        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        githubUsername: "SOROKKIM",
+        googleEmail: "ksl7593@gmail.com",
+    },
+    {
+        name: "이형석",
+        title: "Back-End Developer",
+        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        githubUsername: "yhs0329",
+        googleEmail: "scar0329@gmail.com",
+    },
+];
 router.get("/team", (req, res) => {
+    console.log("ㅇㄱ기기", teamMembers);
     res.render("team", {
-        teamMembers: teamMembers,
+        teamMembers,
         faGithub: "faGithub",
         faGoogle: "faGoogle",
     });
