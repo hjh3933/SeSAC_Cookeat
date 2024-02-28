@@ -49,4 +49,9 @@ Users.belongsToMany(Users, {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.Users = Users;
+db.Bookmarks = Bookmarks;
+db.Follows = Follows;
+db.Posts = Posts;
+
 module.exports = db;
