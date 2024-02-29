@@ -1,179 +1,3 @@
-body {
-    padding-top: 80px; /* 네비게이션 바의 높이보다 크거나 같게 설정 */
-}
-
-.nav-bg-container {
-    width: 100%;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    background-color: #f4f4f4;
-    display: flex;
-    left: 0;
-    position: fixed;
-    top: 0;
-    z-index: 999;
-    align-items: center;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.content-nav {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    /* max-width: 1200px; 원하는 컨텐츠 최대 너비 설정 */
-}
-
-#primary_nav_wrap {
-    display: flex;
-    width: 100%;
-    padding-left: 10px;
-    align-items: center;
-}
-
-#primary_nav_wrap ul {
-    list-style: none;
-    display: flex;
-    margin: -5px;
-    padding: 0;
-    align-items: center;
-}
-
-#primary_nav_wrap ul a {
-    /* display: block; */
-    color: #656565;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 32px;
-    padding: 0 15px;
-    font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-#primary_nav_wrap ul li {
-    position: relative;
-    margin: 0;
-    padding: 0;
-}
-
-#primary_nav_wrap ul li.current-menu-item {
-    background: transparent;
-}
-
-#primary_nav_wrap ul li:hover {
-    background: transparent;
-}
-
-#primary_nav_wrap ul ul {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #fff;
-    padding: 0;
-}
-
-#primary_nav_wrap ul ul li {
-    float: none;
-    width: 200px;
-}
-
-#primary_nav_wrap ul ul a {
-    line-height: 120%;
-    padding: 10px 15px;
-}
-
-#primary_nav_wrap ul ul ul {
-    top: 0;
-    left: 100%;
-}
-
-#primary_nav_wrap ul li:hover > ul {
-    display: block;
-}
-
-.nav-auth-buttons {
-    display: flex;
-    position: absolute;
-    justify-content: flex-end;
-}
-
-.nav-auth-buttons a {
-    display: inline-block;
-    color: #6aaf5f;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 5px 10px;
-    border: 1px solid #6aaf5f;
-    border-radius: 5px;
-    height: auto;
-    width: 49px;
-    text-align: center;
-}
-
-.nav-auth-buttons .join-btn {
-    margin-left: 10px;
-    margin-right: 0px;
-}
-
-.nav-auth-buttons a:hover {
-    background-color: #6aaf5f;
-    color: #fff;
-}
-
-.user-info {
-    display: flex;
-    margin-right: 30px; /* 오른쪽 여백 조절 */
-}
-
-.user-info-image {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-    background-image: url("https://img.icons8.com/?size=512&id=34670&format=png");
-    background-size: cover; /* 이미지를 영역에 맞게 조절 */
-    background-repeat: no-repeat;
-}
-
-.user-info-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: right;
-}
-
-.user-id {
-    font-size: 16px;
-    font-weight: 700;
-    white-space: nowrap;
-    color: #656565;
-}
-
-#primary_nav_wrap ul li.current-menu-item a {
-    margin-top: 10px;
-    border-bottom: 3px solid #6aaf5f; /* 밑줄 스타일 추가 */
-}
-
-#primary_nav_wrap ul li a:hover {
-    margin-top: 20px;
-    /* margin-bottom: 10px; */
-    /* position: relative; */
-    top: 100%;
-    background: transparent;
-    border-bottom: 3px solid #a59172; /* 메뉴에 마우스 호버 시 흰색 밑줄 추가 */
-}
-
-#primary_nav_wrap ul li.current-menu-item a {
-    margin-top: 10px;
-
-    border-bottom: 3px solid #6aaf5f; /* 현재 메뉴에 흰색 밑줄 스타일 유지 및 메뉴 클릭 시 흰색 밑줄 추가 */
-}
-.img {
-    width: 30px;
-}
-
-/* account.css */
-
 #cssmenu {
     height: 37px;
     display: block;
@@ -181,7 +5,7 @@ body {
     padding: 0;
     margin: 7px;
     float: right;
-    /* border: 1px solid; */
+    border: 1px solid;
     border-radius: 5px;
     z-index: 50;
 }
@@ -217,7 +41,7 @@ body {
 #cssmenu > ul > li > a:after {
     content: "";
     position: absolute;
-    /* border-right: 1px solid; */
+    border-right: 1px solid;
     top: -1px;
     bottom: -1px;
     right: -2px;
@@ -254,7 +78,7 @@ body {
     border-top: 5px solid #fff;
 }
 /* #cssmenu > ul > li.has-sub:hover > a:before {
-    top: 30px;
+    top: 19px;
 } */
 /* #cssmenu ul li.has-sub:hover > a {
     background: #3f3f3f;
@@ -263,10 +87,6 @@ body {
     padding-top: 13px;
     top: 0px;
     z-index: 999;
-} */
-/* #cssmenu ul li.has-sub:hover > ul,
-#cssmenu ul li.has-sub.hover > ul {
-    display: block;
 } */
 /* #cssmenu ul li.has-sub:hover > ul,
 .cssmenu ul li.has-sub:hover > div {
@@ -296,10 +116,9 @@ body {
     width: auto;
     position: absolute;
     top: 38px;
-    /* border-radius: 10%; */
     padding: 5px 0;
-    background: #ffffff;
-    border-radius: 10px 10px 10px 10px;
+    background: #3f3f3f;
+    border-radius: 0px 5px 5px 5px;
     z-index: 999;
 }
 
@@ -320,17 +139,12 @@ body {
     margin: 0;
     padding: 13px 13px;
     font: 10pt Arial, Helvetica, sans-serif;
-    color: #000000;
+    color: #fff;
     text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
 }
-#cssmenu ul li > ul li a:hover {
-    background-color: #f4f4f4;
-
-    border-radius: 10px 10px 10px 10px;
-}
-
-/* #cssmenu,
-#cssmenu > ul > li > ul > li a:hover {
+/* #cssmenu, */
+/* #cssmenu > ul > li > ul > li a:hover {
    
     background: -o-linear-gradient(top, #a4c531 0%, #8da408 100%);
     background: -ms-linear-gradient(top, #a4c531 0%, #8da408 100%);
@@ -341,15 +155,15 @@ body {
     border-color: #647306;
 } */
 #cssmenu > ul > li > a {
-    /* border-right: 1px solid #647306; */
+    border-right: 1px solid #647306;
     color: #000000;
 }
 /* #cssmenu > ul > li > a:after {
     border-color: #c2f224;
 } */
-#cssmenu > ul > li > a:hover {
+/* #cssmenu > ul > li > a:hover {
     background: #7fa208;
-}
+} */
 
 #cssmenu > ul > li > ul:before {
     opacity: 0;
@@ -360,18 +174,16 @@ body {
     opacity: 1;
     visibility: visible;
     position: absolute;
-    border-radius: 10px 10px 10px 10px;
+    border-radius: 0 0 5px 5px;
     -webkit-box-shadow: none;
     -o-box-shadow: none;
     -moz-box-shadow: none;
     -ms-box-shadow: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: none;
 } */
 #cssmenu > ul > li > ul {
     width: 200px;
-    /* border: solid 1px black; */
     position: absolute;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 #cssmenu > ul > li > ul > li {
     float: none;
@@ -388,6 +200,7 @@ body {
     position: absolute;
 } */
 #cssmenu > ul > li > ul > li > ul {
+    /* left: 200px; */
     left: auto;
     right: -200px;
     top: 0px;
@@ -395,8 +208,8 @@ body {
     background: #707070;
 }
 #cssmenu > ul > li > ul {
-    left: auto;
-    right: 0;
+    left: auto; /* Remove the left property */
+    right: 0; /* Add right property with value 0 */
 }
 
 #cssmenu > ul > li > ul > li > ul > li {
