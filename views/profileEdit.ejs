@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ProfileEdit</title>
+
+        <link rel="stylesheet" type="text/CSS" href="style.css" />
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('fryingPan.ejs') %> <%-
+        include('account.ejs') %>
+        <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600,700,800"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
+
+        <link rel="stylesheet" href="./static/profile.css" />
+    </head>
+    <body>
+        <div class="portfoliocard">
+            <div class="coverphoto"></div>
+            <div class="profile_picture"></div>
+            <div class="left_col">
+                <div class="followers">
+                    <div class="follow_count">1,234</div>
+                    Followers
+                </div>
+                <div class="following">
+                    <div class="follow_count">123</div>
+                    Following
+                </div>
+                <button id="saveButton" class="save-button">Save</button>
+            </div>
+            <div class="right_col">
+                <ul class="contact_information">
+                    <label for="nickNameInput">Name</label>
+                    <li class="name"><input type="text" id="nameInput" /></li>
+                    <label for="LocationInput">Location</label>
+                    <li class="location">
+                        <input type="text" id="locationInput" />
+                    </li>
+
+                    <label for="nickNameInput">Nickname</label>
+
+                    <li class="nickname">
+                        <input type="text" id="nickNameInput" />
+                    </li>
+                    <label for="MailInput">Mail</label>
+
+                    <li class="mail">
+                        <input type="email" id="mailInput" />
+                    </li>
+                    <label for="PhoneInput">Phone</label>
+
+                    <li class="phone">
+                        <input type="tel" id="phoneInput" />
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <script>
+            document
+                .getElementById("saveButton")
+                .addEventListener("click", function () // submit하면 데이터 넘어가게 하기
+                {
+                    // Save 버튼 클릭 시 /profile 페이지로 이동
+                    window.location.href = "/profile";
+                });
+        </script>
+    </body>
+</html>

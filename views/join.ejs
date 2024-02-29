@@ -4,6 +4,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="./static/Join.css" />
         <title>Join Page</title>
@@ -14,16 +16,13 @@
             <h2>회원가입 페이지</h2>
 
             <div class="join-input-container">
-                <button
-                    class="join-check-button"
-                    onclick="handleUsernameDuplicationCheck()"
-                >
+                <button class="join-check-button" onclick="handleUsernameDuplicationCheck()">
                     ID 확인
                 </button>
                 <input
                     id="username"
                     type="text"
-                    value="<%= username %>"
+                    value="<%#= username %>"
                     oninput="setUsername(this.value)"
                     required
                 />
@@ -31,16 +30,13 @@
             </div>
 
             <div class="join-input-container">
-                <button
-                    class="join-check-button"
-                    onclick="handleNicknameDuplicationCheck()"
-                >
+                <button class="join-check-button" onclick="handleNicknameDuplicationCheck()">
                     닉네임 확인
                 </button>
                 <input
                     id="nickname"
                     type="text"
-                    value="<%= nickname %>"
+                    value="<%#= nickName %>"
                     oninput="setNickname(this.value)"
                     required
                 />
@@ -51,7 +47,7 @@
                 <input
                     id="password"
                     type="password"
-                    value="<%= password %>"
+                    value="<%#= password %>"
                     oninput="setPassword(this.value)"
                     required
                 />
@@ -61,16 +57,14 @@
                 <input
                     id="confirm-password"
                     type="password"
-                    value="<%= confirmPassword %>"
-                    oninput="setConfirmPassword(this.value); setPasswordMatchError('<%= password !== confirmPassword %>');"
+                    value="<%#= confirmPassword %>"
+                    oninput="setConfirmPassword(this.value); setPasswordMatchError('<%#= password !== confirmPassword %>');"
                     required
                 />
                 <label for="confirm-password">비밀번호 확인</label>
-                <% if (passwordMatchError) { %>
-                <p class="error-message">
-                    비밀번호와 비밀번호 확인 입력값이 다릅니다.
-                </p>
-                <% } %>
+                <%# if (passwordMatchError) { %>
+                <!-- <p class="error-message">비밀번호와 비밀번호 확인 입력값이 다릅니다.</p> -->
+                <%# } %>
             </div>
 
             <!-- <div class="join-input-container double-input">
@@ -78,7 +72,7 @@
               <input
                 id="number"
                 type="tel"
-                value="<%= number %>"
+                value="<%#= number %>"
                 oninput="setNumber(this.value)"
                 required
               />
@@ -89,7 +83,7 @@
               <input
                 id="email"
                 type="email"
-                value="<%= email %>"
+                value="<%#= email %>"
                 oninput="setEmail(this.value)"
                 required
               />
@@ -97,13 +91,9 @@
             </div>
           </div> -->
 
-            <button class="join-submit-button" onclick="handleJoin()">
-                제출
-            </button>
+            <button class="join-submit-button" onclick="handleJoin()">제출</button>
             <br />
-            <p class="login-link">
-                이미 회원이신가요? <a href="/login"> 로그인 페이지로 이동</a>
-            </p>
+            <p class="login-link">이미 회원이신가요? <a href="/login"> 로그인 페이지로 이동</a></p>
         </div>
 
         <script>

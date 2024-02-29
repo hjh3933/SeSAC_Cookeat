@@ -24,7 +24,7 @@ exports.postJoin = (req, res) => {
     });
 };
 
-// 회원정보 페이지 - 이형석
+// 회원정보 페이지 렌더링
 exports.postProfile = (req, res) => {
     models.Users.findOne({
         where: {
@@ -35,8 +35,22 @@ exports.postProfile = (req, res) => {
         res.render("profile", { data: result });
     });
 };
-// 회원 정보 수정
+
+// 회원 정보 수정 페이지 이동
 exports.editProfile = (req, res) => {
+    models.Users.findOne({
+        where: {
+            userId: req.body.userId,
+        },
+    }).then((result) => {
+        console.log("회원정보 수정 요청", result);
+        res.render("profileEdit", { data: result });
+    });
+};
+
+// 회원 정보 수정
+
+exports.patchProfile = (req, res) => {
     if (!req.body.password || !req.body.userName) {
         return res.status(400).send("수정사항을 입력해주세요.");
     }

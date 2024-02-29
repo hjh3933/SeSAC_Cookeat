@@ -22,8 +22,7 @@ body {
             rgb(171, 206, 212) 81px,
             rgba(0, 0, 0, 0) 81px
         ),
-        linear-gradient(0deg, rgb(238, 238, 238) 0.1em, rgba(0, 0, 0, 0) 0.1em),
-        rgb(255, 255, 255);
+        linear-gradient(0deg, rgb(238, 238, 238) 0.1em, rgba(0, 0, 0, 0) 0.1em), rgb(255, 255, 255);
     background-position: auto auto;
     -webkit-background-origin: padding-box;
     background-origin: padding-box;

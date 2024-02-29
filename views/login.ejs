@@ -2,6 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login Page</title>
         <link rel="stylesheet" type="text/css" href="./static/login.css" />
@@ -18,7 +20,7 @@
                         type="text"
                         name="username"
                         required
-                        value="<%= username %>"
+                        value="<%#= username %>"
                         oninput="setUsername(this.value)"
                     />
                     <label>사용자 이름</label>
@@ -28,16 +30,12 @@
                         type="password"
                         name="password"
                         required
-                        value="<%= password %>"
+                        value="<%#= password %>"
                         oninput="setPassword(this.value)"
                     />
                     <label>비밀번호</label>
                 </div>
-                <button
-                    class="myapp-submit-button"
-                    type="submit"
-                    onclick="handleLogin(event)"
-                >
+                <button class="myapp-submit-button" type="submit" onclick="handleLogin(event)">
                     로그인
                 </button>
                 <br />
@@ -64,12 +62,8 @@
                     const response = await axios.post(
                         "http://localhost:8080/login",
                         {
-                            username:
-                                document.querySelector('[name="username"]')
-                                    .value,
-                            password:
-                                document.querySelector('[name="password"]')
-                                    .value,
+                            username: document.querySelector('[name="username"]').value,
+                            password: document.querySelector('[name="password"]').value,
                         },
                         {
                             withCredentials: true,
