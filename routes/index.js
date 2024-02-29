@@ -10,6 +10,7 @@ router.get("/post", controller.getCreatePost);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
+router.post("/login", controller.postLogin);
 
 router.get("/food", (req, res) => {
     res.render("food");
