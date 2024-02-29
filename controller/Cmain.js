@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const SECRET = "DWB0jOga2jrAozUXUsLCQ1e4EeeQH8"; //랜덤문자열 env관리 예정
 const bcrypt = require("bcrypt");
 
+//암호화, 비교 함수
 const saltRounds = 10;
-
 function hashPw(pw) {
     return bcrypt.hashSync(pw, saltRounds);
 }
@@ -67,6 +67,20 @@ exports.postLogin = (req, res) => {
         } else {
             //아이디 오류
             res.send({ msg: "로그인 실패", result: false });
+        }
+    });
+};
+exports.getPosts = (req, res) => {
+    //전체 게시글 조회
+    models.Posts.findAll({
+        attributes: ["postId", "id", "title", "createdAt"],
+        include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
+    }).then((result) => {
+        if (result.length > 0) {
+            res.render("posts", { posts: result });
+            // res.send(result);
+        } else {
+            res.send("게시글이 존재하지 않습니다");
         }
     });
 };
