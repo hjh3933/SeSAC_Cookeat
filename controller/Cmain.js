@@ -34,8 +34,7 @@ exports.postJoin = (req, res) => {
         userName: req.body.userName,
     }).then((result) => {
         console.log(result);
-        // res.send({ msg: "회원가입 완료!", statusCode: 200 });
-        res.json(result);
+        res.send({ msg: "회원가입 완료!", statusCode: 200 });
     });
 };
 exports.postLogin = (req, res) => {
@@ -54,6 +53,7 @@ exports.postLogin = (req, res) => {
             if (loginResult) {
                 const token = jwt.sign({ id }, SECRET);
                 console.log("token", token);
+                console.log("loginResult", loginResult);
                 res.send({
                     result: loginResult,
                     msg: "로그인 완료",
