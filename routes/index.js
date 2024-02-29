@@ -3,7 +3,6 @@ const router = express.Router();
 const controller = require("../controller/Cmain");
 const teamMembers = require("../app");
 
-//router작성
 router.get("/", controller.main);
 router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
@@ -32,5 +31,9 @@ router.get("/team", (req, res) => {
         faGoogle: "faGoogle",
     });
 });
+
+// 회원정보 조회 - 이형석
+router.post("/profile", controller.postProfile);
+router.post("/profile/edit", controller.editProfile);
 
 module.exports = router;
