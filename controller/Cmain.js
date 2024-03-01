@@ -130,3 +130,48 @@ exports.getPostDetail = async (req, res) => {
         res.status(500).send("server error");
     }
 };
+
+// 게시글 수정 PATCH
+exports.patchPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { title, content, img, category } = req.body;
+
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        // 게시글이 존재하는지 확인
+        const existingPost = await models.Posts.findOne({
+            where: { postId },
+        });
+
+        // 게시글이 존재하지 않는 경우
+        if (!existingPost) {
+            return res.status(404).json({ error: "게시글이 존재하지 않습니다." });
+        }
+
+        // 로그인한 사용자가 게시글을 작성한 사용자인지 확인
+        if (existingPost.id !== userId) {
+            return res.status(403).json({ error: "게시글을 수정할 권한이 없습니다." });
+        }
+
+        // 게시글 업데이트
+        await models.Posts.update(
+            {
+                title,
+                content,
+                img,
+                category,
+            },
+            {
+                where: { postId },
+            }
+        );
+        res.send({ msg: "게시글 수정 완료" });
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).send("게시글 수정 중에 오류가 발생했습니다.");
+    }
+};
