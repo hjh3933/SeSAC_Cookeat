@@ -108,3 +108,25 @@ exports.postRecipe = async (req, res) => {
         res.status(500).send("server error");
     }
 };
+//단일 게시글 조회
+exports.getPostDetail = async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        // 게시글 조회
+        const postDetail = await models.Posts.findOne({
+            where: {
+                postId,
+            },
+        });
+
+        // 게시글이 존재하지 않는 경우
+        if (!postDetail) {
+            return res.status(404).json({ error: "게시글이 존재하지 않습니다." });
+        }
+        res.json(postDetail);
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).send("server error");
+    }
+};

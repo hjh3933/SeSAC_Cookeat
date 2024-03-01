@@ -15,6 +15,7 @@ router.post("/login", controller.postLogin);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
+router.get("/post/:postId", controller.getPostDetail);
 
 router.get("/food", (req, res) => {
     res.render("food");
