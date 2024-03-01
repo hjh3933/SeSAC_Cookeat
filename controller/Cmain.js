@@ -84,3 +84,27 @@ exports.getPosts = (req, res) => {
         }
     });
 };
+
+// 게시글 작성
+exports.postRecipe = async (req, res) => {
+    try {
+        const { title, content, img, category } = req.body;
+
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        const newRecipe = await models.Posts.create({
+            title,
+            content,
+            img: null,
+            category,
+            id: userId,
+        });
+        res.json(newRecipe);
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).send("server error");
+    }
+};
