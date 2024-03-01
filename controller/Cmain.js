@@ -89,6 +89,10 @@ exports.getPosts = (req, res) => {
 exports.postRecipe = async (req, res) => {
     try {
         const { title, content, img, category } = req.body;
+        // 제목, 내용, 카테고리 유효성 검사
+        if (!title || !content || !category) {
+            return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
+        }
 
         // 로그인한 사용자의 id를 토큰에서 추출
         const token = req.headers.authorization;
@@ -102,10 +106,14 @@ exports.postRecipe = async (req, res) => {
             category,
             id: userId,
         });
-        res.json(newRecipe);
+        res.send({ msg: "게시글 작성 완료" });
     } catch (err) {
-        console.log("err", err);
-        res.status(500).send("server error");
+        console.error("게시글 작성 중 에러가 발생했습니다.", err);
+        // 토큰 유효성 검사 에러
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ error: "로그인이 필요합니다." });
+        }
+        res.status(500).send("서버 에러");
     }
 };
 //단일 게시글 조회
@@ -127,7 +135,7 @@ exports.getPostDetail = async (req, res) => {
         res.json(postDetail);
     } catch (err) {
         console.log("err", err);
-        res.status(500).send("server error");
+        res.status(500).send("서버 에러");
     }
 };
 
@@ -171,7 +179,12 @@ exports.patchPost = async (req, res) => {
         );
         res.send({ msg: "게시글 수정 완료" });
     } catch (err) {
-        console.log("err", err);
-        res.status(500).send("게시글 수정 중에 오류가 발생했습니다.");
+        console.log("게시글 수정 중에 에러가 발생했습니다.", err);
+
+        // 토큰 유효성 검사 에러
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ error: "로그인이 필요합니다." });
+        }
+        res.status(500).send("서버 에러");
     }
 };
