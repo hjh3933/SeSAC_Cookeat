@@ -13,6 +13,9 @@ router.get("/posts", controller.getPosts);
 router.post("/join", controller.postJoin);
 router.post("/login", controller.postLogin);
 
+//게시글 CRUD - 보아
+router.post("/post", controller.postRecipe);
+
 router.get("/food", (req, res) => {
     res.render("food");
 });
