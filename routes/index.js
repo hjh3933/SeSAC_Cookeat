@@ -17,6 +17,7 @@ router.post("/login", controller.postLogin);
 router.post("/post", controller.postRecipe);
 router.get("/post/:postId", controller.getPostDetail);
 router.patch("/post/:postId", controller.patchPost);
+router.delete("/post/:postId", controller.deletePost);
 
 router.get("/food", (req, res) => {
     res.render("food");
