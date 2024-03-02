@@ -246,7 +246,7 @@ exports.profile = (req, res) => {
         const userId = decodedToken.id;
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
-            where: { userId: userId },
+            where: { id: userId },
         })
             .then((user) => {
                 if (user) {
