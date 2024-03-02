@@ -10,6 +10,7 @@ router.get("/post", controller.getCreatePost);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
+router.post("/login", controller.postLogin);
 
 // 회원정보 페이지 조회 미들웨어
 function isAuthenticated(req, res, next) {

@@ -1,5 +1,7 @@
--- Active: 1707208765864@@127.0.0.1@3306@sesac
-desc Users;
-desc Bookmarks;
-desc Follows;
-desc Posts;
+-- Active: 1707101290768@@127.0.0.1@3306@sesac
+show tables;
+DESC Users;
+DESC posts;
+DESC FOLLOWS;
+DESC bookmarks;
+SELECT * from users;
