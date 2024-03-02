@@ -13,6 +13,10 @@ router.get("/posts", controller.getPosts);
 router.post("/join", controller.postJoin);
 router.post("/login", controller.postLogin);
 
+// 회원정보 및 수정 페이지 조회 - 형석
+router.get("/profile", controller.profile);
+router.get("/profileEdit", controller.profileEdit);
+
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
 router.get("/post/:postId", controller.getPostDetail);
@@ -28,14 +32,8 @@ router.get("/fryingPan", (req, res) => {
 router.get("/nav", (req, res) => {
     res.render("nav");
 });
-router.get("/profile", (req, res) => {
-    res.render("profile");
-});
 router.get("/footer", (req, res) => {
     res.render("footer");
-});
-router.get("/profileEdit", (req, res) => {
-    res.render("profileEdit");
 });
 
 const teamMembers = [
@@ -73,7 +71,7 @@ const teamMembers = [
         title: "Back-End Developer",
         imageUrl: "https://i.imgur.com/jtXnFZc.png",
         githubUsername: "yhs0329",
-        googleEmail: "scar0329@gmail.com",
+        googleEmail: "scar9983@gmail.com",
     },
 ];
 router.get("/team", (req, res) => {

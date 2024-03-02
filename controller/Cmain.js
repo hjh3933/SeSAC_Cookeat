@@ -231,3 +231,42 @@ exports.deletePost = async (req, res) => {
         res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
     }
 };
+
+// 회원정보 및 수정 페이지 조회 - 형석
+exports.profile = (req, res) => {
+    // res.render("profile");
+    try {
+        // 요청 헤더에서 토큰 추출
+        const token = req.headers.authorization;
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        // 토큰을 검증하고 사용자 ID 추출
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+        // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
+        models.Users.findOne({
+            where: { userId: userId },
+        })
+            .then((user) => {
+                if (user) {
+                    // 사용자 정보가 있으면 프로필 페이지를 렌더링
+                    res.render("profile", { user });
+                } else {
+                    // 사용자 정보가 없는 경우
+                    res.status(404).send("사용자를 찾을 수 없습니다.");
+                }
+            })
+            .catch((err) => {
+                // 데이터베이스 조회 중 오류 발생
+                console.error("프로필 조회 중 에러 발생", err);
+                res.status(500).send("서버 에러");
+            });
+    } catch (error) {
+        // JWT 검증 실패
+        res.status(401).send("유효하지 않은 토큰");
+    }
+};
+exports.profileEdit = (req, res) => {
+    res.render("profileEdit");
+};
