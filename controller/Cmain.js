@@ -188,3 +188,46 @@ exports.patchPost = async (req, res) => {
         res.status(500).send("서버 에러");
     }
 };
+
+// 게시글 삭제 DELETE
+exports.deletePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        // 게시글이 존재하는지 확인
+        const existingPost = await models.Posts.findOne({
+            where: { postId },
+        });
+
+        // 게시글이 존재하지 않는 경우
+        if (!existingPost) {
+            return res.status(404).json({ error: "게시글이 존재하지 않습니다." });
+        }
+
+        // 로그인한 사용자가 게시글을 작성한 사용자인지 확인
+        if (existingPost.id !== userId) {
+            return res.status(403).json({ error: "게시글을 삭제할 권한이 없습니다." });
+        }
+
+        const isDeleted = await models.Posts.destroy({
+            where: { postId },
+        });
+        if (isDeleted) {
+            res.send({ msg: "게시글 삭제 완료" });
+        } else {
+            res.send({ msg: "게시글 삭제 실패" });
+        }
+    } catch (err) {
+        console.log("err", err);
+        // 토큰 유효성 검사 에러
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ error: "로그인이 필요합니다." });
+        }
+        res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
+    }
+};
