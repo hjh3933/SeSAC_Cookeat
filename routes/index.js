@@ -7,22 +7,21 @@ router.get("/", controller.main);
 router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
+router.get("/posts", controller.getPosts);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
 router.post("/login", controller.postLogin);
 
-// 회원정보 페이지 조회 미들웨어
-function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        // `req.isAuthenticated()` 사용자 인증 상태를 확인
-        return next();
-    } else {
-        res.redirect("/login"); // 인증되지 않은 사용자는 로그인 페이지로 리디렉션
-    }
-}
-router.get("/profile", isAuthenticated, controller.postProfile);
-router.get("/profileEdit", isAuthenticated, controller.editProfile);
+// 회원정보 및 수정 페이지 조회 - 형석
+router.get("/profile", controller.profile);
+router.get("/profileEdit", controller.profileEdit);
+
+//게시글 CRUD - 보아
+router.post("/post", controller.postRecipe);
+router.get("/post/:postId", controller.getPostDetail);
+router.patch("/post/:postId", controller.patchPost);
+router.delete("/post/:postId", controller.deletePost);
 
 router.get("/food", (req, res) => {
     res.render("food");
