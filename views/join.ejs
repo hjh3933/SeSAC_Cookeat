@@ -20,13 +20,13 @@
                     ID 확인
                 </button>
                 <input
-                    id="username"
+                    id="userId"
                     type="text"
                     value="<%#= username %>"
-                    oninput="setUsername(this.value)"
+                    oninput="setUserId(this.value)"
                     required
                 />
-                <label for="username">아이디</label>
+                <label for="userId">아이디</label>
             </div>
 
             <div class="join-input-container">
@@ -34,13 +34,13 @@
                     닉네임 확인
                 </button>
                 <input
-                    id="nickname"
+                    id="userName"
                     type="text"
                     value="<%#= nickName %>"
-                    oninput="setNickname(this.value)"
+                    oninput="setUserName(this.value)"
                     required
                 />
-                <label for="nickname">닉네임</label>
+                <label for="userName">닉네임</label>
             </div>
 
             <div class="join-input-container">
@@ -71,15 +71,17 @@
         </div>
 
         <script>
-            // 클라이언트 측에서 동작하는 코드들을 여기에 추가
-            // 예: 이벤트 핸들러, API 호출 등
-            function setUsername(value) {
+            function setUserName(value) {
+                // 클라이언트 측에서 수행해야 할 동작
+                // ...
+            }
+            function setUserId(value) {
                 // 클라이언트 측에서 수행해야 할 동작
                 // ...
             }
 
             function handleUsernameDuplicationCheck() {
-                const userId = document.getElementById("username").value;
+                const userId = document.getElementById("userId").value;
                 if (!userId.trim()) {
                     // ID 입력창이 빈칸인 경우
                     alert("ID를 입력해주세요!");
@@ -110,7 +112,7 @@
             }
 
             function handleNicknameDuplicationCheck() {
-                const userName = document.getElementById("nickname").value;
+                const userName = document.getElementById("userName").value;
                 if (!userName.trim()) {
                     // 닉네임 입력창이 빈칸인 경우
                     alert("닉네임을 입력해주세요!");
@@ -164,8 +166,8 @@
             }
 
             function handleJoin() {
-                const userId = document.getElementById("username").value;
-                const userName = document.getElementById("nickname").value;
+                const userId = document.getElementById("userId").value;
+                const userName = document.getElementById("userName").value;
                 const password = document.getElementById("password").value;
                 const confirmPassword = document.getElementById("confirm-password").value;
 
@@ -212,8 +214,31 @@
                                     } else {
                                         // 사용 가능한 닉네임인 경우
                                         // 나머지 회원가입 정보를 서버로 전송
-                                        alert("가입이 완료되었습니다!");
-                                        // 나머지 회원가입 정보를 서버로 전송하는 코드 추가
+                                        fetch("/postJoin", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({
+                                                userId,
+                                                userName,
+                                                password,
+                                            }),
+                                        })
+                                            .then((response) => response.json())
+                                            .then((data) => {
+                                                if (data.statusCode === 200) {
+                                                    alert("가입이 완료되었습니다!");
+                                                } else {
+                                                    alert(
+                                                        "가입에 실패했습니다. 다시 시도해주세요."
+                                                    );
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                console.error("회원가입 중 에러 발생:", error);
+                                                alert("서버 오류로 회원가입에 실패하였습니다.");
+                                            });
                                     }
                                 })
                                 .catch((error) => {

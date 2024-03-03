@@ -20,7 +20,7 @@
                         value="<%#= userId %>"
                         oninput="setUserId(this.value)"
                     />
-                    <label>사용자 이름</label>
+                    <label>아이디</label>
                 </div>
                 <div class="user-box">
                     <input
@@ -61,7 +61,7 @@
                     const response = await axios.post(
                         "http://localhost:8080/login",
                         {
-                            userId: document.querySelector('[name="userId"]').value, <!-- 수정: userId로 변경 -->
+                            userId: document.querySelector('[name="userId"]').value,
                             password: document.querySelector('[name="password"]').value,
                         },
                         {

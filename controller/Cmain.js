@@ -42,12 +42,14 @@ exports.postJoin = (req, res) => {
     // 암호화
     const hashedPw = hashPw(req.body.password);
     models.Users.create({
-        userId: req.body.userId, // username으로 변경
+        userId: req.body.userId,
         password: hashedPw,
-        userName: req.body.userName, // nickname으로 변경
+        userName: req.body.userName,
     })
         .then((result) => {
             console.log(result);
+            console.log("회원가입 성공! 생성된 사용자 정보:", result);
+
             res.send({ msg: "회원가입 완료!", statusCode: 200 });
         })
         .catch((error) => {
@@ -119,12 +121,12 @@ exports.postLogin = (req, res) => {
                     });
                 } else {
                     // 비밀번호 오류
-                    res.send({ msg: "로그인 실패", result: false });
+                    res.send({ msg: "로그인 실패! 비밀번호를 확인해주세요", result: false });
                 }
             });
         } else {
             // 아이디 오류
-            res.send({ msg: "로그인 실패", result: false });
+            res.send({ msg: "로그인 실패! 아이디를 확인해주세요", result: false });
         }
     });
 };
