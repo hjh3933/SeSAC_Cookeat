@@ -8,6 +8,8 @@ router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
 router.get("/posts", controller.getPosts);
+// 로그아웃 라우터
+// router.get("/logout", cmainController.logout);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);

@@ -53,6 +53,7 @@ body {
 #primary_nav_wrap ul li {
     position: relative;
     margin: 0;
+    color: black;
     padding: 0;
 }
 
@@ -132,14 +133,16 @@ body {
     height: 24px;
     margin-right: 8px;
     background-image: url("https://img.icons8.com/?size=512&id=34670&format=png");
-    background-size: cover; /* 이미지를 영역에 맞게 조절 */
+    background-size: cover;
     background-repeat: no-repeat;
+    border-radius: 50%;
 }
 
 .user-info-wrapper {
     display: flex;
     align-items: center;
     justify-content: right;
+    /* margin-right: 10px; */
 }
 
 .user-id {
@@ -401,4 +404,20 @@ body {
 
 #cssmenu > ul > li > ul > li > ul > li {
     float: none;
+}
+
+#userNavItem {
+    color: black;
+    position: absolute;
+    right: 50px;
+    top: 25px;
+    /* margin-right: 40px; */
+    /* display: flex; */
+    /* align-items: center;  */
+}
+#cssmenu > ul > li {
+    position: relative;
+}
+.account-image {
+    position: relative;
 }
