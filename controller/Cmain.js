@@ -42,9 +42,9 @@ exports.postJoin = (req, res) => {
     // 암호화
     const hashedPw = hashPw(req.body.password);
     models.Users.create({
-        userId: req.body.username, // username으로 변경
+        userId: req.body.userId, // username으로 변경
         password: hashedPw,
-        userName: req.body.nickname, // nickname으로 변경
+        userName: req.body.userName, // nickname으로 변경
     })
         .then((result) => {
             console.log(result);
@@ -56,39 +56,69 @@ exports.postJoin = (req, res) => {
         });
 };
 
+// exports.postLogin = (req, res) => {
+//     //{userId, password}
+//     console.log("로그인 데이터", req.body);
+//     const { userId, password } = req.body;
+//     models.Users.findOne({
+//         where: { userId: userId },
+//     }).then((result) => {
+//         console.log("로그인 password 조회 결과:", result);
+//         if (result) {
+//             //result.password = 해시된 비밀번호
+//             const hashedPw = result.password;
+//             const id = result.id;
+//             const loginResult = comparePw(password, hashedPw);
+//             if (loginResult) {
+//                 const token = jwt.sign({ id }, SECRET);
+//                 console.log("token", token);
+//                 console.log("loginResult", loginResult);
+//                 res.send({
+//                     result: loginResult,
+//                     msg: "로그인 완료",
+//                     statusCode: 200,
+//                     token: token,
+//                 });
+//             } else {
+//                 //비밀번호 오류
+//                 res.send({ msg: "로그인 실패", result: false });
+//             }
+//         } else {
+//             //아이디 오류
+//             res.send({ msg: "로그인 실패", result: false });
+//         }
+//     });
+// };
 exports.postLogin = (req, res) => {
     //{userId, password}
     console.log("로그인 데이터", req.body);
-    const { userId, password } = req.body;
+    const { username, password } = req.body;
+
     models.Users.findOne({
-        where: { userId: userId },
+        where: { userId: username },
     }).then((result) => {
         console.log("로그인 password 조회 결과:", result);
         if (result) {
             //result.password = 해시된 비밀번호
             const hashedPw = result.password;
             const id = result.id;
-            const loginResult = comparePw(password, hashedPw);
-            if (loginResult) {
-                const token = jwt.sign({ id }, SECRET);
-                console.log("token", token);
-                console.log("loginResult", loginResult);
-                res.send({
-                    result: loginResult,
-                    msg: "로그인 완료",
-                    statusCode: 200,
-                    token: token,
-                });
-            } else {
-                //비밀번호 오류
-                res.send({ msg: "로그인 실패", result: false });
-            }
+            const user = { id, username: result.userName }; // 토큰에 추가할 사용자 정보
+            const token = jwt.sign(user, SECRET);
+            console.log("token", token);
+            console.log("loginResult", true);
+            res.send({
+                result: true,
+                msg: "로그인 완료",
+                statusCode: 200,
+                token: token,
+            });
         } else {
             //아이디 오류
             res.send({ msg: "로그인 실패", result: false });
         }
     });
 };
+
 //로그아웃 기능 추가중..(3/3, 명현)
 exports.logout = (req, res) => {
     // 클라이언트의 쿠키를 삭제
@@ -96,7 +126,7 @@ exports.logout = (req, res) => {
 
     // 서버에서 로그아웃 관련 작업 수행 (예: 세션 종료 등)
 
-    res.send({ msg: "로그아웃 완료", statusCode: 200 });
+    res.send({ msg: "로그아웃 완료", statusCode: 200, tokenDeleted: true });
 };
 
 exports.getPosts = (req, res) => {

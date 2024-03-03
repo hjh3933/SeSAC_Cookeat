@@ -129,45 +129,43 @@
                 // ...
             }
 
-    function handleJoin() {
-        const username = document.getElementById("username").value;
-        const nickname = document.getElementById("nickname").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirm-password").value;
+            function handleJoin() {
+                const userId = document.getElementById("username").value; // 변경된 부분
+                const userName = document.getElementById("nickname").value; // 변경된 부분
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirm-password").value;
 
-        // 회원가입 정보를 서버로 전송
-        fetch("/join", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json", // JSON 형식으로 보내기 위해 명시
-            },
-            body: JSON.stringify({
-                username,
-                nickname,
-                password,
-                confirmPassword,
-            }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            // 서버로부터 받은 응답에 따라 동작 수행
-            if (data.statusCode === 200) {
-                // 회원가입 성공
-                alert("회원가입이 완료되었습니다.");
-                // 원하는 동작 수행 (예: 로그인 페이지로 이동)
-            } else {
-                // 회원가입 실패
-                alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+                // 회원가입 정보를 서버로 전송
+                fetch("/join", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", // JSON 형식으로 보내기 위해 명시
+                    },
+                    body: JSON.stringify({
+                        userId, // 변경된 부분
+                        userName, // 변경된 부분
+                        password,
+                        confirmPassword,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                        // 서버로부터 받은 응답에 따라 동작 수행
+                        if (data.statusCode === 200) {
+                            // 회원가입 성공
+                            alert("회원가입이 완료되었습니다.");
+                            // 원하는 동작 수행 (예: 로그인 페이지로 이동)
+                        } else {
+                            // 회원가입 실패
+                            alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("회원가입 중 에러 발생:", error);
+                        alert("서버 오류로 회원가입에 실패하였습니다.");
+                    });
             }
-        })
-        .catch((error) => {
-            console.error("회원가입 중 에러 발생:", error);
-            alert("서버 오류로 회원가입에 실패하였습니다.");
-        });
-    }
-</script>
-
 
             function handleUsernameDuplicationCheck() {
                 // 클라이언트 측에서 수행해야 할 동작

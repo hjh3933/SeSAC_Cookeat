@@ -5,9 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
         <link rel="stylesheet" href="./static/nav.css" />
-        <%- include('account.ejs') %>
         <style>
-            \ #cssmenu ul li ul {
+            #cssmenu ul li ul {
                 display: none;
             }
             #cssmenu ul li.active ul {
@@ -36,12 +35,16 @@
                 </nav>
             </div>
             <div id="cssmenu">
+                <li id="userNavItem" style="display: none">
+                    <span id="userText"></span>
+                </li>
                 <ul>
                     <li class="has-sub" id="profileBtn">
                         <img
                             src="./static/account.png"
                             alt="Profile"
                             style="width: 30px; height: 30px"
+                            class="account-image"
                         />
 
                         <ul>
@@ -52,7 +55,10 @@
                                 <a href="/Join"><span>Join</span></a>
                             </li>
                             <li>
-                                <a href="/profile"><span>Mypage</span></a>
+                                <a href="/profile"><span id="userText">Mypage</span></a>
+                            </li>
+                            <li>
+                                <a href="#" id="logoutBtn"><span>Logout</span></a>
                             </li>
                         </ul>
                     </li>
@@ -63,10 +69,53 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 var profileBtn = document.getElementById("profileBtn");
+                var logoutBtn = document.getElementById("logoutBtn");
+                var userNavItem = document.getElementById("userNavItem");
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
                 });
+
+                function updateNavbarWithUserData() {
+                    // 로컬 스토리지에서 쿠키를 가져옴
+                    var token = localStorage.getItem("user");
+
+                    // 토큰 디코딩
+                    if (token) {
+                        try {
+                            // Base64 디코딩
+                            var base64Decoded = atob(token.split(".")[1]);
+
+                            // UTF-8 디코딩
+                            var decodedToken = JSON.parse(
+                                new TextDecoder().decode(
+                                    new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0)))
+                                )
+                            );
+
+                            // 디코딩된 토큰을 콘솔에 출력
+                            console.log("Decoded token:", decodedToken);
+
+                            // 사용자 정보를 네비게이션 바에 표시
+                            if (decodedToken && decodedToken.username) {
+                                userNavItem.style.display = "block";
+                                userNavItem.textContent = "Welcome, " + decodedToken.username;
+                            }
+                        } catch (error) {
+                            console.error("Error decoding token:", error);
+                        }
+                    }
+                }
+
+                logoutBtn.addEventListener("click", function (event) {
+                    // 이 부분에서 로컬 스토리지에서 쿠키를 삭제하고, 알림을 표시하고 index 페이지로 이동하는 코드를 추가하세요.
+                    localStorage.removeItem("user");
+                    alert("로그아웃 완료!");
+                    window.location.href = "/"; // 홈페이지로 이동
+                });
+
+                // 페이지 로드 시 사용자 정보 업데이트
+                updateNavbarWithUserData();
             });
         </script>
     </body>

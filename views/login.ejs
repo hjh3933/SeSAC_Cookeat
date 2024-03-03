@@ -61,7 +61,8 @@
                     const response = await axios.post(
                         "http://localhost:8080/login",
                         {
-                            userId: document.querySelector('[name="username"]').value,
+                            // 추가: userId 대신 username 전송
+                            username: document.querySelector('[name="username"]').value,
                             password: document.querySelector('[name="password"]').value,
                         },
                         {
@@ -73,7 +74,9 @@
                     if (statusCode === 200 && result) {
                         // 로그인 성공 시
                         alert(msg);
-                        // 토큰 저장 등의 추가 로직이 필요할 수 있습니다.
+
+                        // 토큰을 로컬 스토리지에 저장
+                        localStorage.setItem("user", token);
 
                         // 홈으로 이동
                         location.href = "/";
