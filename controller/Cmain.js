@@ -108,7 +108,7 @@ exports.postLogin = (req, res) => {
             console.log("loginResult", true);
             res.send({
                 result: true,
-                msg: "로그인 완료",
+                msg: "로그인 완료!!",
                 statusCode: 200,
                 token: token,
             });
