@@ -58,38 +58,12 @@
                     id="confirm-password"
                     type="password"
                     value="<%#= confirmPassword %>"
-                    oninput="setConfirmPassword(this.value); setPasswordMatchError('<%#= password !== confirmPassword %>');"
+                    oninput="setConfirmPassword(this.value); checkPasswordMatch();"
                     required
                 />
                 <label for="confirm-password">비밀번호 확인</label>
-                <%# if (passwordMatchError) { %>
-                <!-- <p class="error-message">비밀번호와 비밀번호 확인 입력값이 다릅니다.</p> -->
-                <%# } %>
+                <p id="password-match-error" class="error-message"></p>
             </div>
-
-            <!-- <div class="join-input-container double-input">
-            <div class="double-input-inner">
-              <input
-                id="number"
-                type="tel"
-                value="<%#= number %>"
-                oninput="setNumber(this.value)"
-                required
-              />
-              <label for="number">전화번호</label>
-              <p class="input-description">ex) 010-1234-5678</p>
-            </div>
-            <div class="double-input-inner">
-              <input
-                id="email"
-                type="email"
-                value="<%#= email %>"
-                oninput="setEmail(this.value)"
-                required
-              />
-              <label for="email">이메일</label>
-            </div>
-          </div> -->
 
             <button class="join-submit-button" onclick="handleJoin()">제출</button>
             <br />
@@ -104,9 +78,66 @@
                 // ...
             }
 
-            function setNickname(value) {
-                // 클라이언트 측에서 수행해야 할 동작
-                // ...
+            function handleUsernameDuplicationCheck() {
+                const userId = document.getElementById("username").value;
+                if (!userId.trim()) {
+                    // ID 입력창이 빈칸인 경우
+                    alert("ID를 입력해주세요!");
+                    return;
+                }
+                // ID 중복 확인 요청
+                fetch("/checkUsername", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ userId }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.exists) {
+                            // 이미 존재하는 ID인 경우
+                            alert("이미 있는 ID입니다!");
+                        } else {
+                            // 사용 가능한 ID인 경우
+                            alert("사용 가능한 ID입니다!");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("ID 중복 확인 중 에러 발생:", error);
+                        alert("서버 오류로 ID 중복 확인에 실패하였습니다.");
+                    });
+            }
+
+            function handleNicknameDuplicationCheck() {
+                const userName = document.getElementById("nickname").value;
+                if (!userName.trim()) {
+                    // 닉네임 입력창이 빈칸인 경우
+                    alert("닉네임을 입력해주세요!");
+                    return;
+                }
+                // 닉네임 중복 확인 요청
+                fetch("/checkNickname", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ userName }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.exists) {
+                            // 이미 존재하는 닉네임인 경우
+                            alert("이미 있는 닉네임입니다!");
+                        } else {
+                            // 사용 가능한 닉네임인 경우
+                            alert("사용 가능한 닉네임입니다!");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("닉네임 중복 확인 중 에러 발생:", error);
+                        alert("서버 오류로 닉네임 중복 확인에 실패하였습니다.");
+                    });
             }
 
             function setPassword(value) {
@@ -119,62 +150,82 @@
                 // ...
             }
 
-            function setNumber(value) {
-                // 클라이언트 측에서 수행해야 할 동작
-                // ...
-            }
+            function checkPasswordMatch() {
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirm-password").value;
+                const passwordMatchErrorElement = document.getElementById("password-match-error");
 
-            function setEmail(value) {
-                // 클라이언트 측에서 수행해야 할 동작
-                // ...
+                if (password !== confirmPassword) {
+                    passwordMatchErrorElement.textContent =
+                        "비밀번호와 비밀번호 확인 입력값이 다릅니다.";
+                } else {
+                    passwordMatchErrorElement.textContent = "";
+                }
             }
 
             function handleJoin() {
-                const userId = document.getElementById("username").value; // 변경된 부분
-                const userName = document.getElementById("nickname").value; // 변경된 부분
+                const userId = document.getElementById("username").value;
+                const userName = document.getElementById("nickname").value;
                 const password = document.getElementById("password").value;
                 const confirmPassword = document.getElementById("confirm-password").value;
 
-                // 회원가입 정보를 서버로 전송
-                fetch("/join", {
+                // 비밀번호 일치 여부 확인
+                if (password !== confirmPassword) {
+                    alert("비밀번호와 비밀번호 확인 입력값이 다릅니다. 다시 확인해주세요.");
+                    return;
+                }
+
+                // ID와 닉네임 확인 여부 확인
+                if (userId.trim() === "" || userName.trim() === "") {
+                    alert("ID와 닉네임을 확인해주세요!");
+                    return;
+                }
+
+                // 서버로 중복 여부를 다시 확인
+                fetch("/checkUsername", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json", // JSON 형식으로 보내기 위해 명시
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        userId, // 변경된 부분
-                        userName, // 변경된 부분
-                        password,
-                        confirmPassword,
-                    }),
+                    body: JSON.stringify({ userId }),
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log(data);
-                        // 서버로부터 받은 응답에 따라 동작 수행
-                        if (data.statusCode === 200) {
-                            // 회원가입 성공
-                            alert("회원가입이 완료되었습니다.");
-                            // 원하는 동작 수행 (예: 로그인 페이지로 이동)
+                        if (data.exists) {
+                            // 이미 존재하는 ID인 경우
+                            alert("중복된 ID로는 가입이 불가능합니다!");
                         } else {
-                            // 회원가입 실패
-                            alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+                            // 사용 가능한 ID인 경우
+                            // 추가적으로 닉네임 중복 여부도 확인
+                            fetch("/checkNickname", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ userName }),
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data.exists) {
+                                        // 이미 존재하는 닉네임인 경우
+                                        alert("중복된 닉네임으로는 가입이 불가능합니다!");
+                                    } else {
+                                        // 사용 가능한 닉네임인 경우
+                                        // 나머지 회원가입 정보를 서버로 전송
+                                        alert("가입이 완료되었습니다!");
+                                        // 나머지 회원가입 정보를 서버로 전송하는 코드 추가
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error("닉네임 중복 확인 중 에러 발생:", error);
+                                    alert("서버 오류로 닉네임 중복 확인에 실패하였습니다.");
+                                });
                         }
                     })
                     .catch((error) => {
-                        console.error("회원가입 중 에러 발생:", error);
-                        alert("서버 오류로 회원가입에 실패하였습니다.");
+                        console.error("ID 중복 확인 중 에러 발생:", error);
+                        alert("서버 오류로 ID 중복 확인에 실패하였습니다.");
                     });
-            }
-
-            function handleUsernameDuplicationCheck() {
-                // 클라이언트 측에서 수행해야 할 동작
-                // ...
-            }
-
-            function handleNicknameDuplicationCheck() {
-                // 클라이언트 측에서 수행해야 할 동작
-                // ...
             }
         </script>
     </body>
