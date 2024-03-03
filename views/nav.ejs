@@ -46,7 +46,6 @@
                             style="width: 30px; height: 30px"
                             class="account-image"
                         />
-
                         <ul>
                             <li>
                                 <a href="/login"><span>Login</span></a>
@@ -54,7 +53,8 @@
                             <li>
                                 <a href="/Join"><span>Join</span></a>
                             </li>
-                            <li>
+                            <li id="profileLink">
+                                <!-- 프로필 페이지로 이동하는 링크를 감싼 li 엘리먼트에 id 추가 -->
                                 <a href="/profile"><span id="userText">Mypage</span></a>
                             </li>
                             <li>
@@ -71,35 +71,28 @@
                 var profileBtn = document.getElementById("profileBtn");
                 var logoutBtn = document.getElementById("logoutBtn");
                 var userNavItem = document.getElementById("userNavItem");
+                var profileLink = document.getElementById("profileLink"); // 프로필 페이지로 이동하는 링크를 가져옴
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
                 });
 
                 function updateNavbarWithUserData() {
-                    // 로컬 스토리지에서 쿠키를 가져옴
                     var token = localStorage.getItem("user");
 
-                    // 토큰 디코딩
                     if (token) {
                         try {
-                            // Base64 디코딩
                             var base64Decoded = atob(token.split(".")[1]);
-
-                            // UTF-8 디코딩
                             var decodedToken = JSON.parse(
                                 new TextDecoder().decode(
                                     new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0)))
                                 )
                             );
 
-                            // 디코딩된 토큰을 콘솔에 출력
-                            console.log("Decoded token:", decodedToken);
-
-                            // 사용자 정보를 네비게이션 바에 표시
                             if (decodedToken && decodedToken.username) {
                                 userNavItem.style.display = "block";
                                 userNavItem.textContent = "Welcome, " + decodedToken.username;
+                                profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                             }
                         } catch (error) {
                             console.error("Error decoding token:", error);
@@ -108,13 +101,11 @@
                 }
 
                 logoutBtn.addEventListener("click", function (event) {
-                    // 이 부분에서 로컬 스토리지에서 쿠키를 삭제하고, 알림을 표시하고 index 페이지로 이동하는 코드를 추가하세요.
                     localStorage.removeItem("user");
                     alert("로그아웃 완료!");
-                    window.location.href = "/"; // 홈페이지로 이동
+                    window.location.href = "/";
                 });
 
-                // 페이지 로드 시 사용자 정보 업데이트
                 updateNavbarWithUserData();
             });
         </script>

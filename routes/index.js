@@ -11,6 +11,9 @@ router.get("/posts", controller.getPosts);
 // 로그아웃 라우터
 // router.get("/logout", cmainController.logout);
 
+router.post("/checkUsername", controller.checkUsername);
+router.post("/checkNickname", controller.checkNickname);
+
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
 router.post("/login", controller.postLogin);

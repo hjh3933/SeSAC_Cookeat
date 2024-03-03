@@ -90,7 +90,7 @@ exports.postJoin = (req, res) => {
 //     });
 // };
 exports.postLogin = (req, res) => {
-    //{userId, password}
+    // {username, password}
     console.log("로그인 데이터", req.body);
     const { username, password } = req.body;
 
@@ -99,21 +99,23 @@ exports.postLogin = (req, res) => {
     }).then((result) => {
         console.log("로그인 password 조회 결과:", result);
         if (result) {
-            //result.password = 해시된 비밀번호
+            // result.password = 해시된 비밀번호
             const hashedPw = result.password;
             const id = result.id;
             const user = { id, username: result.userName }; // 토큰에 추가할 사용자 정보
             const token = jwt.sign(user, SECRET);
             console.log("token", token);
             console.log("loginResult", true);
+
+            // 로그인 성공 시 유저 이름과 함께 응답
             res.send({
                 result: true,
-                msg: "로그인 완료!!",
+                msg: `환영합니다, ${result.userName}님!`,
                 statusCode: 200,
                 token: token,
             });
         } else {
-            //아이디 오류
+            // 아이디 오류
             res.send({ msg: "로그인 실패", result: false });
         }
     });
@@ -326,6 +328,49 @@ exports.profile = (req, res) => {
         res.status(401).send("유효하지 않은 토큰");
     }
 };
+
 exports.profileEdit = (req, res) => {
     res.render("profileEdit");
+};
+// ID중복 확인 기능 추가중
+exports.checkUsername = (req, res) => {
+    const { userId } = req.body;
+
+    models.Users.findOne({
+        where: { userId },
+    })
+        .then((result) => {
+            if (result) {
+                // 이미 존재하는 ID인 경우
+                res.send({ exists: true });
+            } else {
+                // 사용 가능한 ID인 경우
+                res.send({ exists: false });
+            }
+        })
+        .catch((error) => {
+            console.error("ID 중복 확인 중 에러 발생:", error);
+            res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
+        });
+};
+// 닉네임 중복 확인 기능 추가중
+exports.checkNickname = (req, res) => {
+    const { userName } = req.body;
+
+    models.Users.findOne({
+        where: { userName },
+    })
+        .then((result) => {
+            if (result) {
+                // 이미 존재하는 닉네임인 경우
+                res.send({ exists: true });
+            } else {
+                // 사용 가능한 닉네임인 경우
+                res.send({ exists: false });
+            }
+        })
+        .catch((error) => {
+            console.error("ID 중복 확인 중 에러 발생:", error);
+            res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
+        });
 };
