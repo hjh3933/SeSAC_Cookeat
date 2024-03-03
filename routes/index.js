@@ -21,6 +21,8 @@ router.post("/login", controller.postLogin);
 // 회원정보 및 수정 페이지 조회 - 형석
 router.get("/profile", controller.profile);
 router.get("/profileEdit", controller.profileEdit);
+// 회원정보 수정 - 형석
+router.patch("/profileUpdate", controller.profileUpdate);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);

@@ -374,6 +374,7 @@ exports.checkNickname = (req, res) => {
             res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
         });
 };
+
 exports.profileUpdate = async (req, res) => {
     try {
         const token = req.headers.authorization;
