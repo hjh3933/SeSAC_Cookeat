@@ -15,10 +15,10 @@
                 <div class="user-box">
                     <input
                         type="text"
-                        name="username"
+                        name="userId"
                         required
-                        value="<%#= username %>"
-                        oninput="setUsername(this.value)"
+                        value="<%#= userId %>"
+                        oninput="setUserId(this.value)"
                     />
                     <label>사용자 이름</label>
                 </div>
@@ -46,8 +46,8 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <script>
-            const setUsername = (value) => {
-                // 클라이언트 측 리액트 코드에서 사용되는 setUsername 함수
+            const setUserId = (value) => {
+                // 클라이언트 측 리액트 코드에서 사용되는 setUserId 함수
             };
 
             const setPassword = (value) => {
@@ -61,8 +61,7 @@
                     const response = await axios.post(
                         "http://localhost:8080/login",
                         {
-                            // 추가: userId 대신 username 전송
-                            username: document.querySelector('[name="username"]').value,
+                            userId: document.querySelector('[name="userId"]').value, <!-- 수정: userId로 변경 -->
                             password: document.querySelector('[name="password"]').value,
                         },
                         {
