@@ -42,12 +42,14 @@ exports.postJoin = (req, res) => {
     // 암호화
     const hashedPw = hashPw(req.body.password);
     models.Users.create({
-        userId: req.body.userId, // username으로 변경
+        userId: req.body.userId,
         password: hashedPw,
-        userName: req.body.userName, // nickname으로 변경
+        userName: req.body.userName,
     })
         .then((result) => {
             console.log(result);
+            console.log("회원가입 성공! 생성된 사용자 정보:", result);
+
             res.send({ msg: "회원가입 완료!", statusCode: 200 });
         })
         .catch((error) => {
@@ -90,33 +92,41 @@ exports.postJoin = (req, res) => {
 //     });
 // };
 exports.postLogin = (req, res) => {
-    // {username, password}
+    // {userId, password}
     console.log("로그인 데이터", req.body);
-    const { username, password } = req.body;
+    const { userId, password } = req.body;
 
     models.Users.findOne({
-        where: { userId: username },
+        where: { userId: userId },
     }).then((result) => {
         console.log("로그인 password 조회 결과:", result);
         if (result) {
-            // result.password = 해시된 비밀번호
             const hashedPw = result.password;
-            const id = result.id;
-            const user = { id, username: result.userName }; // 토큰에 추가할 사용자 정보
-            const token = jwt.sign(user, SECRET);
-            console.log("token", token);
-            console.log("loginResult", true);
 
-            // 로그인 성공 시 유저 이름과 함께 응답
-            res.send({
-                result: true,
-                msg: `환영합니다, ${result.userName}님!`,
-                statusCode: 200,
-                token: token,
+            // 비밀번호 비교
+            bcrypt.compare(password, hashedPw, (err, passwordMatch) => {
+                if (passwordMatch) {
+                    const id = result.id;
+                    const user = { id, userId: result.userName };
+                    const token = jwt.sign(user, SECRET);
+                    console.log("token", token);
+                    console.log("loginResult", true);
+
+                    // 로그인 성공 시 유저 이름과 함께 응답
+                    res.send({
+                        result: true,
+                        msg: `환영합니다, ${result.userName}님!`,
+                        statusCode: 200,
+                        token: token,
+                    });
+                } else {
+                    // 비밀번호 오류
+                    res.send({ msg: "로그인 실패! 비밀번호를 확인해주세요", result: false });
+                }
             });
         } else {
             // 아이디 오류
-            res.send({ msg: "로그인 실패", result: false });
+            res.send({ msg: "로그인 실패! 아이디를 확인해주세요", result: false });
         }
     });
 };

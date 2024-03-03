@@ -13,6 +13,7 @@ router.get("/posts", controller.getPosts);
 
 router.post("/checkUsername", controller.checkUsername);
 router.post("/checkNickname", controller.checkNickname);
+router.post("/postJoin", controller.postJoin);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
