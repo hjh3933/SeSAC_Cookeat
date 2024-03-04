@@ -369,6 +369,31 @@ exports.profile = async (req, res) => {
 exports.profileEdit = (req, res) => {
     res.render("profileEdit");
 };
+
+// 회원 탈퇴
+exports.profileDelete = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+        const isDeleted = await models.Users.destroy({
+            where: { id: userId },
+        });
+        if (isDeleted) {
+            res.send({ msg: "회원탈퇴 완료" });
+        }
+    } catch (err) {
+        console.log("err", err);
+        // 토큰 유효성 검사 에러
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ error: "로그인이 필요합니다." });
+        }
+        res.status(500).send("회원 탈퇴 중 오류 발생.");
+    }
+};
+
 // ID중복 확인 기능 추가중
 exports.checkUsername = (req, res) => {
     const { userId } = req.body;
