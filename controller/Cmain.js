@@ -401,66 +401,29 @@ exports.checkNickname = (req, res) => {
         });
 };
 
-// exports.profileUpdate = async (req, res) => {
-//     try {
-//         const token = req.headers.authorization;
-//         if (!token) {
-//             return res.status(401).send("로그인이 필요합니다.");
-//         }
-//         const decodedToken = jwt.verify(token, SECRET);
-//         const userId = decodedToken.id;
-
-//         // 요청 바디에서 업데이트할 사용자 정보 추출
-//         // (일단 userName과 password만)
-//         const { userName, password } = req.body;
-
-//         // 비밀번호 암호화
-//         const hashedPw = password ? hashPw(password) : undefined;
-
-//         // DB에서 사용자 정보 업데이트
-//         const [updated] = await models.Users.update(
-//             { userName, password: hashedPw },
-//             { where: { id: userId }, individualHooks: true }
-//         );
-//         if (updated) {
-//             res.send({ meg: "회원정보가 수정되었습니다." });
-//         } else {
-//             res.status(404).send("사용자를 찾을 수 없습니다.");
-//         }
-//     } catch (err) {
-//         console.error("회원정보 수정 중 에러 발생", err);
-//         res.status(500).send("서버 에러");
-//     }
-// };
-// controllers/profileController.js
-
 exports.profileUpdate = async (req, res) => {
     try {
         const token = req.headers.authorization;
-
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
-
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
         // 요청 바디에서 업데이트할 사용자 정보 추출
-        const { userName, location } = req.body;
+        // (일단 userName과 password만)
+        const { userName, password } = req.body;
 
-        // Prepare an object with the fields to update
-        const updatedFields = {};
-        if (userName) updatedFields.userName = userName;
-        if (location) updatedFields.location = location;
+        // 비밀번호 암호화
+        const hashedPw = password ? hashPw(password) : undefined;
 
         // DB에서 사용자 정보 업데이트
-        const [updated] = await models.Users.update(updatedFields, {
-            where: { userId: userId },
-            individualHooks: true,
-        });
-
+        const [updated] = await models.Users.update(
+            { userName, password: hashedPw },
+            { where: { id: userId }, individualHooks: true }
+        );
         if (updated) {
-            res.send({ msg: "회원정보가 수정되었습니다." });
+            res.send({ meg: "회원정보가 수정되었습니다." });
         } else {
             res.status(404).send("사용자를 찾을 수 없습니다.");
         }

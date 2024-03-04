@@ -36,26 +36,67 @@
                 <ul class="contact_information">
                     <label for="nameInput">userId</label>
                     <li class="userId"><input type="text" id="userId" /></li>
-                    <label for="locationInput">Location</label>
-                    <li class="location">
-                        <input type="text" id="locationInput" />
-                    </li>
-                    <label for="userNameInput">Nickname</label>
+                    <label for="userNameInput">userName</label>
                     <li class="userName">
                         <input type="text" id="userName" />
-                        <!-- </li>
-                    <label for="mailInput">Mail</label>
-                    <li class="mail">
-                        <input type="email" id="mailInput" />
-                    </li>
-                    <label for="phoneInput">Phone</label>
-                    <li class="phone">
-                        <input type="tel" id="phoneInput" />
-                    </li> -->
                     </li>
                 </ul>
             </div>
         </div>
-        <script></script>
+        <script>
+            const token = localStorage.getItem("user");
+            const userId = localStorage.getItem("userId");
+            console.log(token);
+            console.log(userId);
+
+            function displayUserData(response) {
+                console.log(response.data);
+                document.getElementById("userId").value = response.data.user.userId;
+                document.getElementById("userName").value = response.data.user.userName;
+            }
+
+            function saveUserData() {
+                const modifiedUserId = document.getElementById("userId").value;
+                const modifiedUserName = document.getElementById("userName").value;
+
+                axios
+                    .patch(
+                        "/updateProfile/" + userId,
+                        {
+                            userId: modifiedUserId,
+                            userName: modifiedUserName,
+                        },
+                        {
+                            headers: {
+                                Authorization: "Bearer " + token,
+                            },
+                        }
+                    )
+                    .then(function (response) {
+                        console.log(response.data);
+                        window.location.href = "/profile";
+                    })
+                    .catch(function (error) {
+                        console.error("Error:", error);
+                    });
+            }
+
+            axios
+                .post(
+                    "/profile/" + userId,
+                    {},
+                    {
+                        headers: {
+                            Authorization: "Bearer " + token,
+                        },
+                    }
+                )
+                .then(displayUserData)
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
+
+            document.getElementById("saveButton").addEventListener("click", saveUserData);
+        </script>
     </body>
 </html>
