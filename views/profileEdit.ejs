@@ -58,10 +58,13 @@
             function saveUserData() {
                 const modifiedUserId = document.getElementById("userId").value;
                 const modifiedUserName = document.getElementById("userName").value;
-
+                const token = localStorage.getItem("user");
+                const userId = localStorage.getItem("userId");
+                console.log(token);
+                console.log(userId);
                 axios
                     .patch(
-                        "/updateProfile/" + userId,
+                        "/profileUpdate/" + userId,
                         {
                             userId: modifiedUserId,
                             userName: modifiedUserName,
@@ -74,7 +77,8 @@
                     )
                     .then(function (response) {
                         console.log(response.data);
-                        window.location.href = "/profile";
+                        alert("수정이 완료되었습니다.");
+                        window.location.href = "/profile/" + userId;
                     })
                     .catch(function (error) {
                         console.error("Error:", error);

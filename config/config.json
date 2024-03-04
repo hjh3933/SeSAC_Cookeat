@@ -7,13 +7,13 @@
         "dialect": "mysql"
     },
     "test": {
-        "username": "sesac",
-        "password": "1234",
-        "database": "sesac",
+        "username": "root",
+        "password": null,
+        "database": "database_test",
         "host": "127.0.0.1",
         "dialect": "mysql"
     },
-    "prod": {
+    "production": {
         "username": "sesac",
         "password": "1234",
         "database": "sesac",

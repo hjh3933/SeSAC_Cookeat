@@ -25,9 +25,8 @@ router.post("/profile/:userId", controller.profile);
 router.get("/profileEdit", controller.profileEdit);
 
 // 회원정보 수정, 탈퇴 - 형석
-router.patch("/profileUpdate", controller.profileUpdate);
+router.patch("/profileUpdate/:userId", controller.profileUpdate);
 router.delete("/profile/:userId", controller.profileDelete);
-
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
