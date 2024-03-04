@@ -329,11 +329,15 @@ exports.profile = async (req, res) => {
         // 요청 헤더에서 토큰 추출
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
+        // jwt.verify(token, SECRET)
+        const decodedToken1 = jwt.verify(token, SECRET);
+        console.log("decodedToken>>", decodedToken);
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
         // 토큰을 검증하고 사용자 ID 추출
         const decodedToken = jwt.verify(token, SECRET);
+        console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
@@ -354,8 +358,11 @@ exports.profile = async (req, res) => {
                 res.status(500).send("서버 에러");
             });
     } catch (error) {
+        // if (error) throw error;
         // JWT 검증 실패
         res.status(401).send("유효하지 않은 토큰");
+        // const msg = `alert("로그인을 진행해주세요!")`;
+        // res.render("index");
     }
 };
 
@@ -440,7 +447,6 @@ exports.checkNickname = (req, res) => {
 
 exports.profileUpdate = async (req, res) => {
     try {
-
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
         if (!token) {
