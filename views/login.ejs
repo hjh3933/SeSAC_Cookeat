@@ -68,15 +68,15 @@
                             withCredentials: true,
                         }
                     );
-
-                    const { result, msg, statusCode, token } = response.data;
+                    console.log("여기여기", response.data);
+                    const { result, msg, statusCode, token, id } = response.data;
                     if (statusCode === 200 && result) {
                         // 로그인 성공 시
                         alert(msg);
 
                         // 토큰을 로컬 스토리지에 저장
                         localStorage.setItem("user", token);
-
+                        localStorage.setItem("userId", id);
                         // 홈으로 이동
                         location.href = "/";
                     } else {

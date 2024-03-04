@@ -12,7 +12,7 @@ app.use(express.json());
 db.sequelize.sync({ force: false }).then((result) => {
     console.log("db연결 성공");
 });
-app.use("/static", express.static(path.join(__dirname, "static")));
+app.use("/static", express.static(path.join(__dirname + "/static")));
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js")); // bootstrap JS
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css")); // bootstrap CSS
 

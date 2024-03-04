@@ -13,9 +13,9 @@
             rel="stylesheet"
             type="text/css"
         />
-        <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
+        <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
 
-        <link rel="stylesheet" href="./static/profile.css" />
+        <link rel="stylesheet" href="/static/profile.css" />
     </head>
     <body>
         <div class="portfoliocard">
@@ -37,7 +37,9 @@
                 <h3 class="location">Seoul, Korea</h3>
                 <ul class="contact_information">
                     <label for="nickNameInput">Nickname</label>
-                    <li class="nickName">꾸깃</li>
+
+                    <li class="nickName"><%#=user.user.userName%></li>
+
                     <label for="nickNameInput">Mail</label>
                     <li class="mail">cookeat@sesac.com</li>
                     <label for="nickNameInput">Phone</label>
@@ -46,11 +48,39 @@
                 </ul>
             </div>
         </div>
+        <!-- axios CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
             // 수정: Edit 버튼 클릭 시 /edit 페이지로 이동
             document.getElementById("editButton").addEventListener("click", function () {
                 window.location.href = "/profileEdit";
             });
+
+            // 페이지 로딩이 완료된 후 실행할 코드를 이곳에 작성합니다.
+            const token = localStorage.getItem("user");
+            const userId = localStorage.getItem("userId");
+            console.log(token);
+            console.log(userId);
+
+            axios
+                .post(
+                    "/profile/" + userId,
+                    {},
+                    {
+                        headers: {
+                            Authorization: "Bearer " + token,
+                        },
+                    }
+                )
+                .then(function (response) {
+                    // 서버로부터 받은 응답을 처리합니다.
+                    console.log(response.data);
+                    document.querySelector(".nickName").textContent = response.data.user.userName;
+                })
+                .catch(function (error) {
+                    // 요청 중에 오류가 발생한 경우를 처리합니다.
+                    console.error("Error:", error);
+                });
         </script>
     </body>
 </html>

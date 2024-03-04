@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
-        <link rel="stylesheet" href="./static/nav.css" />
+        <link rel="stylesheet" href="/static/nav.css" />
         <style>
             #cssmenu ul li ul {
                 display: none;
@@ -22,7 +22,7 @@
                         <li>
                             <a href="/">
                                 <img
-                                    src="./static/spoon.png"
+                                    src="/static/spoon.png"
                                     alt="spoon"
                                     style="width: 40px; height: 40px"
                                 />
@@ -71,7 +71,7 @@
                 var profileBtn = document.getElementById("profileBtn");
                 var logoutBtn = document.getElementById("logoutBtn");
                 var userNavItem = document.getElementById("userNavItem");
-                var profileLink = document.getElementById("profileLink"); // 프로필 페이지로 이동하는 링크를 가져옴
+                var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
@@ -79,7 +79,7 @@
 
                 function updateNavbarWithUserData() {
                     var token = localStorage.getItem("user");
-
+                    var userId = localStorage.getItem("userId");
                     if (token) {
                         try {
                             var base64Decoded = atob(token.split(".")[1]);
@@ -93,6 +93,7 @@
                                 userNavItem.style.display = "block";
                                 userNavItem.textContent = "Welcome, " + decodedToken.userId;
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
+                                profileLink.href = "/profile/" + userId; // 프로필 링크의 href 속성에 로컬스토리지에서 가져온 userId를 포함시킴
                             }
                         } catch (error) {
                             console.error("Error decoding token:", error);

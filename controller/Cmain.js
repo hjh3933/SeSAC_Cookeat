@@ -114,6 +114,7 @@ exports.postLogin = (req, res) => {
 
                     // 로그인 성공 시 유저 이름과 함께 응답
                     res.send({
+                        id,
                         result: true,
                         msg: `환영합니다, ${result.userName}님!`,
                         statusCode: 200,
@@ -302,13 +303,18 @@ exports.deletePost = async (req, res) => {
         res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
     }
 };
+exports.getProfile = (req, res) => {
+    res.render("profile");
+};
 
 // 회원정보 및 수정 페이지 조회 - 형석
-exports.profile = (req, res) => {
+exports.profile = async (req, res) => {
     // res.render("profile");
     try {
         // 요청 헤더에서 토큰 추출
-        const token = req.headers.authorization;
+        console.log("dddd", req.headers.authorization);
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
@@ -322,7 +328,7 @@ exports.profile = (req, res) => {
             .then((user) => {
                 if (user) {
                     // 사용자 정보가 있으면 프로필 페이지를 렌더링
-                    res.render("profile", { user });
+                    res.json({ user: user.dataValues, userId });
                 } else {
                     // 사용자 정보가 없는 경우
                     res.status(404).send("사용자를 찾을 수 없습니다.");
