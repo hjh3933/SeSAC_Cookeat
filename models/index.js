@@ -1,7 +1,15 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const config = require(__dirname + "/../config/config.json")["development"];
+console.log("cross-env>>", process.env.NODE_ENV); //prod or development
+
+let config;
+if (process.env.NODE_ENV) {
+    //npm run dev - local에서 development or npm start - server에서 prod
+    config = require(__dirname + "/../config/config.json")[process.env.NODE_ENV];
+} else {
+    config = require(__dirname + "/../config/config.json")["development"];
+}
 const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
