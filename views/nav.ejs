@@ -80,6 +80,8 @@
                 function updateNavbarWithUserData() {
                     var token = localStorage.getItem("user");
                     var userId = localStorage.getItem("userId");
+                    var currentPath = window.location.pathname;
+
                     if (token) {
                         try {
                             var base64Decoded = atob(token.split(".")[1]);
@@ -94,11 +96,15 @@
                                 userNavItem.textContent = "Welcome, " + decodedToken.userId;
 
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
-                                profileLink.href = "/profile/" + userId; // 프로필 링크의 href 속성에 로컬스토리지에서 가져온 userId를 포함시킴
+                                profileLink.href = "/profile/" + userId;
                             }
                         } catch (error) {
                             console.error("Error decoding token:", error);
                         }
+                    } else if (currentPath === "/profile") {
+                        // 토큰이 없을 때, 프로필 페이지로 접근 시 경고
+                        alert("로그인이 필요합니다!");
+                        window.location.href = "/login";
                     }
                 }
 
@@ -115,10 +121,6 @@
                         alert("로그아웃 완료!");
                         window.location.href = "/";
                     }
-
-                    // localStorage.removeItem("user");
-                    // alert("로그아웃 완료!");
-                    // window.location.href = "/";
                 });
 
                 updateNavbarWithUserData();

@@ -24,7 +24,9 @@ router.get("/profile/:userId", controller.getProfile);
 router.post("/profile/:userId", controller.profile);
 router.get("/profileEdit", controller.profileEdit);
 // 회원정보 수정 - 형석
-router.patch("/profileUpdate", controller.profileUpdate);
+router.patch("/updateProfile/:userId", controller.profileUpdate);
+
+router.get("/profileEdit", controller.profileEdit);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
@@ -78,7 +80,7 @@ const teamMembers = [
     {
         name: "이형석",
         title: "Back-End Developer",
-        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        imageUrl: "https://i.imgur.com/bg7MG3j.jpeg",
         githubUsername: "yhs0329",
         googleEmail: "scar9983@gmail.com",
     },

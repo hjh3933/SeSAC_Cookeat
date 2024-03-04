@@ -2,9 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ProfileEdit</title>
-
         <link rel="stylesheet" type="text/CSS" href="style.css" />
         <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('fryingPan.ejs') %> <%-
         include('account.ejs') %>
@@ -14,7 +15,6 @@
             type="text/css"
         />
         <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
-
         <link rel="stylesheet" href="/static/profile.css" />
     </head>
     <body>
@@ -34,39 +34,28 @@
             </div>
             <div class="right_col">
                 <ul class="contact_information">
-                    <label for="nickNameInput">Name</label>
-                    <li class="name"><input type="text" id="nameInput" /></li>
-                    <label for="LocationInput">Location</label>
+                    <label for="nameInput">userId</label>
+                    <li class="userId"><input type="text" id="userId" /></li>
+                    <label for="locationInput">Location</label>
                     <li class="location">
                         <input type="text" id="locationInput" />
                     </li>
-
-                    <label for="nickNameInput">Nickname</label>
-
-                    <li class="nickname">
-                        <input type="text" id="nickNameInput" />
-                    </li>
-                    <label for="MailInput">Mail</label>
-
+                    <label for="userNameInput">Nickname</label>
+                    <li class="userName">
+                        <input type="text" id="userName" />
+                        <!-- </li>
+                    <label for="mailInput">Mail</label>
                     <li class="mail">
                         <input type="email" id="mailInput" />
                     </li>
-                    <label for="PhoneInput">Phone</label>
-
+                    <label for="phoneInput">Phone</label>
                     <li class="phone">
                         <input type="tel" id="phoneInput" />
+                    </li> -->
                     </li>
                 </ul>
             </div>
         </div>
-        <script>
-            document
-                .getElementById("saveButton")
-                .addEventListener("click", function () // submit하면 데이터 넘어가게 하기
-                {
-                    // Save 버튼 클릭 시 /profile 페이지로 이동
-                    window.location.href = "/profile";
-                });
-        </script>
+        <script></script>
     </body>
 </html>
