@@ -54,11 +54,10 @@
                                 <a href="/Join"><span>Join</span></a>
                             </li>
                             <li id="profileLink">
-                                <!-- 프로필 페이지로 이동하는 링크를 감싼 li 엘리먼트에 id 추가 -->
                                 <a href="/profile"><span id="userText">Mypage</span></a>
                             </li>
                             <li>
-                                <a href="#" id="logoutBtn"><span>Logout</span></a>
+                                <a href="/" id="logoutBtn"><span>Logout</span></a>
                             </li>
                         </ul>
                     </li>
@@ -71,7 +70,9 @@
                 var profileBtn = document.getElementById("profileBtn");
                 var logoutBtn = document.getElementById("logoutBtn");
                 var userNavItem = document.getElementById("userNavItem");
+
                 var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
+
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
@@ -92,6 +93,7 @@
                             if (decodedToken && decodedToken.userId) {
                                 userNavItem.style.display = "block";
                                 userNavItem.textContent = "Welcome, " + decodedToken.userId;
+
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                                 profileLink.href = "/profile/" + userId; // 프로필 링크의 href 속성에 로컬스토리지에서 가져온 userId를 포함시킴
                             }
@@ -102,9 +104,22 @@
                 }
 
                 logoutBtn.addEventListener("click", function (event) {
-                    localStorage.removeItem("user");
-                    alert("로그아웃 완료!");
-                    window.location.href = "/";
+                    var token = localStorage.getItem("user");
+
+                    if (!token) {
+                        // 토큰이 없으면 로그인 페이지로 이동
+                        alert("로그인이 필요합니다!");
+                        window.location.href = "/login";
+                    } else {
+                        // 토큰이 있으면 로그아웃 수행
+                        localStorage.removeItem("user");
+                        alert("로그아웃 완료!");
+                        window.location.href = "/";
+                    }
+
+                    // localStorage.removeItem("user");
+                    // alert("로그아웃 완료!");
+                    // window.location.href = "/";
                 });
 
                 updateNavbarWithUserData();

@@ -137,7 +137,17 @@ exports.logout = (req, res) => {
     // 클라이언트의 쿠키를 삭제
     res.clearCookie("login");
 
-    // 서버에서 로그아웃 관련 작업 수행 (예: 세션 종료 등)
+    const token = localStorage.getItem("user");
+
+    // 서버에서 로그아웃 관련 작업 수행
+    if (!token) {
+        // 로그인되어 있는 토큰이 없을 경우
+        return res.send({
+            msg: "로그인을 해주세요!",
+            statusCode: 400,
+            tokenDeleted: true,
+        });
+    }
 
     res.send({ msg: "로그아웃 완료", statusCode: 200, tokenDeleted: true });
 };
