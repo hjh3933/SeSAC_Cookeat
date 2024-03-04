@@ -108,7 +108,9 @@ exports.postLogin = (req, res) => {
                 if (passwordMatch) {
                     const id = result.id;
                     const user = { id, userId: result.userName };
-                    const token = jwt.sign(user, SECRET);
+                    const token = jwt.sign(user, SECRET, {
+                        expiresIn: "1m",
+                    });
                     console.log("token", token);
                     console.log("loginResult", true);
 
@@ -327,11 +329,15 @@ exports.profile = async (req, res) => {
         // 요청 헤더에서 토큰 추출
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
+        // jwt.verify(token, SECRET)
+        const decodedToken1 = jwt.verify(token, SECRET);
+        console.log("decodedToken>>", decodedToken);
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
         // 토큰을 검증하고 사용자 ID 추출
         const decodedToken = jwt.verify(token, SECRET);
+        console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
@@ -352,8 +358,11 @@ exports.profile = async (req, res) => {
                 res.status(500).send("서버 에러");
             });
     } catch (error) {
+        // if (error) throw error;
         // JWT 검증 실패
         res.status(401).send("유효하지 않은 토큰");
+        // const msg = `alert("로그인을 진행해주세요!")`;
+        // res.render("index");
     }
 };
 
@@ -428,6 +437,39 @@ exports.checkNickname = (req, res) => {
         });
 };
 
+// exports.profileUpdate = async (req, res) => {
+//     try {
+//         const token = req.headers.authorization;
+//         if (!token) {
+//             return res.status(401).send("로그인이 필요합니다.");
+//         }
+//         const decodedToken = jwt.verify(token, SECRET);
+//         const userId = decodedToken.id;
+
+//         // 요청 바디에서 업데이트할 사용자 정보 추출
+//         // (일단 userName과 password만)
+//         const { userName, password } = req.body;
+
+//         // 비밀번호 암호화
+//         const hashedPw = password ? hashPw(password) : undefined;
+
+//         // DB에서 사용자 정보 업데이트
+//         const [updated] = await models.Users.update(
+//             { userName, password: hashedPw },
+//             { where: { id: userId }, individualHooks: true }
+//         );
+//         if (updated) {
+//             res.send({ meg: "회원정보가 수정되었습니다." });
+//         } else {
+//             res.status(404).send("사용자를 찾을 수 없습니다.");
+//         }
+//     } catch (err) {
+//         console.error("회원정보 수정 중 에러 발생", err);
+//         res.status(500).send("서버 에러");
+//     }
+// };
+// controllers/profileController.js
+
 exports.profileUpdate = async (req, res) => {
     try {
         const tokenWithBearer = req.headers.authorization;
@@ -435,23 +477,26 @@ exports.profileUpdate = async (req, res) => {
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
+
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
         // 요청 바디에서 업데이트할 사용자 정보 추출
-        // (일단 userName과 password만)
-        const { userName, password } = req.body;
+        const { userName, location } = req.body;
 
-        // 비밀번호 암호화
-        const hashedPw = password ? hashPw(password) : undefined;
+        // Prepare an object with the fields to update
+        const updatedFields = {};
+        if (userName) updatedFields.userName = userName;
+        if (location) updatedFields.location = location;
 
         // DB에서 사용자 정보 업데이트
-        const [updated] = await models.Users.update(
-            { userName, password: hashedPw },
-            { where: { id: userId }, individualHooks: true }
-        );
+        const [updated] = await models.Users.update(updatedFields, {
+            where: { userId: userId },
+            individualHooks: true,
+        });
+
         if (updated) {
-            res.send({ meg: "회원정보가 수정되었습니다." });
+            res.send({ msg: "회원정보가 수정되었습니다." });
         } else {
             res.status(404).send("사용자를 찾을 수 없습니다.");
         }
