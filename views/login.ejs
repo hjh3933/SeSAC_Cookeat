@@ -59,7 +59,7 @@
 
                 try {
                     const response = await axios.post(
-                        "http://localhost:8080/login",
+                        "/login",
                         {
                             userId: document.querySelector('[name="userId"]').value,
                             password: document.querySelector('[name="password"]').value,

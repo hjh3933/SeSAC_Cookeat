@@ -94,7 +94,7 @@
                             if (decodedToken && decodedToken.userId) {
                                 userNavItem.style.display = "block";
                                 userNavItem.textContent = "Welcome, " + decodedToken.userId;
-
+                                console.log(decodedToken.userId);
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                                 profileLink.href = "/profile/" + userId;
                             }

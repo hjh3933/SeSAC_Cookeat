@@ -109,7 +109,7 @@ exports.postLogin = (req, res) => {
                     const id = result.id;
                     const user = { id, userId: result.userName };
                     const token = jwt.sign(user, SECRET, {
-                        expiresIn: "1m",
+                        expiresIn: "10m",
                     });
                     console.log("token", token);
                     console.log("loginResult", true);
@@ -327,11 +327,12 @@ exports.profile = async (req, res) => {
     // res.render("profile");
     try {
         // 요청 헤더에서 토큰 추출
+        console.log(req.headers.authorization);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
         // jwt.verify(token, SECRET)
-        const decodedToken1 = jwt.verify(token, SECRET);
-        console.log("decodedToken>>", decodedToken);
+        // const decodedToken1 = jwt.verify(token, SECRET);
+        // console.log("decodedToken>>", decodedToken);
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
@@ -439,7 +440,6 @@ exports.checkNickname = (req, res) => {
 
 exports.profileUpdate = async (req, res) => {
     try {
-
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
 
@@ -451,18 +451,18 @@ exports.profileUpdate = async (req, res) => {
 
         // 요청 바디에서 업데이트할 사용자 정보 추출
         // (일단 userName과 password만)
-        const { userName, password } = req.body;
+        const { userId: id, userName, password } = req.body;
 
         // 비밀번호 암호화
         const hashedPw = password ? hashPw(password) : undefined;
 
         // DB에서 사용자 정보 업데이트
         const [updated] = await models.Users.update(
-            { userName, password: hashedPw },
+            { userId: id, userName, password: hashedPw },
             { where: { id: userId }, individualHooks: true }
         );
         if (updated) {
-            res.send({ meg: "회원정보가 수정되었습니다." });
+            res.status(200).json({ updated, meg: "회원정보가 수정되었습니다." });
         } else {
             res.status(404).send("사용자를 찾을 수 없습니다.");
         }
