@@ -364,15 +364,13 @@ exports.profileEdit = (req, res) => {
 // 회원 탈퇴
 exports.profileDelete = async (req, res) => {
     try {
-        const { id } = req.params; // params?
-
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
-
-        const isDeleted = await models.id.destroy({
-            where: { id },
+        const isDeleted = await models.Users.destroy({
+            where: { id: userId },
         });
         if (isDeleted) {
             res.send({ msg: "회원탈퇴 완료" });
