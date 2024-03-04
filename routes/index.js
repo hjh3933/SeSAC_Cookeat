@@ -9,7 +9,7 @@ router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
 router.get("/posts", controller.getPosts);
 // 로그아웃 라우터
-// router.get("/logout", cmainController.logout);
+router.get("/logout", controller.logout);
 
 router.post("/checkUsername", controller.checkUsername);
 router.post("/checkNickname", controller.checkNickname);
