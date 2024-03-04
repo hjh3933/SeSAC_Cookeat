@@ -12,7 +12,8 @@ app.use(express.json());
 db.sequelize.sync({ force: false }).then((result) => {
     console.log("db연결 성공");
 });
-app.use("/static", express.static(path.join(__dirname, "static")));
+// app.use("/static", express.static(__dirname + "/static"));
+app.use("/static", express.static(__dirname + "/static"));
 
 const indexRouter = require("./routes");
 app.use("/", indexRouter);
