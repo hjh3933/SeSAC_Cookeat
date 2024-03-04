@@ -179,7 +179,8 @@ exports.postRecipe = async (req, res) => {
         }
 
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
@@ -230,7 +231,8 @@ exports.patchPost = async (req, res) => {
         const { title, content, img, category } = req.body;
 
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
@@ -279,7 +281,8 @@ exports.deletePost = async (req, res) => {
         const { postId } = req.params;
 
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
@@ -324,7 +327,6 @@ exports.profile = async (req, res) => {
     // res.render("profile");
     try {
         // 요청 헤더에서 토큰 추출
-        console.log("dddd", req.headers.authorization);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
         if (!token) {
@@ -405,7 +407,8 @@ exports.checkNickname = (req, res) => {
 
 exports.profileUpdate = async (req, res) => {
     try {
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
