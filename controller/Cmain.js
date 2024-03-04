@@ -108,7 +108,9 @@ exports.postLogin = (req, res) => {
                 if (passwordMatch) {
                     const id = result.id;
                     const user = { id, userId: result.userName };
-                    const token = jwt.sign(user, SECRET);
+                    const token = jwt.sign(user, SECRET, {
+                        expiresIn: "1m",
+                    });
                     console.log("token", token);
                     console.log("loginResult", true);
 
@@ -177,7 +179,8 @@ exports.postRecipe = async (req, res) => {
         }
 
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
@@ -228,7 +231,8 @@ exports.patchPost = async (req, res) => {
         const { title, content, img, category } = req.body;
 
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
@@ -277,7 +281,8 @@ exports.deletePost = async (req, res) => {
         const { postId } = req.params;
 
         // 로그인한 사용자의 id를 토큰에서 추출
-        const token = req.headers.authorization;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
@@ -322,14 +327,17 @@ exports.profile = async (req, res) => {
     // res.render("profile");
     try {
         // 요청 헤더에서 토큰 추출
-        console.log("dddd", req.headers.authorization);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
+        // jwt.verify(token, SECRET)
+        const decodedToken1 = jwt.verify(token, SECRET);
+        console.log("decodedToken>>", decodedToken);
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
         // 토큰을 검증하고 사용자 ID 추출
         const decodedToken = jwt.verify(token, SECRET);
+        console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
@@ -350,14 +358,42 @@ exports.profile = async (req, res) => {
                 res.status(500).send("서버 에러");
             });
     } catch (error) {
+        // if (error) throw error;
         // JWT 검증 실패
         res.status(401).send("유효하지 않은 토큰");
+        // const msg = `alert("로그인을 진행해주세요!")`;
+        // res.render("index");
     }
 };
 
 exports.profileEdit = (req, res) => {
     res.render("profileEdit");
 };
+
+// 회원 탈퇴
+exports.profileDelete = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+        const isDeleted = await models.Users.destroy({
+            where: { id: userId },
+        });
+        if (isDeleted) {
+            res.send({ msg: "회원탈퇴 완료" });
+        }
+    } catch (err) {
+        console.log("err", err);
+        // 토큰 유효성 검사 에러
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ error: "로그인이 필요합니다." });
+        }
+        res.status(500).send("회원 탈퇴 중 오류 발생.");
+    }
+};
+
 // ID중복 확인 기능 추가중
 exports.checkUsername = (req, res) => {
     const { userId } = req.body;
@@ -403,7 +439,10 @@ exports.checkNickname = (req, res) => {
 
 exports.profileUpdate = async (req, res) => {
     try {
-        const token = req.headers.authorization;
+
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }

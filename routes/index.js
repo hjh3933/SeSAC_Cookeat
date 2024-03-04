@@ -23,10 +23,11 @@ router.post("/login", controller.postLogin);
 router.get("/profile/:userId", controller.getProfile);
 router.post("/profile/:userId", controller.profile);
 router.get("/profileEdit", controller.profileEdit);
-// 회원정보 수정 - 형석
-router.patch("/updateProfile/:userId", controller.profileUpdate);
 
-router.get("/profileEdit", controller.profileEdit);
+// 회원정보 수정, 탈퇴 - 형석
+router.patch("/profileUpdate", controller.profileUpdate);
+router.delete("/profile/:userId", controller.profileDelete);
+
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
