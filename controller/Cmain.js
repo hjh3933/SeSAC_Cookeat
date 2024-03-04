@@ -108,7 +108,9 @@ exports.postLogin = (req, res) => {
                 if (passwordMatch) {
                     const id = result.id;
                     const user = { id, userId: result.userName };
-                    const token = jwt.sign(user, SECRET);
+                    const token = jwt.sign(user, SECRET, {
+                        expiresIn: "1m",
+                    });
                     console.log("token", token);
                     console.log("loginResult", true);
 
