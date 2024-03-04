@@ -24,52 +24,123 @@ exports.getJoin = (req, res) => {
 exports.getCreatePost = (req, res) => {
     res.render("createPost");
 };
+// exports.postJoin = (req, res) => {
+//     console.log("회원가입 정보", req.body);
+//     //암호화
+//     const hashedPw = hashPw(req.body.password);
+//     models.Users.create({
+//         userId: req.body.userId,
+//         password: hashedPw,
+//         userName: req.body.userName,
+//     }).then((result) => {
+//         console.log(result);
+//         res.send({ msg: "회원가입 완료!", statusCode: 200 });
+//     });
+// };
 exports.postJoin = (req, res) => {
     console.log("회원가입 정보", req.body);
-    //암호화
+    // 암호화
     const hashedPw = hashPw(req.body.password);
     models.Users.create({
         userId: req.body.userId,
         password: hashedPw,
         userName: req.body.userName,
-    }).then((result) => {
-        console.log(result);
-        res.send({ msg: "회원가입 완료!", statusCode: 200 });
-    });
+    })
+        .then((result) => {
+            console.log(result);
+            console.log("회원가입 성공! 생성된 사용자 정보:", result);
+
+            res.send({ msg: "회원가입 완료!", statusCode: 200 });
+        })
+        .catch((error) => {
+            console.error("회원가입 중 에러 발생:", error);
+            res.status(500).send("서버 오류로 회원가입에 실패하였습니다.");
+        });
 };
+
+// exports.postLogin = (req, res) => {
+//     //{userId, password}
+//     console.log("로그인 데이터", req.body);
+//     const { userId, password } = req.body;
+//     models.Users.findOne({
+//         where: { userId: userId },
+//     }).then((result) => {
+//         console.log("로그인 password 조회 결과:", result);
+//         if (result) {
+//             //result.password = 해시된 비밀번호
+//             const hashedPw = result.password;
+//             const id = result.id;
+//             const loginResult = comparePw(password, hashedPw);
+//             if (loginResult) {
+//                 const token = jwt.sign({ id }, SECRET);
+//                 console.log("token", token);
+//                 console.log("loginResult", loginResult);
+//                 res.send({
+//                     result: loginResult,
+//                     msg: "로그인 완료",
+//                     statusCode: 200,
+//                     token: token,
+//                 });
+//             } else {
+//                 //비밀번호 오류
+//                 res.send({ msg: "로그인 실패", result: false });
+//             }
+//         } else {
+//             //아이디 오류
+//             res.send({ msg: "로그인 실패", result: false });
+//         }
+//     });
+// };
 exports.postLogin = (req, res) => {
-    //{userId, password}
+    // {userId, password}
     console.log("로그인 데이터", req.body);
     const { userId, password } = req.body;
+
     models.Users.findOne({
         where: { userId: userId },
     }).then((result) => {
         console.log("로그인 password 조회 결과:", result);
         if (result) {
-            //result.password = 해시된 비밀번호
             const hashedPw = result.password;
-            const id = result.id;
-            const loginResult = comparePw(password, hashedPw);
-            if (loginResult) {
-                const token = jwt.sign({ id }, SECRET);
-                console.log("token", token);
-                console.log("loginResult", loginResult);
-                res.send({
-                    result: loginResult,
-                    msg: "로그인 완료",
-                    statusCode: 200,
-                    token: token,
-                });
-            } else {
-                //비밀번호 오류
-                res.send({ msg: "로그인 실패", result: false });
-            }
+
+            // 비밀번호 비교
+            bcrypt.compare(password, hashedPw, (err, passwordMatch) => {
+                if (passwordMatch) {
+                    const id = result.id;
+                    const user = { id, userId: result.userName };
+                    const token = jwt.sign(user, SECRET);
+                    console.log("token", token);
+                    console.log("loginResult", true);
+
+                    // 로그인 성공 시 유저 이름과 함께 응답
+                    res.send({
+                        result: true,
+                        msg: `환영합니다, ${result.userName}님!`,
+                        statusCode: 200,
+                        token: token,
+                    });
+                } else {
+                    // 비밀번호 오류
+                    res.send({ msg: "로그인 실패! 비밀번호를 확인해주세요", result: false });
+                }
+            });
         } else {
-            //아이디 오류
-            res.send({ msg: "로그인 실패", result: false });
+            // 아이디 오류
+            res.send({ msg: "로그인 실패! 아이디를 확인해주세요", result: false });
         }
     });
 };
+
+//로그아웃 기능 추가중..(3/3, 명현)
+exports.logout = (req, res) => {
+    // 클라이언트의 쿠키를 삭제
+    res.clearCookie("login");
+
+    // 서버에서 로그아웃 관련 작업 수행 (예: 세션 종료 등)
+
+    res.send({ msg: "로그아웃 완료", statusCode: 200, tokenDeleted: true });
+};
+
 exports.getPosts = (req, res) => {
     //전체 게시글 조회
     models.Posts.findAll({
@@ -246,7 +317,7 @@ exports.profile = (req, res) => {
         const userId = decodedToken.id;
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
-            where: { userId: userId },
+            where: { id: userId },
         })
             .then((user) => {
                 if (user) {
@@ -267,6 +338,81 @@ exports.profile = (req, res) => {
         res.status(401).send("유효하지 않은 토큰");
     }
 };
+
 exports.profileEdit = (req, res) => {
     res.render("profileEdit");
+};
+// ID중복 확인 기능 추가중
+exports.checkUsername = (req, res) => {
+    const { userId } = req.body;
+
+    models.Users.findOne({
+        where: { userId },
+    })
+        .then((result) => {
+            if (result) {
+                // 이미 존재하는 ID인 경우
+                res.send({ exists: true });
+            } else {
+                // 사용 가능한 ID인 경우
+                res.send({ exists: false });
+            }
+        })
+        .catch((error) => {
+            console.error("ID 중복 확인 중 에러 발생:", error);
+            res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
+        });
+};
+// 닉네임 중복 확인 기능 추가중
+exports.checkNickname = (req, res) => {
+    const { userName } = req.body;
+
+    models.Users.findOne({
+        where: { userName },
+    })
+        .then((result) => {
+            if (result) {
+                // 이미 존재하는 닉네임인 경우
+                res.send({ exists: true });
+            } else {
+                // 사용 가능한 닉네임인 경우
+                res.send({ exists: false });
+            }
+        })
+        .catch((error) => {
+            console.error("ID 중복 확인 중 에러 발생:", error);
+            res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
+        });
+};
+
+exports.profileUpdate = async (req, res) => {
+    try {
+        const token = req.headers.authorization;
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        // 요청 바디에서 업데이트할 사용자 정보 추출
+        // (일단 userName과 password만)
+        const { userName, password } = req.body;
+
+        // 비밀번호 암호화
+        const hashedPw = password ? hashPw(password) : undefined;
+
+        // DB에서 사용자 정보 업데이트
+        const [updated] = await models.Users.update(
+            { userName, password: hashedPw },
+            { where: { id: userId }, individualHooks: true }
+        );
+        if (updated) {
+            res.send({ meg: "회원정보가 수정되었습니다." });
+        } else {
+            res.status(404).send("사용자를 찾을 수 없습니다.");
+        }
+    } catch (err) {
+        console.error("회원정보 수정 중 에러 발생", err);
+        res.status(500).send("서버 에러");
+    }
 };

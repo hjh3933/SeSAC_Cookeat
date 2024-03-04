@@ -8,6 +8,12 @@ router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
 router.get("/posts", controller.getPosts);
+// 로그아웃 라우터
+// router.get("/logout", cmainController.logout);
+
+router.post("/checkUsername", controller.checkUsername);
+router.post("/checkNickname", controller.checkNickname);
+router.post("/postJoin", controller.postJoin);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
@@ -16,6 +22,8 @@ router.post("/login", controller.postLogin);
 // 회원정보 및 수정 페이지 조회 - 형석
 router.get("/profile", controller.profile);
 router.get("/profileEdit", controller.profileEdit);
+// 회원정보 수정 - 형석
+router.patch("/profileUpdate", controller.profileUpdate);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);

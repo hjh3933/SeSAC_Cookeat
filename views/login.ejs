@@ -3,27 +3,24 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login Page</title>
         <link rel="stylesheet" type="text/css" href="./static/login.css" />
         <%- include('nav.ejs') %> <%- include('footer.ejs') %>
     </head>
     <body>
-        <!-- views/login.ejs -->
-
         <div class="myapp-login-box">
             <h2>로그인</h2>
             <form>
                 <div class="user-box">
                     <input
                         type="text"
-                        name="username"
+                        name="userId"
                         required
-                        value="<%#= username %>"
-                        oninput="setUsername(this.value)"
+                        value="<%#= userId %>"
+                        oninput="setUserId(this.value)"
                     />
-                    <label>사용자 이름</label>
+                    <label>아이디</label>
                 </div>
                 <div class="user-box">
                     <input
@@ -46,9 +43,11 @@
             </p>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
         <script>
-            const setUsername = (value) => {
-                // 클라이언트 측 리액트 코드에서 사용되는 setUsername 함수
+            const setUserId = (value) => {
+                // 클라이언트 측 리액트 코드에서 사용되는 setUserId 함수
             };
 
             const setPassword = (value) => {
@@ -62,7 +61,7 @@
                     const response = await axios.post(
                         "http://localhost:8080/login",
                         {
-                            username: document.querySelector('[name="username"]').value,
+                            userId: document.querySelector('[name="userId"]').value,
                             password: document.querySelector('[name="password"]').value,
                         },
                         {
@@ -70,17 +69,23 @@
                         }
                     );
 
-                    const token = response.data;
-                    if (response.status === 200) {
+                    const { result, msg, statusCode, token } = response.data;
+                    if (statusCode === 200 && result) {
                         // 로그인 성공 시
-                        // Redux와 로컬 스토리지 처리
-                        dispatch(setTokenAction(token));
-                        localStorage.setItem("token", token);
+                        alert(msg);
+
+                        // 토큰을 로컬 스토리지에 저장
+                        localStorage.setItem("user", token);
+
                         // 홈으로 이동
                         location.href = "/";
+                    } else {
+                        // 로그인 실패 시
+                        console.error("로그인 실패:", msg);
+                        alert(msg);
                     }
                 } catch (error) {
-                    console.error("로그인 실패:", error);
+                    console.error("로그인 실패:", error.message);
                     alert(error.message);
                 }
             };
