@@ -89,9 +89,9 @@
                                 )
                             );
 
-                            if (decodedToken && decodedToken.username) {
+                            if (decodedToken && decodedToken.userId) {
                                 userNavItem.style.display = "block";
-                                userNavItem.textContent = "Welcome, " + decodedToken.username;
+                                userNavItem.textContent = "Welcome, " + decodedToken.userId;
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                                 profileLink.href = "/profile/" + userId; // 프로필 링크의 href 속성에 로컬스토리지에서 가져온 userId를 포함시킴
                             }
