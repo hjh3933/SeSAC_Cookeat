@@ -471,3 +471,24 @@ exports.profileUpdate = async (req, res) => {
         res.status(500).send("서버 에러");
     }
 };
+
+// 북마크 삭제
+exports.bookmarkDelete(async (req, res) => {
+    try {
+        // 선택한 북마크 id 추출
+        // const userId = decodedToken.id;
+        const isDeleted = await models.Bookmarks.destroy({
+            where: { id: bookmarkId },
+        });
+        if (isDeleted) {
+            res.send({ msg: "북마크가 삭제되었습니다." });
+        }
+    } catch (err) {
+        console.log("err", err);
+        // 토큰 유효성 검사 에러
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ error: "로그인이 필요합니다." });
+        }
+        res.status(500).send("회원 탈퇴 중 오류 발생.");
+    }
+});
