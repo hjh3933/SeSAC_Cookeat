@@ -29,7 +29,7 @@ router.patch("/profileUpdate/:userId", controller.profileUpdate);
 router.delete("/profile/:userId", controller.profileDelete);
 
 // 북마크 삭제 - 형석
-router.delete("/bookmarkDelete", controller.bookmarkDelete);
+router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
