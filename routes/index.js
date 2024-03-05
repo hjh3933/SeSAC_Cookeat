@@ -30,6 +30,8 @@ router.delete("/profile/:userId", controller.profileDelete);
 
 // 북마크 추가
 router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
+// 북마크 조회 - 프로필 페이지에서 북마크 목록 조회
+router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
 

@@ -509,6 +509,56 @@ exports.bookmarkInsert = async (req, res) => {
         res.send("다시 로그인해주세요");
     }
 };
+// 내 북마크 목록 전체 조회 /profile/:userId/bookmarks
+exports.getAllBookMarks = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
+        // 토큰 없는 경우
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        const user = await models.Users.findByPk(userId, {
+            include: [
+                {
+                    model: models.Posts,
+                    as: "bookmarkedPosts", // 별칭을 'bookmarkedPosts'로 설정합니다.
+                    through: { attributes: ["createdAt"] }, // // Bookmarks 테이블의 타임스탬프 정보
+                    attributes: ["postId", "title"], // 필요한 필드만 선택하여 가져옵니다.
+                    include: [
+                        {
+                            model: models.Users,
+                            as: "author", // 별칭을 'author'로 설정합니다.
+                            attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                        },
+                    ],
+                },
+            ],
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "회원을 찾을 수 없습니다." });
+        }
+
+        const bookmarks = user.bookmarkedPosts.map((post) => ({
+            postId: post.postId,
+            title: post.title,
+            authorName: post.author.userName, // 'author' 별칭을 사용하여 접근합니다.
+            bookmarkCreatedAt: post.Bookmarks.createdAt, // Bookmarks 테이블의 createdAt 정보
+        }));
+
+        return res.status(200).json(bookmarks);
+    } catch (err) {
+        console.error("북마크 목록 조회 중 에러 발생", err);
+        res.send({ message: "에러 발생", error: err });
+        // 어떤 에러 인지 확인 해야함!! 토큰이 만료되었는지, 시퀄라이즈 에러인지 여러 변수가 많음
+    }
+};
 
 // 북마크 삭제
 exports.bookmarkDelete = async (req, res) => {

@@ -24,11 +24,13 @@ Users.hasMany(Posts, {
     foreignKey: "id",
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
+    as: "writtenPosts", // 별칭을 'writtenPosts'로 설정합니다.
 });
 Posts.belongsTo(Users, {
     foreignKey: "id",
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
+    as: "author", // 별칭을 'author'로 설정합니다.
 });
 
 Users.belongsToMany(Posts, {
@@ -36,6 +38,7 @@ Users.belongsToMany(Posts, {
     foreignKey: "id",
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
+    as: "bookmarkedPosts", // 별칭을 'bookmarkedPosts'로 설정합니다.
 });
 Posts.belongsToMany(Users, {
     through: Bookmarks,
