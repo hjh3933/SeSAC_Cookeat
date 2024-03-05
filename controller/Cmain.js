@@ -471,6 +471,44 @@ exports.profileUpdate = async (req, res) => {
         res.status(500).send("서버 에러");
     }
 };
+// 북마크 추가
+exports.bookmarkInsert = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        console.log("postId", postId);
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        console.log("token", token);
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        //bookmark - id, postId
+        const bookmarkCreate = await models.Bookmarks.create({
+            id: userId,
+            postId: postId,
+        });
+        let result;
+        let msg;
+        if (bookmarkCreate) {
+            //북마크 생성 성공
+            msg = "북마크 추가가 완료되었습니다";
+            result = true;
+        } else {
+            //북마크 생성 실패
+            msg = "북마크 추가 실패했습니다";
+            result = false;
+        }
+        res.send({ msg, result });
+    } catch (e) {
+        console.log("error발생", e);
+        // return res.status(500).send("server error");
+        console.log("토큰이 만료되었습니다");
+        res.send("다시 로그인해주세요");
+    }
+};
 
 // 북마크 삭제
 exports.bookmarkDelete = async (req, res) => {

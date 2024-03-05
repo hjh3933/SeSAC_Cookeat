@@ -28,6 +28,8 @@ router.get("/profileEdit", controller.profileEdit);
 router.patch("/profileUpdate/:userId", controller.profileUpdate);
 router.delete("/profile/:userId", controller.profileDelete);
 
+// 북마크 추가
+router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
 
