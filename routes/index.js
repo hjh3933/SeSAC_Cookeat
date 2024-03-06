@@ -44,6 +44,7 @@ router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
 router.get("/post/:postId", controller.getPostDetail);
+router.get("/postEdit", controller.postEdit);
 router.patch("/post/:postId", controller.patchPost);
 router.delete("/post/:postId", controller.deletePost);
 

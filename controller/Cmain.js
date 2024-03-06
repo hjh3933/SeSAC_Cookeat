@@ -273,6 +273,9 @@ exports.getPostDetail = async (req, res) => {
     }
 };
 
+exports.postEdit = (req, res) => {
+    res.render("postEdit");
+};
 // 게시글 수정 PATCH
 exports.patchPost = async (req, res) => {
     try {
