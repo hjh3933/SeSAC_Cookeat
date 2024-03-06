@@ -13,11 +13,11 @@ const Users = function (Sequelize, DataTypes) {
                 allowNull: false,
             },
             password: {
-                type: DataTypes.STRING(100),
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             userName: {
-                type: DataTypes.STRING(20),
+                type: DataTypes.STRING(255),
                 allowNull: false,
             },
         },

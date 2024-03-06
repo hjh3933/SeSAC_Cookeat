@@ -1,7 +1,15 @@
 "use strict";
 
 const Sequelize = require("sequelize");
-const config = require(__dirname + "/../config/config.json")["development"];
+console.log("cross-env>>", process.env.NODE_ENV); //prod or development
+
+let config;
+if (process.env.NODE_ENV) {
+    //npm run dev - local에서 development or npm start - server에서 prod
+    config = require(__dirname + "/../config/config.json")[process.env.NODE_ENV];
+} else {
+    config = require(__dirname + "/../config/config.json")["development"];
+}
 const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
@@ -16,11 +24,13 @@ Users.hasMany(Posts, {
     foreignKey: "id",
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
+    as: "writtenPosts", // 별칭을 'writtenPosts'로 설정합니다.
 });
 Posts.belongsTo(Users, {
     foreignKey: "id",
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
+    as: "author", // 별칭을 'author'로 설정합니다.
 });
 
 Users.belongsToMany(Posts, {
@@ -28,6 +38,7 @@ Users.belongsToMany(Posts, {
     foreignKey: "id",
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
+    as: "bookmarkedPosts", // 별칭을 'bookmarkedPosts'로 설정합니다.
 });
 Posts.belongsToMany(Users, {
     through: Bookmarks,

@@ -155,9 +155,9 @@ label {
     transition: background 0.2s, color 0.2s;
 }
 
-.name input[type="text"],
+.userId input[type="text"],
 .location input[type="text"],
-.nickname input[type="text"],
+.userName input[type="text"],
 .mail input[type="email"],
 .phone input[type="tel"] {
     width: 100%;

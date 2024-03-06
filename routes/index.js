@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller/Cmain");
+// multer - Cmain에서 profileUpload 미들웨어와 uploadDetail 핸들러 가져오기
+const { profileUpload, uploadDetail } = require("../controller/Cmain");
+
 // const app = require("../app");
 // router작성
 router.get("/", controller.main);
@@ -8,14 +11,35 @@ router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
 router.get("/posts", controller.getPosts);
+// 로그아웃 라우터
+router.get("/logout", controller.logout);
+
+router.post("/checkUsername", controller.checkUsername);
+router.post("/checkNickname", controller.checkNickname);
+router.post("/postJoin", controller.postJoin);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
 router.post("/login", controller.postLogin);
 
 // 회원정보 및 수정 페이지 조회 - 형석
-router.get("/profile", controller.profile);
+router.get("/profile/:userId", controller.getProfile);
+router.post("/profile/:userId", controller.profile);
 router.get("/profileEdit", controller.profileEdit);
+
+// 회원정보 수정, 탈퇴 - 형석
+router.patch("/profileUpdate/:userId", controller.profileUpdate);
+router.delete("/profile/:userId", controller.profileDelete);
+
+// multer 설정
+// "userfile"은 파일 업로드 필드의 name과 일치시켜야 함
+router.post("/profileUpload", uploadDetail.single("userfile"), profileUpload);
+// 북마크 추가
+router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
+// 북마크 조회 - 프로필 페이지에서 북마크 목록 조회
+router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
+// 북마크 삭제 - 형석
+router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
@@ -69,7 +93,7 @@ const teamMembers = [
     {
         name: "이형석",
         title: "Back-End Developer",
-        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        imageUrl: "https://i.imgur.com/bg7MG3j.jpeg",
         githubUsername: "yhs0329",
         googleEmail: "scar9983@gmail.com",
     },

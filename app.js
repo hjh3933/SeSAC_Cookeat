@@ -12,7 +12,8 @@ app.use(express.json());
 db.sequelize.sync({ force: false }).then((result) => {
     console.log("db연결 성공");
 });
-app.use("/static", express.static(path.join(__dirname, "static")));
+// app.use("/static", express.static(__dirname + "/static"));
+app.use("/static", express.static(path.join(__dirname + "/static")));
 app.use("/js", express.static(__dirname + "/node_modules/bootstrap/dist/js")); // bootstrap JS
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css")); // bootstrap CSS
 
@@ -25,4 +26,5 @@ app.get("*", (req, res) => {
 });
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`http://118.67.133.199:${PORT}`);
 });

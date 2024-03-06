@@ -4,10 +4,9 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
-        <link rel="stylesheet" href="./static/nav.css" />
-        <!-- <%- include('account.ejs') %> -->
+        <link rel="stylesheet" href="/static/nav.css" />
         <style>
-            \ #cssmenu ul li ul {
+            #cssmenu ul li ul {
                 display: none;
             }
             #cssmenu ul li.active ul {
@@ -23,7 +22,7 @@
                         <li>
                             <a href="/">
                                 <img
-                                    src="./static/spoon.png"
+                                    src="/static/spoon.png"
                                     alt="spoon"
                                     style="width: 40px; height: 40px"
                                 />
@@ -36,14 +35,17 @@
                 </nav>
             </div>
             <div id="cssmenu">
+                <li id="userNavItem" style="display: none">
+                    <span id="userText"></span>
+                </li>
                 <ul>
                     <li class="has-sub" id="profileBtn">
                         <img
-                            src="./static/account.png"
+                            src="/static/account.png"
                             alt="Profile"
                             style="width: 30px; height: 30px"
+                            class="account-image"
                         />
-
                         <ul>
                             <li>
                                 <a href="/login"><span>Login</span></a>
@@ -51,8 +53,11 @@
                             <li>
                                 <a href="/Join"><span>Join</span></a>
                             </li>
+                            <li id="profileLink">
+                                <a href="/profile"><span id="userText">Mypage</span></a>
+                            </li>
                             <li>
-                                <a href="/profile"><span>Mypage</span></a>
+                                <a href="/" id="logoutBtn"><span>Logout</span></a>
                             </li>
                         </ul>
                     </li>
@@ -63,10 +68,62 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 var profileBtn = document.getElementById("profileBtn");
+                var logoutBtn = document.getElementById("logoutBtn");
+                var userNavItem = document.getElementById("userNavItem");
+
+                var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
                 });
+
+                function updateNavbarWithUserData() {
+                    var token = localStorage.getItem("user");
+                    var userId = localStorage.getItem("userId");
+                    var currentPath = window.location.pathname;
+
+                    if (token) {
+                        try {
+                            var base64Decoded = atob(token.split(".")[1]);
+                            var decodedToken = JSON.parse(
+                                new TextDecoder().decode(
+                                    new Uint8Array([...base64Decoded].map((c) => c.charCodeAt(0)))
+                                )
+                            );
+
+                            if (decodedToken && decodedToken.userId) {
+                                userNavItem.style.display = "block";
+                                userNavItem.textContent = "Welcome, " + decodedToken.userId;
+                                console.log(decodedToken.userId);
+                                profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
+                                profileLink.href = "/profile/" + userId;
+                            }
+                        } catch (error) {
+                            console.error("Error decoding token:", error);
+                        }
+                    } else if (currentPath === "/profile") {
+                        // 토큰이 없을 때, 프로필 페이지로 접근 시 경고
+                        alert("로그인이 필요합니다!");
+                        window.location.href = "/login";
+                    }
+                }
+
+                logoutBtn.addEventListener("click", function (event) {
+                    var token = localStorage.getItem("user");
+
+                    if (!token) {
+                        // 토큰이 없으면 로그인 페이지로 이동
+                        alert("로그인이 필요합니다!");
+                        window.location.href = "/login";
+                    } else {
+                        // 토큰이 있으면 로그아웃 수행
+                        localStorage.removeItem("user");
+                        alert("로그아웃 완료!");
+                        window.location.href = "/";
+                    }
+                });
+
+                updateNavbarWithUserData();
             });
         </script>
     </body>

@@ -2,9 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ProfileEdit</title>
-
         <link rel="stylesheet" type="text/CSS" href="style.css" />
         <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('fryingPan.ejs') %> <%-
         include('account.ejs') %>
@@ -13,9 +14,8 @@
             rel="stylesheet"
             type="text/css"
         />
-        <link rel="egg icon" href="./static/favicon.ico" type="image/x-icon" />
-
-        <link rel="stylesheet" href="./static/profile.css" />
+        <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/static/profile.css" />
     </head>
     <body>
         <div class="portfoliocard">
@@ -34,39 +34,73 @@
             </div>
             <div class="right_col">
                 <ul class="contact_information">
-                    <label for="nickNameInput">Name</label>
-                    <li class="name"><input type="text" id="nameInput" /></li>
-                    <label for="LocationInput">Location</label>
-                    <li class="location">
-                        <input type="text" id="locationInput" />
-                    </li>
-
-                    <label for="nickNameInput">Nickname</label>
-
-                    <li class="nickname">
-                        <input type="text" id="nickNameInput" />
-                    </li>
-                    <label for="MailInput">Mail</label>
-
-                    <li class="mail">
-                        <input type="email" id="mailInput" />
-                    </li>
-                    <label for="PhoneInput">Phone</label>
-
-                    <li class="phone">
-                        <input type="tel" id="phoneInput" />
+                    <label for="nameInput">userId</label>
+                    <li class="userId"><input type="text" id="userId" /></li>
+                    <label for="userNameInput">userName</label>
+                    <li class="userName">
+                        <input type="text" id="userName" />
                     </li>
                 </ul>
             </div>
         </div>
         <script>
-            document
-                .getElementById("saveButton")
-                .addEventListener("click", function () // submit하면 데이터 넘어가게 하기
-                {
-                    // Save 버튼 클릭 시 /profile 페이지로 이동
-                    window.location.href = "/profile";
+            const token = localStorage.getItem("user");
+            const userId = localStorage.getItem("userId");
+            console.log(token);
+            console.log(userId);
+
+            function displayUserData(response) {
+                console.log(response.data);
+                document.getElementById("userId").value = response.data.user.userId;
+                document.getElementById("userName").value = response.data.user.userName;
+            }
+
+            function saveUserData() {
+                const modifiedUserId = document.getElementById("userId").value;
+                const modifiedUserName = document.getElementById("userName").value;
+                const token = localStorage.getItem("user");
+                const userId = localStorage.getItem("userId");
+                console.log(token);
+                console.log(userId);
+                axios
+                    .patch(
+                        "/profileUpdate/" + userId,
+                        {
+                            userId: modifiedUserId,
+                            userName: modifiedUserName,
+                        },
+                        {
+                            headers: {
+                                Authorization: "Bearer " + token,
+                            },
+                        }
+                    )
+                    .then(function (response) {
+                        console.log(response.data);
+                        alert("수정이 완료되었습니다.");
+                        window.location.href = "/profile/" + userId;
+                    })
+                    .catch(function (error) {
+                        console.error("Error:", error);
+                    });
+            }
+
+            axios
+                .post(
+                    "/profile/" + userId,
+                    {},
+                    {
+                        headers: {
+                            Authorization: "Bearer " + token,
+                        },
+                    }
+                )
+                .then(displayUserData)
+                .catch(function (error) {
+                    console.error("Error:", error);
                 });
+
+            document.getElementById("saveButton").addEventListener("click", saveUserData);
         </script>
     </body>
 </html>
