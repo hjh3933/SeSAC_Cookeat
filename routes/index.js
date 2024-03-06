@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller/Cmain");
+// multer - Cmain에서 profileUpload 미들웨어와 uploadDetail 핸들러 가져오기
+const { profileUpload, uploadDetail } = require("../controller/Cmain");
+
 // const app = require("../app");
 // router작성
 router.get("/", controller.main);
@@ -28,6 +31,9 @@ router.get("/profileEdit", controller.profileEdit);
 router.patch("/profileUpdate/:userId", controller.profileUpdate);
 router.delete("/profile/:userId", controller.profileDelete);
 
+// multer 설정
+// "userfile"은 파일 업로드 필드의 name과 일치시켜야 함
+router.post("/profileUpload", uploadDetail.single("userfile"), profileUpload);
 // 북마크 추가
 router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 // 북마크 조회 - 프로필 페이지에서 북마크 목록 조회
