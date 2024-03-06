@@ -183,6 +183,7 @@ exports.logout = (req, res) => {
 
 exports.getPosts = (req, res) => {
     //전체 게시글 조회
+
     try {
         models.Posts.findAll({
             attributes: ["postId", "id", "title", "createdAt"],

@@ -1,4 +1,3 @@
--- Active: 1707101290768@@127.0.0.1@3306@sesac
 show tables;
 DESC Users;
 DESC posts;
@@ -8,6 +7,13 @@ SELECT * from posts;
 SELECT * from users;
 SELECT * from bookmarks;
 -- postId, title, content, img, category createdAt, updatedAt, id
+insert into users
+VALUES(null, 'allie', '1234', '앨리',NOW(),NOW());
+insert into users VALUES(null, 'allie2', '1234', '앨리2',NOW(),NOW());
+insert into users VALUES(null, 'allie3', '1234', '앨리3',NOW(),NOW());
+insert into users VALUES(null, 'allie4', '1234', '앨리4',NOW(),NOW());
+insert into users VALUES(null, 'allie5', '1234', '앨리5',NOW(),NOW());
+
 INSERT INTO posts 
 VALUES (NULL,"jisu4", "hi~~~~~",NULL,"한식",NOW(),NOW(), 10);
 INSERT INTO posts 
