@@ -37,7 +37,6 @@
                 var content = $("#summernote").summernote("code"); // 에디터의 내용을 HTML 문자열로 가져옴
                 var category = $("#category").val();
                 var accessToken = localStorage.getItem("user");
-                console.log(accessToken);
 
                 axios({
                     method: "post",
@@ -53,7 +52,6 @@
                     },
                 })
                     .then(function (response) {
-                        console.log(response.data.postId);
                         alert("레시피 등록이 완료되었습니다.");
                         localStorage.setItem("createPostId", response.data.postId); // response에서 postId 가져와서 저장
                         window.location = "/post/" + response.data.postId;
