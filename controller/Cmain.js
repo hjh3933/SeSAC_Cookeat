@@ -183,6 +183,7 @@ exports.logout = (req, res) => {
 
 exports.getPosts = (req, res) => {
     //전체 게시글 조회
+
     try {
         models.Posts.findAll({
             attributes: ["postId", "id", "title", "createdAt"],
@@ -615,8 +616,8 @@ exports.getAllBookMarks = async (req, res) => {
 // 북마크 삭제
 exports.bookmarkDelete = async (req, res) => {
     try {
-        // 응답된 params 경로에서 bookmarkId값 추출
-        const { bookmarkId } = req.params;
+        // 응답된 params 저장
+        const { postId } = req.params;
         // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
         const tokenWithBearer = req.headers.authorization;
         // bearer와 token을 공백으로 분리해서 실제 토큰만 token 변수에 담음
@@ -628,16 +629,16 @@ exports.bookmarkDelete = async (req, res) => {
         // 토큰 디코드하고 디코드된 토큰에서 사용자 id 추출
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
-        // Bookmarks 모델에서 bookmarks가 위에서 응답받은 bookmarks인지, userid인지 확인
+        // Bookmarks 모델에서 postIddhk userId가 위에서 응답값과 같은지 확인
         const checkBookmark = await models.Bookmarks.findOne({
-            where: { bookmarkId: bookmarkId, id: userId },
+            where: { postId: postId, id: userId },
         });
         // 북마크 id와 사용자 id 일치하지 않는 경우
         if (!checkBookmark) {
             return res.status(404).json({ error: "북마크가 없습니다." });
         }
         const isDeleted = await models.Bookmarks.destroy({
-            where: { bookmarkId: bookmarkId },
+            where: { postId: postId },
         });
         if (isDeleted) {
             res.send({ msg: "북마크가 삭제되었습니다." });
