@@ -77,10 +77,11 @@ exports.getPosts = (req, res) => {
         include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
     }).then((result) => {
         if (result.length > 0) {
-            res.render("posts", { posts: result });
+            res.render("posts", { posts: result, isData: true });
             // res.send(result);
         } else {
-            res.send("게시글이 존재하지 않습니다");
+            // res.send("게시글이 존재하지 않습니다");
+            res.render("posts", { message: "게시글이 존재하지 않습니다", isData: false });
         }
     });
 };
