@@ -78,7 +78,10 @@
         }
         // 2. 수정버튼 클릭시 수정페이지 이동
         function getEdit() {
-            location.href = "/postEdit";
+            // 현재 보고 있는 포스트 ID 가져오기
+            const postId = document.querySelector(".postId").innerText;
+            // URL 파라미터로 postid 포함해서 리다이렉션
+            location.href = "/postEdit/" + postId;
         }
         // 3. 삭제 버튼 클릭시 확인confirm후 삭제
         function deletePost() {

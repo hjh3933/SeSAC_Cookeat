@@ -274,9 +274,6 @@ exports.getPostDetail = async (req, res) => {
     }
 };
 
-exports.postEdit = (req, res) => {
-    res.render("postEdit");
-};
 // 게시글 수정 PATCH
 exports.patchPost = async (req, res) => {
     try {
@@ -417,6 +414,29 @@ exports.profile = async (req, res) => {
         res.status(401).send("유효하지 않은 토큰");
         // const msg = `alert("로그인을 진행해주세요!")`;
         // res.render("index");
+    }
+};
+
+exports.getPostEdit = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await models.Posts.findOne({
+            where: { postId: postId },
+            include: [
+                {
+                    model: models.Users,
+                    as: ["author"],
+                },
+            ],
+        });
+        if (post) {
+            res.render("postEdit", { post });
+        } else {
+            res.status(404).send("게시글이 존재하지 않습니다.");
+        }
+    } catch (err) {
+        console.error("게시글 수정 페이지 로딩 중 에러 발생", err);
+        res.status(500).send("서버오류");
     }
 };
 
