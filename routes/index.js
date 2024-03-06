@@ -39,7 +39,7 @@ router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 // 북마크 조회 - 프로필 페이지에서 북마크 목록 조회
 router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
-router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
+router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
