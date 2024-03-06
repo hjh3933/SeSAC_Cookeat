@@ -216,13 +216,30 @@ exports.getPostDetail = async (req, res) => {
             where: {
                 postId,
             },
+            include: [
+                {
+                    model: models.Users,
+                    as: "author", // 별칭을 'author'로 설정합니다.
+                    attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                },
+            ],
         });
+
+        const dateString = postDetail.createdAt;
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+
+        const formattedDate = `${year}-${month}-${day}`;
+        console.log(formattedDate);
 
         // 게시글이 존재하지 않는 경우
         if (!postDetail) {
             return res.status(404).json({ error: "게시글이 존재하지 않습니다." });
         }
-        res.json(postDetail);
+        // res.json(postDetail);
+        res.render("post", { post: postDetail, formattedDate });
     } catch (err) {
         console.log("err", err);
         res.status(500).send("서버 에러");
