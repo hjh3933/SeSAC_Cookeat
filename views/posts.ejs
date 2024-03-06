@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>📝Cook Eat Drawers</title>
         <!-- axios cdn -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -31,6 +31,9 @@
                 text-align: center;
                 border-radius: 20px;
                 padding: 3rem 0;
+            }
+            .homeimg {
+                margin-bottom: 20px;
             }
             .container .lists {
                 margin: 0 auto;
@@ -92,6 +95,15 @@
             .User {
                 /* width: 100px; */
             }
+            .write {
+                background-color: rgb(227, 245, 168);
+                width: 100px;
+                border-radius: 20px;
+                color: black;
+                margin-top: 5px;
+                margin-left: auto;
+                margin-right: auto;
+            }
         </style>
     </head>
     <body>
@@ -101,14 +113,17 @@
         <%} else{%>
 
         <section class="container">
-            <img src="/static/spoon.png" alt="./" />
+            <div class="homeimg">
+                <a href="/"> <img src="/static/spoon.png" alt="Home" /></a>
+            </div>
+
             <table class="lists">
                 <thead>
                     <tr class="top">
                         <td class="items num">번호</td>
                         <td class="items identi">ID</td>
                         <td class="items postsTitle">제목</td>
-                        <td class="items postsDate">작성일</td>
+                        <td class="items postsDate">작성일시</td>
                         <td class="items writer">작성자</td>
                     </tr>
                 </thead>
@@ -120,7 +135,7 @@
                         <td class="infos title">
                             <a href="/#">크림파스타라라라라랄라라라라ㅏㄹ라라라라라라라라</a>
                         </td>
-                        <td class="infos createdAt">2024-03-06</td>
+                        <td class="infos createdAt">Mon Mar 04 2024 21:31:36</td>
                         <td class="infos User">윤대정윤대정윤대정</td>
                     </tr>
                     <!-- [{postId, id, title, createdAt, User:{} }] -->
@@ -137,7 +152,8 @@
                     <% } %>
                 </tbody>
             </table>
-            <a href="/post">게시글 작성</a>
+            <div class="write"><a href="/post">게시글 작성</a></div>
+            <% console.log(posts[0]) %>
         </section>
         <% } %>
         <footer>
@@ -146,7 +162,7 @@
             <script src="/js/jquery.js"></script>
         </footer>
         <script>
-            console.log("<%=posts.User%>");
+            console.log(finalDataArr);
         </script>
     </body>
 </html>
