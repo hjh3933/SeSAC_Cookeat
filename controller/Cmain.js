@@ -49,7 +49,7 @@ exports.getJoin = (req, res) => {
     res.render("join");
 };
 exports.getCreatePost = (req, res) => {
-    res.render("createPost");
+    res.render("creatRecipeForm");
 };
 // exports.postJoin = (req, res) => {
 //     console.log("회원가입 정보", req.body);
@@ -223,14 +223,14 @@ exports.postRecipe = async (req, res) => {
             category,
             id: userId,
         });
-        res.send({ msg: "게시글 작성 완료" });
+        res.json(newRecipe);
     } catch (err) {
         console.error("게시글 작성 중 에러가 발생했습니다.", err);
         // 토큰 유효성 검사 에러
         if (err.name === "JsonWebTokenError") {
             return res.status(401).json({ error: "로그인이 필요합니다." });
         }
-        res.status(500).send("서버 에러");
+        res.status(500).send("서버 에러", err);
     }
 };
 //단일 게시글 조회
