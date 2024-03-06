@@ -185,15 +185,24 @@ exports.getPosts = (req, res) => {
     //전체 게시글 조회
 
     try {
+        models.Users.findAll().then((res) => {
+            console.log("======================");
+            console.log(res);
+        });
+        console.log(allUser);
         models.Posts.findAll({
             attributes: ["postId", "id", "title", "createdAt"],
-            include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
+            include: [{ model: models.Users }],
         }).then((result) => {
+            console.log("user data``````````", models.Users);
+            console.log("result", result);
             if (result.length > 0) {
-                res.json({ posts: result });
-                // res.send(result);
+                // res.json({ posts: result });
+                res.send(result);
+                // res.render("posts", { isData: true, posts: result });
             } else {
-                res.send("게시글이 존재하지 않습니다");
+                // res.send("게시글이 존재하지 않습니다");
+                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
             }
         });
     } catch (err) {
