@@ -25,7 +25,7 @@
             }
             .container {
                 background-color: #f7f5ec;
-               max-width: 1200px;
+                max-width: 1200px;
                 margin: 0 auto;
                 box-shadow: 0px 0px 15px rgba(80, 80, 80, 0.4);
                 text-align: center;
@@ -34,6 +34,9 @@
             }
             .container .lists {
                 margin: 0 auto;
+                border: 5px solid rgba(175, 182, 76, 0.6);
+                border-collapse: separate;
+                border-radius: 20px;
             }
             .container .top {
                 /* display: flex; */
@@ -48,7 +51,7 @@
             }
             .container .top .items {
                 /* display: flex; */
-                border: 1px solid black;
+                /* border: 1px solid black; */
                 /* border-radius: 20px; */
                 /* width: 100px; */
                 height: 50px;
@@ -64,10 +67,9 @@
                 /* border: 1px solid black; */
                 border-radius: 20px;
                 /* margin-bottom: 5px; */
-
             }
             .infos {
-                border: 1px solid black;
+                border: 5px solid rgb(231, 243, 205);
                 border-radius: 20px;
                 height: 50px;
             }
@@ -99,7 +101,7 @@
         <%} else{%>
 
         <section class="container">
-
+            <img src="/static/spoon.png" alt="./" />
             <table class="lists">
                 <thead>
                     <tr class="top">
@@ -110,31 +112,41 @@
                         <td class="items writer">작성자</td>
                     </tr>
                 </thead>
-                
+
                 <tbody>
-                    
+                    <tr class="infomation">
+                        <td class="infos postId">1</td>
+                        <td class="infos id">bseowjd13</td>
+                        <td class="infos title">
+                            <a href="/#">크림파스타라라라라랄라라라라ㅏㄹ라라라라라라라라</a>
+                        </td>
+                        <td class="infos createdAt">2024-03-06</td>
+                        <td class="infos User">윤대정윤대정윤대정</td>
+                    </tr>
                     <!-- [{postId, id, title, createdAt, User:{} }] -->
                     <% for(let post of posts){ %>
-                        <tr class="infomation">
-                            <td class="infos postId"><%=post.postId%></td>
-                            <td class="infos id"><%=post.id%></td>
-                            <td class="infos title"><a href=/post/<%=post.postId%>><%=post.title%></a></td>
-                            <td class="infos createdAt"><%=post.createdAt%></td>
-                            <td class="infos User"><%=post.User.userName%></td>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-                <a href="/post">게시글 작성</a>
-            </section>
-                <% } %>
+                    <tr class="infomation">
+                        <td class="infos postId"><%=post.postId%></td>
+                        <td class="infos id"><%=post.id%></td>
+                        <td class="infos title">
+                            <a href="/post/<%=post.postId%>"><%=post.title%></a>
+                        </td>
+                        <td class="infos createdAt"><%=post.createdAt%></td>
+                        <td class="infos User"><%=post.User.userName%></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <a href="/post">게시글 작성</a>
+        </section>
+        <% } %>
         <footer>
             <script src="/js/bootstrap.min.js"></script>
             <script src="/js/bootstrap.bundle.js"></script>
             <script src="/js/jquery.js"></script>
         </footer>
         <script>
-            console.log("<%=posts.length%>");
+            console.log("<%=posts.User%>");
         </script>
     </body>
 </html>
