@@ -2,6 +2,33 @@ const models = require("../models");
 const jwt = require("jsonwebtoken");
 const SECRET = "DWB0jOga2jrAozUXUsLCQ1e4EeeQH8"; //랜덤문자열 env관리 예정
 const bcrypt = require("bcrypt");
+const path = require("path");
+const multer = require("multer");
+const uploadDetail = multer({
+    storage: multer.diskStorage({
+        // 저장할 경로 profileUploads 폴더
+        destination(req, file, done) {
+            done(null, "profileUploads/");
+        },
+        filename(req, file, done) {
+            // 파일 확장자 추출
+            const ext = path.extname(file.originalname);
+            // 파일 이름을 원본 파일 이름의 베이스 이름, 현재 날짜의 타임스탬프, 확장자로
+            done(null, path.basename(file.originalname, ext) + Date.now() + ext);
+        },
+    }),
+    // 파일 크기 제한 설정 (5MB)
+    limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+exports.profileUpload = (req, res) => {
+    // "userfile"은 파일 업로드 필드의 name과 일치시켜야함
+    console.log(req.file);
+    console.log(req.body);
+    res.send("업로드 완료");
+};
+// routes/index.js에서 사용할 수 있게 내보내기
+exports.uploadDetail = uploadDetail;
 
 //암호화, 비교 함수
 const saltRounds = 10;
