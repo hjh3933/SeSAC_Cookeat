@@ -23,20 +23,95 @@
         <br />
 
         <script>
+            var notice_form = `
+                <h4> 양식에 맞게 레시피를 작성해 주세요.</h4>
+                <p style="color: gray;">⚠️ 이미지는 복사, 붙여넣기 해서 첨부해 주세요.</p>
+                `;
+
+            var default_form = `
+                ${notice_form}
+                <br />
+                <p><strong> - 요리명 : </strong></p>
+                <br />
+                <p><strong> - 재료 : </strong></p>
+                <br />
+                <p><strong> - 조리 순서 : </strong></p>
+                <br />
+                `;
             $(document).ready(function () {
+                var imgURLs = []; // 이미지 URL들을 저장할 배열
+
+                function uploadImage(file) {
+                    var data = new FormData();
+                    data.append("file", file);
+                    axios({
+                        url: "/recipeUploadImg",
+                        method: "POST",
+                        data: data,
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }).then(function (response) {
+                        // 이미지 URL을 에디터에 삽입
+                        $("#summernote").summernote("insertImage", response.data.url);
+                        // 전역 변수에 이미지 URL을 저장
+                        // 배열에 이미지 URL을 추가
+                        imgURLs.push(response.data.url);
+                        localStorage.setItem("imgURLs", JSON.stringify(imgURLs));
+                    });
+                }
+
                 $("#summernote").summernote({
                     placeholder: "- 나만의 레시피를 작성해 주세요",
                     tabsize: 2,
                     height: 740,
+                    toolbar: [
+                        ["style", ["bold", "italic", "underline", "clear"]],
+                        ["font", ["strikethrough", "superscript", "subscript"]],
+                        ["fontsize", ["fontsize"]],
+                        ["color", ["color"]],
+                        ["para", ["ul", "ol", "paragraph"]],
+                        ["height", ["height"]],
+                        ["insert", ["link"]],
+                        ["view", ["fullscreen", "codeview", "help"]],
+                    ],
+                    callbacks: {
+                        onFocus: function () {
+                            // 에디터가 비어 있을 때만 기본 양식을 설정
+                            if ($("#summernote").summernote("isEmpty")) {
+                                $("#summernote").summernote("code", default_form);
+                            }
+                        },
+                        onImageUpload: function (files) {
+                            uploadImage(files[0]);
+                        },
+                        onPaste: function (e) {
+                            var clipboardData = e.originalEvent.clipboardData;
+                            if (
+                                clipboardData &&
+                                clipboardData.items &&
+                                clipboardData.items.length
+                            ) {
+                                var item = clipboardData.items[0];
+                                if (item.kind === "file" && item.type.indexOf("image/") !== -1) {
+                                    e.preventDefault();
+                                    uploadImage(item.getAsFile());
+                                }
+                            }
+                        },
+                    },
                 });
             });
-        </script>
-        <script>
+
             function recipeSummit() {
                 var title = $("#title").val();
                 var content = $("#summernote").summernote("code"); // 에디터의 내용을 HTML 문자열로 가져옴
+                console.log("1", content);
+                content = content.replace(notice_form, "");
+                console.log("2", content);
                 var category = $("#category").val();
                 var accessToken = localStorage.getItem("user");
+                var imgURLs = JSON.parse(localStorage.getItem("imgURLs")); // imgURLs를 가져옴
 
                 axios({
                     method: "post",
@@ -48,6 +123,7 @@
                     data: {
                         title: title,
                         content: content,
+                        imgURLs: imgURLs, // imgURLs를 data에 추가
                         category: category,
                     },
                 })

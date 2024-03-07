@@ -1,4 +1,3 @@
--- Active: 1707101290768@@127.0.0.1@3306@sesac
 show tables;
 DESC Users;
 DESC posts;
@@ -27,3 +26,5 @@ SELECT * from bookmarks;
 SELECT * from follows;
 INSERT into bookmarks
 VALUES(NULL, Now(),now(),10,2)
+
+select img from `Posts` WHERE postId=23;

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Edit Post</title>
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %>
+        <link rel="stylesheet" href="/static/post.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h2>Edit Post</h2>
+            <form action="/post/<%= post.postId %>" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">제목:</label>
+                    <input type="text" id="title" name="title" value="<%= post.title %>" required />
+                </div>
+                <div class="form-group">
+                    <label for="content">본문내용:</label>
+                    <textarea id="content" name="content" rows="4" required>
+<%= post.content %></textarea
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="image">이미지 파일 업로드:</label>
+                    <input type="file" id="image" name="image" />
+                </div>
+                <div class="form-group">
+                    <label for="category">카테고리:</label>
+                    <!-- <select id="category" name="category">
+                    <option value="category1" <% if(post.category === 'category1') { %>selected<% } %>>Category 1</option>
+                    <option value="category2" <% if(post.category === 'category2') { %>selected<% } %>>Category 2</option>
+                </select> -->
+                </div>
+
+                <button type="submit" class="btn">수정 완료</button>
+            </form>
+        </div>
+
+        <script src="/path/to/axios.min.js"></script>
+        <script>
+            function postEdit() {
+                location.href = "/post/:postId";
+            }
+        </script>
+    </body>
+</html>
