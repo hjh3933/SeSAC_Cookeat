@@ -214,8 +214,10 @@ exports.getPosts = (req, res) => {
             include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
         }).then((result) => {
             if (result.length > 0) {
-                res.json({ posts: result });
+                // res.json({ posts: result });
                 // res.send(result);
+                console.log("result>>", result);
+                res.render("posts", { posts: result });
             } else {
                 res.send("게시글이 존재하지 않습니다");
             }
@@ -362,10 +364,13 @@ exports.deletePost = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
+        console.log("삭제 진행중", postId);
+
         // 게시글이 존재하는지 확인
         const existingPost = await models.Posts.findOne({
             where: { postId },
         });
+        console.log("existingPost", existingPost);
 
         // 게시글이 존재하지 않는 경우
         if (!existingPost) {
@@ -391,6 +396,44 @@ exports.deletePost = async (req, res) => {
         if (err.name === "JsonWebTokenError") {
             return res.status(401).json({ error: "로그인이 필요합니다." });
         }
+        res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
+    }
+};
+
+exports.postData = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        const bookmarkData = await models.Bookmarks.findOne({
+            where: { id: userId, postId: postId },
+        });
+        let isBookmark;
+        let isFollow;
+        if (bookmarkData) {
+            isBookmark = true;
+        }
+        //postId로 게시글 작성자 id데이터를 가져옴
+        const postsData = await models.Posts.findOne({
+            where: { postId },
+        });
+        const followData = await models.Follows.findOne({
+            where: { followerId: userId, followingId: postsData.id },
+        });
+        console.log("followData", followData);
+        if (followData) {
+            isFollow = true;
+        }
+        res.send({ isBookmark, isFollow });
+    } catch (err) {
+        console.log("err", err);
+        // // 토큰 유효성 검사 에러
+        // if (err.name === "JsonWebTokenError") {
+        //     return res.status(401).json({ error: "로그인이 필요합니다." });
+        // }
         res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
     }
 };
@@ -695,12 +738,47 @@ exports.bookmarkDelete = async (req, res) => {
     }
 };
 
+exports.followInsert = async (req, res) => {
+    try {
+        const id = req.body.id;
+        console.log("id>>", id); //팔로우할 아이디
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        console.log("token", token);
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        //follow - id, postId
+        const followCreate = await models.Follows.create({
+            followerId: userId,
+            followingId: id,
+        });
+        let msg;
+        if (followCreate) {
+            //팔로우 생성 성공
+            msg = "팔로우 추가가 완료되었습니다";
+        } else {
+            //팔로우 생성 실패
+            msg = "팔로우 추가 실패했습니다";
+        }
+        res.send({ msg });
+    } catch (e) {
+        console.log("error발생", e);
+        return res.status(500).send("server error");
+        // console.log("토큰이 만료되었습니다");
+        // res.send("다시 로그인해주세요");
+    }
+};
+
 // 팔로잉 삭제
 exports.followDelete = async (req, res) => {
     try {
         // 응답된 params 저장
-        const { userId } = req.params;
-        console.log("~~userId는~~", userId); // 2 -> Follows의 followId(기본키)
+        const id = req.body.id;
+        console.log("id는~~~~~~~~~", id);
         // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
         const tokenWithBearer = req.headers.authorization;
         // bearer와 token을 공백으로 분리해서 실제 토큰만 token 변수에 담음
@@ -711,18 +789,18 @@ exports.followDelete = async (req, res) => {
         }
         // 토큰 디코드하고 디코드된 토큰에서 사용자 id 추출
         const decodedToken = jwt.verify(token, SECRET);
-        const id = decodedToken.id;
-        console.log("~~id는~~", id); // 10 -> Follows의 followerId = users의 기본키
+        const userid = decodedToken.id;
+        console.log("~~id는~~", userid); // 10 -> Follows의 followerId = users의 기본키
         // Follows 모델에서 userId와 id가 위 응답값과 같은지 확인
         const checkfollow = await models.Follows.findOne({
-            where: { followerId: id },
+            where: { followerId: userid },
         });
         // 팔로우 id와 사용자 id 일치하지 않는 경우
         if (!checkfollow) {
             return res.status(404).json({ error: "팔로우하고 있지 않습니다." });
         }
         const isDeleted = await models.Follows.destroy({
-            where: { followerId: id },
+            where: { followerId: userid },
         });
         if (isDeleted) {
             res.send({ msg: "팔로우가 취소되었습니다." });
