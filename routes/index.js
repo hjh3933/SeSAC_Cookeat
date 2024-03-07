@@ -48,6 +48,8 @@ router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
+// 팔로잉 삭제 - 형석
+router.delete("/followDelete/:userId", controller.followDelete);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
