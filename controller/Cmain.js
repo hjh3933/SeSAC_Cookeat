@@ -247,7 +247,7 @@ exports.postRecipe = async (req, res) => {
         const newRecipe = await models.Posts.create({
             title,
             content,
-            img: null,
+            img: imgURLsString,
             category,
             id: userId,
         });
@@ -286,8 +286,10 @@ exports.getPostDetail = async (req, res) => {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const day = date.getDate().toString().padStart(2, "0");
+        const hour = date.getHours().toString().padStart(2, "0");
+        const minute = date.getMinutes().toString().padStart(2, "0");
 
-        const formattedDate = `${year}-${month}-${day}`;
+        const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`; // 시간과 분을 추가합니다.
         console.log(formattedDate);
 
         // 게시글이 존재하지 않는 경우
@@ -645,10 +647,14 @@ exports.bookmarkInsert = async (req, res) => {
         }
         res.send({ msg, result });
     } catch (e) {
-        console.log("error발생", e);
-        // return res.status(500).send("server error");
-        console.log("토큰이 만료되었습니다");
-        res.send("다시 로그인해주세요");
+        console.error("북마크 추가 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (e instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 // 내 북마크 목록 전체 조회 /profile/:userId/bookmarks
@@ -668,15 +674,20 @@ exports.getAllBookMarks = async (req, res) => {
         const user = await models.Users.findByPk(userId, {
             include: [
                 {
-                    model: models.Posts,
-                    as: "bookmarkedPosts", // 별칭을 'bookmarkedPosts'로 설정합니다.
-                    through: { attributes: ["createdAt"] }, // // Bookmarks 테이블의 타임스탬프 정보
-                    attributes: ["postId", "title"], // 필요한 필드만 선택하여 가져옵니다.
+                    model: models.Bookmarks,
+                    attributes: ["createdAt"], // Bookmarks 테이블의 타임스탬프 정보
                     include: [
                         {
-                            model: models.Users,
-                            as: "author", // 별칭을 'author'로 설정합니다.
-                            attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                            model: models.Posts,
+                            as: "post", // 별칭을 'post'로 설정합니다.
+                            attributes: ["postId", "title"], // 필요한 필드만 선택하여 가져옵니다.
+                            include: [
+                                {
+                                    model: models.Users,
+                                    as: "author", // 별칭을 'author'로 설정합니다.
+                                    attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                                },
+                            ],
                         },
                     ],
                 },
@@ -687,18 +698,23 @@ exports.getAllBookMarks = async (req, res) => {
             return res.status(404).json({ message: "회원을 찾을 수 없습니다." });
         }
 
-        const bookmarks = user.bookmarkedPosts.map((post) => ({
-            postId: post.postId,
-            title: post.title,
-            authorName: post.author.userName, // 'author' 별칭을 사용하여 접근합니다.
-            bookmarkCreatedAt: post.Bookmarks.createdAt, // Bookmarks 테이블의 createdAt 정보
+        const bookmarks = user.Bookmarks.map((bookmark) => ({
+            postId: bookmark.post.postId,
+            title: bookmark.post.title,
+            authorName: bookmark.post.author.userName, // 'author' 별칭을 사용하여 접근합니다.
+            bookmarkCreatedAt: bookmark.createdAt, // Bookmarks 테이블의 createdAt 정보
         }));
 
         return res.status(200).json(bookmarks);
     } catch (err) {
         console.error("북마크 목록 조회 중 에러 발생", err);
-        res.send({ message: "에러 발생", error: err });
-        // 어떤 에러 인지 확인 해야함!! 토큰이 만료되었는지, 시퀄라이즈 에러인지 여러 변수가 많음
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 
@@ -727,14 +743,20 @@ exports.bookmarkDelete = async (req, res) => {
             return res.status(404).json({ error: "북마크가 없습니다." });
         }
         const isDeleted = await models.Bookmarks.destroy({
-            where: { postId: postId },
+            where: { postId: postId, id: userId }, // userId 추가 => 현재 로그인한 사용자만 자신의 북마크를 삭제
         });
         if (isDeleted) {
             res.send({ msg: "북마크가 삭제되었습니다." });
         }
     } catch (err) {
-        console.error("오류 상세 정보:", err);
-        return res.status(500).send("서버 에러, 상세 정보를 확인하세요.");
+        console.error("북마크 삭제 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 
