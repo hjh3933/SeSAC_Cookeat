@@ -417,6 +417,29 @@ exports.profile = async (req, res) => {
     }
 };
 
+exports.getPostEdit = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await models.Posts.findOne({
+            where: { postId: postId },
+            include: [
+                {
+                    model: models.Users,
+                    as: ["author"],
+                },
+            ],
+        });
+        if (post) {
+            res.render("postEdit", { post });
+        } else {
+            res.status(404).send("게시글이 존재하지 않습니다.");
+        }
+    } catch (err) {
+        console.error("게시글 수정 페이지 로딩 중 에러 발생", err);
+        res.status(500).send("서버오류");
+    }
+};
+
 exports.profileEdit = (req, res) => {
     res.render("profileEdit");
 };

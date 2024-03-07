@@ -31,6 +31,9 @@ router.get("/profileEdit", controller.profileEdit);
 router.patch("/profileUpdate/:userId", controller.profileUpdate);
 router.delete("/profile/:userId", controller.profileDelete);
 
+// 게시글 수정페이지 라우터
+router.get("/postEdit/:postId", controller.getPostEdit);
+
 // multer 설정
 // "userfile"은 파일 업로드 필드의 name과 일치시켜야 함
 router.post("/profileUpload", uploadDetail.single("userfile"), profileUpload);
