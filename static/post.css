@@ -61,5 +61,11 @@ h2 {
 
 /* google font */
 .material-symbols-outlined {
-    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+    color: gray;
+}
+.material-symbols-outlined:hover {
+    cursor: pointer;
+    scale: 1.2;
+    color: red;
 }
