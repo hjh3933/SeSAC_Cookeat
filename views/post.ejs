@@ -10,6 +10,7 @@
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
     <body>
         <!-- {
@@ -20,20 +21,26 @@
         ”createdAt” : ”2024/02/28” 
         } -->
         <div class="container">
-            <h2>POST</h2>
+            <!-- 제목 -->
+            <div class="titleCategoryBox">
+                <h1><%=post.title %></h1>
+                <div class="category"><%=post.category%></div>
+            </div>
             <div class="postNav">
                 <div class="navContent">
                     <!-- <div class="postId"><%#=post.id %></div> -->
                     <div class="postId" hidden><%=post.postId %></div>
-                    <div class="userName">작성자: <%=post.author.userName%></div>
+                    <div class="userName"><%=post.author.userName%></div>
                     <div class="follow">
-                        <span class="material-symbols-outlined followIcon"> favorite </span>
+                        <span class="material-symbols-outlined followIcon" onclick="goFollow()">
+                            favorite
+                        </span>
                         <!-- <button type="button">FOLLOW</button> -->
                     </div>
-                    <div class="title">제목: <%=post.title %></div>
+                    <!-- <div class="category"><%#=post.category%></div> -->
                 </div>
                 <div class="time">
-                    <div class="createdAt">작성일: <%=formattedDate %></div>
+                    <div class="createdAt"><%=formattedDate %></div>
                 </div>
             </div>
             <div class="contentBox">
@@ -46,7 +53,9 @@
                 </div>
                 <div class="bookmarkBox">
                     <div class="bookmark">
-                        <span class="material-symbols-outlined bookmarkIcon"> bookmark </span>
+                        <span class="material-symbols-outlined bookmarkIcon" onclick="goBookmark()">
+                            bookmark
+                        </span>
                         <!-- <button type="button">BOOKMARK</button> -->
                     </div>
                 </div>
@@ -62,8 +71,132 @@
         const token = localStorage.getItem("user");
         const userId = localStorage.getItem("userId");
         const postUserId = "<%=post.id %>";
+        const bookmarkIcon = document.querySelector(".bookmarkIcon");
+        const followIcon = document.querySelector(".followIcon");
+        let isBookmark;
+        let isFollow;
         console.log("token", token);
         console.log("userId", userId); //User테이블의 id임
+
+        if (!token) {
+            //로그인 X 북마크, 팔로우 기능 사용불가
+            bookmarkIcon.style.visibility = "hidden";
+            followIcon.style.visibility = "hidden";
+        } else {
+            if (postUserId == userId) {
+                //로그인 상태이고, 내 글일 때
+                bookmarkIcon.style.visibility = "hidden";
+                followIcon.style.visibility = "hidden";
+            } else {
+                //로그인 상태, 내 글이 아닐때
+                axios({
+                    url: "/postData/" + "<%=post.postId %>",
+                    method: "post",
+                    headers: { Authorization: "Bearer " + token },
+                })
+                    .then((res) => {
+                        console.log(res.data.isBookmark);
+                        console.log(res.data.isFollow);
+                        isBookmark = res.data.isBookmark;
+                        isFollow = res.data.isFollow;
+                        if (isBookmark) {
+                            bookmarkIcon.style.color = "red";
+                            // bookmarkIcon.style.scale = "1.5";
+                        }
+                        if (isFollow) {
+                            followIcon.style.color = "red";
+                            // followIcon.style.scale = "1.5";
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("err>>", err);
+                    });
+            }
+        }
+
+        // 4. bookmark버튼
+        function goBookmark() {
+            if (isBookmark) {
+                axios({
+                    url: "/bookmarkDelete/" + "<%=post.postId %>",
+                    method: "delete",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        alert(res.data.msg);
+                        location.reload(); //다시 로드함
+                    })
+                    .catch((err) => {
+                        alert("오류 발생");
+                        console.log("err>>", err);
+                    });
+            } else {
+                axios({
+                    url: "/bookmarkInsert/" + "<%=post.postId %>",
+                    method: "post",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        alert(res.data.msg);
+                        location.reload(); //다시 로드함
+                    })
+                    .catch((err) => {
+                        alert("오류 발생");
+                        console.log("err>>", err);
+                    });
+            }
+        }
+
+        // 5. follow버튼
+        const id = "<%=post.id%>"; //글작성자의 아이디, 내가 팔로우할 아이디
+        function goFollow() {
+            if (isFollow) {
+                //팔로우 삭제
+                alert("팔로우 삭제");
+                // axios({
+                //     url: "/followDelete",
+                //     method: "delete",
+                //     data: { id: id },
+                //     headers: {
+                //         Authorization: "Bearer " + token,
+                //     },
+                // })
+                //     .then((res) => {
+                //         console.log(res.data);
+                //         alert(res.data.msg);
+                //         location.reload(); //다시 로드함
+                //     })
+                //     .catch((err) => {
+                //         alert("오류 발생");
+                //         console.log("err>>", err);
+                //     });
+            } else {
+                //팔로우 추가
+                axios({
+                    url: "/followInsert",
+                    method: "post",
+                    data: { id: id },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        alert(res.data.msg);
+                        location.reload(); //다시 로드함
+                    })
+                    .catch((err) => {
+                        alert("오류 발생");
+                        console.log("err>>", err);
+                    });
+            }
+        }
 
         // 0-5 수정, 삭제 버튼은 토큰 일치해야 보이도록 설정
         const editPostBtn = document.querySelector(".editPost");
@@ -89,7 +222,7 @@
             if (deleteOk) {
                 //삭제작업 axios
                 axios({
-                    url: "/post/" + "<%=post.id %>",
+                    url: "/post/" + "<%=post.postId %>",
                     method: "delete",
                     headers: {
                         Authorization: "Bearer " + token,
@@ -106,7 +239,5 @@
                 //삭제취소
             }
         }
-        // 4. follow버튼
-        // 5. bookmark버튼
     </script>
 </html>

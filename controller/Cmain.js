@@ -207,15 +207,28 @@ exports.logout = (req, res) => {
 
 exports.getPosts = (req, res) => {
     //전체 게시글 조회
-
     try {
         models.Posts.findAll({
             attributes: ["postId", "id", "title", "createdAt"],
-            include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
+            include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
         }).then((result) => {
             if (result.length > 0) {
-                res.json({ posts: result });
+                // 날짜와 시간 포맷 변경
+                result.forEach((post) => {
+                    console.log(post.createdAt);
+                    const date = new Date(post.createdAt);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
+                    const day = date.getDate().toString().padStart(2, "0");
+                    const hour = date.getHours().toString().padStart(2, "0");
+                    const minute = date.getMinutes().toString().padStart(2, "0");
+
+                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+                });
+                // res.json({ posts: result });
                 // res.send(result);
+                console.log("result>>", result);
+                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
                 res.send("게시글이 존재하지 않습니다");
             }
@@ -245,7 +258,7 @@ exports.postRecipe = async (req, res) => {
         const newRecipe = await models.Posts.create({
             title,
             content,
-            img: null,
+            img: imgURLsString,
             category,
             id: userId,
         });
@@ -284,8 +297,10 @@ exports.getPostDetail = async (req, res) => {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const day = date.getDate().toString().padStart(2, "0");
+        const hour = date.getHours().toString().padStart(2, "0");
+        const minute = date.getMinutes().toString().padStart(2, "0");
 
-        const formattedDate = `${year}-${month}-${day}`;
+        const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`; // 시간과 분을 추가합니다.
         console.log(formattedDate);
 
         // 게시글이 존재하지 않는 경우
@@ -362,10 +377,13 @@ exports.deletePost = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
+        console.log("삭제 진행중", postId);
+
         // 게시글이 존재하는지 확인
         const existingPost = await models.Posts.findOne({
             where: { postId },
         });
+        console.log("existingPost", existingPost);
 
         // 게시글이 존재하지 않는 경우
         if (!existingPost) {
@@ -394,6 +412,44 @@ exports.deletePost = async (req, res) => {
         res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
     }
 };
+
+exports.postData = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        const bookmarkData = await models.Bookmarks.findOne({
+            where: { id: userId, postId: postId },
+        });
+        let isBookmark;
+        let isFollow;
+        if (bookmarkData) {
+            isBookmark = true;
+        }
+        //postId로 게시글 작성자 id데이터를 가져옴
+        const postsData = await models.Posts.findOne({
+            where: { postId },
+        });
+        const followData = await models.Follows.findOne({
+            where: { followerId: userId, followingId: postsData.id },
+        });
+        console.log("followData", followData);
+        if (followData) {
+            isFollow = true;
+        }
+        res.send({ isBookmark, isFollow });
+    } catch (err) {
+        console.log("err", err);
+        // // 토큰 유효성 검사 에러
+        // if (err.name === "JsonWebTokenError") {
+        //     return res.status(401).json({ error: "로그인이 필요합니다." });
+        // }
+        res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
+    }
+};
 exports.getProfile = (req, res) => {
     res.render("profile");
 };
@@ -403,7 +459,7 @@ exports.profile = async (req, res) => {
     // res.render("profile");
     try {
         // 요청 헤더에서 토큰 추출
-        console.log(req.headers.authorization);
+        console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
         // jwt.verify(token, SECRET)
@@ -434,12 +490,15 @@ exports.profile = async (req, res) => {
                 console.error("프로필 조회 중 에러 발생", err);
                 res.status(500).send("서버 에러");
             });
-    } catch (error) {
-        // if (error) throw error;
-        // JWT 검증 실패
-        res.status(401).send("유효하지 않은 토큰");
-        // const msg = `alert("로그인을 진행해주세요!")`;
-        // res.render("index");
+    } catch (err) {
+        console.error("회원정보 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 
@@ -451,7 +510,7 @@ exports.getPostEdit = async (req, res) => {
             include: [
                 {
                     model: models.Users,
-                    as: ["author"],
+                    as: "author",
                 },
             ],
         });
@@ -536,7 +595,7 @@ exports.checkNickname = (req, res) => {
             res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
         });
 };
-
+// 회원정보 수정
 exports.profileUpdate = async (req, res) => {
     try {
         const tokenWithBearer = req.headers.authorization;
@@ -602,10 +661,14 @@ exports.bookmarkInsert = async (req, res) => {
         }
         res.send({ msg, result });
     } catch (e) {
-        console.log("error발생", e);
-        // return res.status(500).send("server error");
-        console.log("토큰이 만료되었습니다");
-        res.send("다시 로그인해주세요");
+        console.error("북마크 추가 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (e instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 // 내 북마크 목록 전체 조회 /profile/:userId/bookmarks
@@ -625,15 +688,20 @@ exports.getAllBookMarks = async (req, res) => {
         const user = await models.Users.findByPk(userId, {
             include: [
                 {
-                    model: models.Posts,
-                    as: "bookmarkedPosts", // 별칭을 'bookmarkedPosts'로 설정합니다.
-                    through: { attributes: ["createdAt"] }, // // Bookmarks 테이블의 타임스탬프 정보
-                    attributes: ["postId", "title"], // 필요한 필드만 선택하여 가져옵니다.
+                    model: models.Bookmarks,
+                    attributes: ["createdAt"], // Bookmarks 테이블의 타임스탬프 정보
                     include: [
                         {
-                            model: models.Users,
-                            as: "author", // 별칭을 'author'로 설정합니다.
-                            attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                            model: models.Posts,
+                            as: "post", // 별칭을 'post'로 설정합니다.
+                            attributes: ["postId", "title"], // 필요한 필드만 선택하여 가져옵니다.
+                            include: [
+                                {
+                                    model: models.Users,
+                                    as: "author", // 별칭을 'author'로 설정합니다.
+                                    attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                                },
+                            ],
                         },
                     ],
                 },
@@ -644,18 +712,23 @@ exports.getAllBookMarks = async (req, res) => {
             return res.status(404).json({ message: "회원을 찾을 수 없습니다." });
         }
 
-        const bookmarks = user.bookmarkedPosts.map((post) => ({
-            postId: post.postId,
-            title: post.title,
-            authorName: post.author.userName, // 'author' 별칭을 사용하여 접근합니다.
-            bookmarkCreatedAt: post.Bookmarks.createdAt, // Bookmarks 테이블의 createdAt 정보
+        const bookmarks = user.Bookmarks.map((bookmark) => ({
+            postId: bookmark.post.postId,
+            title: bookmark.post.title,
+            authorName: bookmark.post.author.userName, // 'author' 별칭을 사용하여 접근합니다.
+            bookmarkCreatedAt: bookmark.createdAt, // Bookmarks 테이블의 createdAt 정보
         }));
 
         return res.status(200).json(bookmarks);
     } catch (err) {
         console.error("북마크 목록 조회 중 에러 발생", err);
-        res.send({ message: "에러 발생", error: err });
-        // 어떤 에러 인지 확인 해야함!! 토큰이 만료되었는지, 시퀄라이즈 에러인지 여러 변수가 많음
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 
@@ -684,10 +757,149 @@ exports.bookmarkDelete = async (req, res) => {
             return res.status(404).json({ error: "북마크가 없습니다." });
         }
         const isDeleted = await models.Bookmarks.destroy({
-            where: { postId: postId },
+            where: { postId: postId, id: userId }, // userId 추가 => 현재 로그인한 사용자만 자신의 북마크를 삭제
         });
         if (isDeleted) {
             res.send({ msg: "북마크가 삭제되었습니다." });
+        }
+    } catch (err) {
+        console.error("북마크 삭제 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
+    }
+};
+// 팔로우 추가
+exports.followInsert = async (req, res) => {
+    try {
+        const id = req.body.id;
+        console.log("id>>", id); //팔로우할 아이디
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+        console.log("token", token);
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        //follow - id, postId
+        const followCreate = await models.Follows.create({
+            followerId: userId,
+            followingId: id,
+        });
+        let msg;
+        if (followCreate) {
+            //팔로우 생성 성공
+            msg = "팔로우 추가가 완료되었습니다";
+        } else {
+            //팔로우 생성 실패
+            msg = "팔로우 추가 실패했습니다";
+        }
+        res.send({ msg });
+    } catch (e) {
+        console.log("error발생", e);
+        return res.status(500).send("server error");
+        // console.log("토큰이 만료되었습니다");
+        // res.send("다시 로그인해주세요");
+    }
+};
+// 팔로워 조회
+exports.getFollowers = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
+        // 토큰 없는 경우
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        // 팔로워 조회
+        const user = await models.Users.findOne({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).send("사용자를 찾을 수 없습니다.");
+        }
+        const followers = await user.getFollowers();
+        res.json({ followers });
+    } catch (err) {
+        console.error("팔로워 목록 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
+    }
+};
+// 팔로잉 목록 조회
+exports.getFollowings = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+      
+        // 토큰 없는 경우
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        //팔로잉 조회
+        const user = await models.Users.findOne({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).send("사용자를 찾을 수 없습니다.");
+        }
+        const followings = await user.getFollowings();
+        res.json(followings);
+    } catch (err) {
+        console.error("팔로잉 목록 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
+    }
+};
+
+// 팔로잉 삭제
+exports.followDelete = async (req, res) => {
+    try {
+        // 응답된 params 저장
+        const { followingId } = req.params;
+        console.log("id는~~~~~~~~~", followingId);
+        // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
+        const tokenWithBearer = req.headers.authorization;
+        // bearer와 token을 공백으로 분리해서 실제 토큰만 token 변수에 담음
+        const token = tokenWithBearer.split(" ")[1];
+        // 토큰 디코드하고 디코드된 토큰에서 사용자 id 추출
+        const decodedToken = jwt.verify(token, SECRET);
+        const userid = decodedToken.id;
+        console.log("userid는~~~~", userid); // Follows의 followerId = users의 기본키
+        // Follows 모델에서 userId와 id가 위 응답값과 같은지 확인
+        const checkfollow = await models.Follows.findOne({
+            where: { followerId: userid, followingId: followingId },
+        });
+        // 팔로우 id와 사용자 id 일치하지 않는 경우
+        if (!checkfollow) {
+            return res.status(404).json({ error: "팔로우하고 있지 않습니다." });
+        }
+        const isDeleted = await models.Follows.destroy({
+            where: { followerId: userid, followingId: followingId },
+        });
+        if (isDeleted) {
+            res.send({ msg: "팔로우가 취소되었습니다." });
         }
     } catch (err) {
         console.error("오류 상세 정보:", err);
