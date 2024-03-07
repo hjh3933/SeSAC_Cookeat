@@ -214,8 +214,10 @@ exports.getPosts = (req, res) => {
             include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
         }).then((result) => {
             if (result.length > 0) {
-                res.json({ posts: result });
+                // res.json({ posts: result });
                 // res.send(result);
+                console.log("result>>", result);
+                res.render("posts", { posts: result });
             } else {
                 res.send("게시글이 존재하지 않습니다");
             }
