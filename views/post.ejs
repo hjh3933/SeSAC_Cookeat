@@ -21,23 +21,26 @@
         ”createdAt” : ”2024/02/28” 
         } -->
         <div class="container">
-            <h2>POST</h2>
+            <!-- 제목 -->
+            <div class="titleCategoryBox">
+                <h1><%=post.title %></h1>
+                <div class="category"><%=post.category%></div>
+            </div>
             <div class="postNav">
                 <div class="navContent">
                     <!-- <div class="postId"><%#=post.id %></div> -->
                     <div class="postId" hidden><%=post.postId %></div>
-                    <div class="category">카테고리: <%=post.category%></div>
-                    <div class="userName">작성자: <%=post.author.userName%></div>
+                    <div class="userName"><%=post.author.userName%></div>
                     <div class="follow">
                         <span class="material-symbols-outlined followIcon" onclick="goFollow()">
                             favorite
                         </span>
                         <!-- <button type="button">FOLLOW</button> -->
                     </div>
-                    <div class="title">제목: <%=post.title %></div>
+                    <!-- <div class="category"><%#=post.category%></div> -->
                 </div>
                 <div class="time">
-                    <div class="createdAt">작성일: <%=formattedDate %></div>
+                    <div class="createdAt"><%=formattedDate %></div>
                 </div>
             </div>
             <div class="contentBox">
@@ -98,11 +101,11 @@
                         isFollow = res.data.isFollow;
                         if (isBookmark) {
                             bookmarkIcon.style.color = "red";
-                            bookmarkIcon.style.scale = "1.5";
+                            // bookmarkIcon.style.scale = "1.5";
                         }
                         if (isFollow) {
                             followIcon.style.color = "red";
-                            followIcon.style.scale = "1.5";
+                            // followIcon.style.scale = "1.5";
                         }
                     })
                     .catch((err) => {

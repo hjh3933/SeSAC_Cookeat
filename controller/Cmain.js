@@ -510,7 +510,7 @@ exports.getPostEdit = async (req, res) => {
             include: [
                 {
                     model: models.Users,
-                    as: ["author"],
+                    as: "author",
                 },
             ],
         });
@@ -846,7 +846,7 @@ exports.getFollowings = async (req, res) => {
         // 로그인한 사용자의 id를 토큰에서 추출
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-
+      
         // 토큰 없는 경우
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
@@ -870,5 +870,39 @@ exports.getFollowings = async (req, res) => {
         } else {
             res.send({ message: "에러 발생", error: err });
         }
+    }
+};
+
+// 팔로잉 삭제
+exports.followDelete = async (req, res) => {
+    try {
+        // 응답된 params 저장
+        const { followingId } = req.params;
+        console.log("id는~~~~~~~~~", followingId);
+        // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
+        const tokenWithBearer = req.headers.authorization;
+        // bearer와 token을 공백으로 분리해서 실제 토큰만 token 변수에 담음
+        const token = tokenWithBearer.split(" ")[1];
+        // 토큰 디코드하고 디코드된 토큰에서 사용자 id 추출
+        const decodedToken = jwt.verify(token, SECRET);
+        const userid = decodedToken.id;
+        console.log("userid는~~~~", userid); // Follows의 followerId = users의 기본키
+        // Follows 모델에서 userId와 id가 위 응답값과 같은지 확인
+        const checkfollow = await models.Follows.findOne({
+            where: { followerId: userid, followingId: followingId },
+        });
+        // 팔로우 id와 사용자 id 일치하지 않는 경우
+        if (!checkfollow) {
+            return res.status(404).json({ error: "팔로우하고 있지 않습니다." });
+        }
+        const isDeleted = await models.Follows.destroy({
+            where: { followerId: userid, followingId: followingId },
+        });
+        if (isDeleted) {
+            res.send({ msg: "팔로우가 취소되었습니다." });
+        }
+    } catch (err) {
+        console.error("오류 상세 정보:", err);
+        return res.status(500).send("서버 에러, 상세 정보를 확인하세요.");
     }
 };
