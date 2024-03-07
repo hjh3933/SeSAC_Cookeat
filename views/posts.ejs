@@ -7,107 +7,11 @@
         <!-- axios cdn -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
-        <style>
-            body {
-                background: #f4f4f4;
-                padding: 0 8px;
-            }
-
-            .noData {
-                background-color: #f7f5ec;
-                max-width: 1200px;
-                margin: 0 auto;
-                box-shadow: 0px 0px 15px rgba(80, 80, 80, 0.4);
-                text-align: center;
-                height: 500px;
-                line-height: 500px;
-                border-radius: 20px;
-            }
-            .container {
-                background-color: #f7f5ec;
-                max-width: 1200px;
-                margin: 0 auto;
-                box-shadow: 0px 0px 15px rgba(80, 80, 80, 0.4);
-                text-align: center;
-                border-radius: 20px;
-                padding: 3rem 0;
-            }
-            .homeimg {
-                margin-bottom: 20px;
-            }
-            .container .lists {
-                margin: 0 auto;
-                border: 5px solid rgba(175, 182, 76, 0.6);
-                border-collapse: separate;
-                border-radius: 20px;
-            }
-            .container .top {
-                /* display: flex; */
-                /* width: 1150px; */
-                height: 50px;
-                align-items: center;
-                text-align: center;
-                top: 5px;
-                /* border: 1px solid black; */
-                border-radius: 20px;
-                /* margin-bottom: 10px; */
-            }
-            .container .top .items {
-                /* display: flex; */
-                /* border: 1px solid black; */
-                /* border-radius: 20px; */
-                /* width: 100px; */
-                height: 50px;
-                text-align: center;
-            }
-            .container .infomation {
-                /* display: flex; */
-                justify-content: start;
-                /* position: absolute; */
-                /* width: 1150px; */
-                /* height: 400px; */
-                /* flex-direction: column; */
-                /* border: 1px solid black; */
-                border-radius: 20px;
-                /* margin-bottom: 5px; */
-            }
-            .infos {
-                border: 5px solid rgb(231, 243, 205);
-                border-radius: 20px;
-                height: 50px;
-            }
-            .infos > td {
-                margin-bottom: 10px;
-            }
-
-            .postId {
-                /* width: 100px; */
-            }
-            .id {
-                /* width: 100px; */
-            }
-            .title {
-                /* width: 400px; */
-            }
-            .createdAt {
-                /* width: 500px; */
-            }
-            .User {
-                /* width: 100px; */
-            }
-            .write {
-                background-color: rgb(227, 245, 168);
-                width: 100px;
-                border-radius: 20px;
-                color: black;
-                margin-top: 5px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/posts.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
     </head>
     <body>
-        <% if(!isData){%>
+        <% if(!posts){%>
         <p class="noData"><%=message %></p>
 
         <%} else{%>
@@ -123,8 +27,8 @@
                         <td class="items num">번호</td>
                         <td class="items identi">ID</td>
                         <td class="items postsTitle">제목</td>
-                        <td class="items postsDate">작성일시</td>
-                        <td class="items writer">작성자</td>
+                        <td class="items postsDate">작성일자</td>
+                        <td class="items writer">요리사</td>
                     </tr>
                 </thead>
 
@@ -147,13 +51,15 @@
                             <a href="/post/<%=post.postId%>"><%=post.title%></a>
                         </td>
                         <td class="infos createdAt"><%=post.createdAt%></td>
-                        <td class="infos User"><%=post.User.userName%></td>
+                        <td class="infos User"><%=post.Users.userName%></td>
                     </tr>
                     <% } %>
                 </tbody>
             </table>
-            <div class="write"><a href="/post">게시글 작성</a></div>
-            <% console.log(posts[0]) %>
+            <button class="custom-btn btn-12" onclick="location.href = '/post' ">
+                <span>Cook eat!🍴</span><span>요리시작!🍴</span>
+            </button>
+            <%# console.log(posts[0]) %>
         </section>
         <% } %>
         <footer>
