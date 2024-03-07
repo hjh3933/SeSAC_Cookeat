@@ -49,7 +49,7 @@ router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
 // 팔로잉 삭제 - 형석
-router.delete("/followDelete", controller.followDelete);
+router.delete("/followDelete/:followingId", controller.followDelete);
 
 // 팔로우 추가
 router.post("/followInsert", controller.followInsert);
