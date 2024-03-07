@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const db = require("./models");
+const cors = require("cors");
 const app = express();
 const PORT = 8080;
 
@@ -21,6 +22,12 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(
+    cors({
+        origin: "http://localhost:8080", // 클라이언트의 도메인
+        credentials: true, // `Authorization` 헤더를 포함한 요청을 허용함
+    })
+);
 
 db.sequelize.sync({ force: false }).then((result) => {
     console.log("db연결 성공");

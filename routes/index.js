@@ -53,6 +53,10 @@ router.delete("/followDelete/:followingId", controller.followDelete);
 
 // 팔로우 추가
 router.post("/followInsert", controller.followInsert);
+// 팔로워 조회
+router.get("/followers", controller.getFollowers);
+// 팔로잉 조회
+router.get("/followings", controller.getFollowings);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
