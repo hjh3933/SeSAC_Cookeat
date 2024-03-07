@@ -1,4 +1,4 @@
--- Active: 1707101290768@@127.0.0.1@3306@sesac
+-- Active: 1707112054461@@127.0.0.1@3306@sesac
 show tables;
 DESC Users;
 DESC posts;
@@ -19,3 +19,5 @@ VALUES (NULL,"jisu4", "ㅋㅋㅋㅋㅋㅋㅋㅋ",NULL,"채식",NOW(),NOW(), 4);
 SELECT * from bookmarks;
 INSERT into bookmarks
 VALUES(NULL, Now(),now(),10,2)
+
+select img from `Posts` WHERE postId=23;
