@@ -207,17 +207,28 @@ exports.logout = (req, res) => {
 
 exports.getPosts = (req, res) => {
     //전체 게시글 조회
-
     try {
         models.Posts.findAll({
             attributes: ["postId", "id", "title", "createdAt"],
-            include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
+            include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
         }).then((result) => {
             if (result.length > 0) {
+                // 날짜와 시간 포맷 변경
+                result.forEach((post) => {
+                    console.log(post.createdAt);
+                    const date = new Date(post.createdAt);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
+                    const day = date.getDate().toString().padStart(2, "0");
+                    const hour = date.getHours().toString().padStart(2, "0");
+                    const minute = date.getMinutes().toString().padStart(2, "0");
+
+                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+                });
                 // res.json({ posts: result });
                 // res.send(result);
                 console.log("result>>", result);
-                res.render("posts", { posts: result });
+                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
                 res.send("게시글이 존재하지 않습니다");
             }
@@ -448,7 +459,7 @@ exports.profile = async (req, res) => {
     // res.render("profile");
     try {
         // 요청 헤더에서 토큰 추출
-        console.log(req.headers.authorization);
+        console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
         // jwt.verify(token, SECRET)
@@ -479,12 +490,15 @@ exports.profile = async (req, res) => {
                 console.error("프로필 조회 중 에러 발생", err);
                 res.status(500).send("서버 에러");
             });
-    } catch (error) {
-        // if (error) throw error;
-        // JWT 검증 실패
-        res.status(401).send("유효하지 않은 토큰");
-        // const msg = `alert("로그인을 진행해주세요!")`;
-        // res.render("index");
+    } catch (err) {
+        console.error("회원정보 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
 
@@ -581,7 +595,7 @@ exports.checkNickname = (req, res) => {
             res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
         });
 };
-
+// 회원정보 수정
 exports.profileUpdate = async (req, res) => {
     try {
         const tokenWithBearer = req.headers.authorization;
@@ -759,7 +773,7 @@ exports.bookmarkDelete = async (req, res) => {
         }
     }
 };
-
+// 팔로우 추가
 exports.followInsert = async (req, res) => {
     try {
         const id = req.body.id;
@@ -792,5 +806,69 @@ exports.followInsert = async (req, res) => {
         return res.status(500).send("server error");
         // console.log("토큰이 만료되었습니다");
         // res.send("다시 로그인해주세요");
+    }
+};
+// 팔로워 조회
+exports.getFollowers = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
+        // 토큰 없는 경우
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        // 팔로워 조회
+        const user = await models.Users.findOne({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).send("사용자를 찾을 수 없습니다.");
+        }
+        const followers = await user.getFollowers();
+        res.json({ followers });
+    } catch (err) {
+        console.error("팔로워 목록 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
+    }
+};
+// 팔로잉 목록 조회
+exports.getFollowings = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
+        // 토큰 없는 경우
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        //팔로잉 조회
+        const user = await models.Users.findOne({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).send("사용자를 찾을 수 없습니다.");
+        }
+        const followings = await user.getFollowings();
+        res.json(followings);
+    } catch (err) {
+        console.error("팔로잉 목록 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };
