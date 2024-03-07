@@ -4,31 +4,55 @@ const SECRET = "DWB0jOga2jrAozUXUsLCQ1e4EeeQH8"; //랜덤문자열 env관리 예
 const bcrypt = require("bcrypt");
 const path = require("path");
 const multer = require("multer");
-const uploadDetail = multer({
+
+// 프로필 이미지 업로드 multer
+const profileUpload = multer({
     storage: multer.diskStorage({
-        // 저장할 경로 profileUploads 폴더
         destination(req, file, done) {
-            done(null, "profileUploads/");
+            done(null, path.join(__dirname, "../static/profileUploads/")); // 프로필 이미지를 저장할 디렉토리
         },
         filename(req, file, done) {
-            // 파일 확장자 추출
             const ext = path.extname(file.originalname);
-            // 파일 이름을 원본 파일 이름의 베이스 이름, 현재 날짜의 타임스탬프, 확장자로
             done(null, path.basename(file.originalname, ext) + Date.now() + ext);
         },
     }),
-    // 파일 크기 제한 설정 (5MB)
     limits: { fileSize: 5 * 1024 * 1024 },
 });
-
-exports.profileUpload = (req, res) => {
+// 프로필 이미지 업로드
+exports.uploadProfileImg = (req, res) => {
     // "userfile"은 파일 업로드 필드의 name과 일치시켜야함
     console.log(req.file);
     console.log(req.body);
-    res.send("업로드 완료");
+    res.send("프로필 이미지 업로드 완료");
+};
+
+// 게시글 이미지 업로드 multer
+const recipeUpload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, done) {
+            done(null, path.join(__dirname, "../static/recipeUploadImg/")); // 게시글 이미지를 저장할 디렉토리
+        },
+        filename(req, file, done) {
+            const ext = path.extname(file.originalname);
+            done(null, path.basename(file.originalname, ext) + Date.now() + ext);
+        },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 },
+});
+// 게시글 이미지 업로드
+exports.uploadRecipeImage = (req, res) => {
+    console.log(req.files);
+    console.log(req.body);
+    if (req.files.length > 0) {
+        var url = path.join("/static/recipeUploadImg/", req.files[0].filename);
+        res.send({ message: "게시글 이미지 업로드 완료", url: url });
+    } else {
+        res.status(400).send({ error: "No file was uploaded." });
+    }
 };
 // routes/index.js에서 사용할 수 있게 내보내기
-exports.uploadDetail = uploadDetail;
+exports.profileUpload = profileUpload;
+exports.recipeUpload = recipeUpload; // 게시글 이미지 업로드를 위한 `multer` 인스턴스 내보내기
 
 //암호화, 비교 함수
 const saltRounds = 10;
@@ -205,7 +229,7 @@ exports.getPosts = (req, res) => {
 // 게시글 작성
 exports.postRecipe = async (req, res) => {
     try {
-        const { title, content, img, category } = req.body;
+        const { title, content, imgURLs, category } = req.body;
         // 제목, 내용, 카테고리 유효성 검사
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
@@ -216,6 +240,7 @@ exports.postRecipe = async (req, res) => {
         const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
+        const imgURLsString = JSON.stringify(imgURLs);
 
         const newRecipe = await models.Posts.create({
             title,
@@ -231,9 +256,10 @@ exports.postRecipe = async (req, res) => {
         if (err.name === "JsonWebTokenError") {
             return res.status(401).json({ error: "로그인이 필요합니다." });
         }
-        res.status(500).send("서버 에러", err);
+        res.status(500).send({ message: "서버 에러", error: err });
     }
 };
+
 //단일 게시글 조회
 exports.getPostDetail = async (req, res) => {
     try {

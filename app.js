@@ -1,8 +1,21 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const db = require("./models");
 const app = express();
 const PORT = 8080;
+
+// 프로필 이미지를 저장할 디렉토리
+const profileDir = path.join(__dirname, "./static/profileUploads");
+if (!fs.existsSync(profileDir)) {
+    fs.mkdirSync(profileDir, { recursive: true });
+}
+
+// 게시글 이미지를 저장할 디렉토리
+const recipeDir = path.join(__dirname, "./static/recipeUploadImg");
+if (!fs.existsSync(recipeDir)) {
+    fs.mkdirSync(recipeDir, { recursive: true });
+}
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
