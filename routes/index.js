@@ -32,6 +32,9 @@ router.get("/profileEdit", controller.profileEdit);
 router.patch("/profileUpdate/:userId", controller.profileUpdate);
 router.delete("/profile/:userId", controller.profileDelete);
 
+// 게시글 수정페이지 라우터
+router.get("/postEdit/:postId", controller.getPostEdit);
+
 // multer 설정
 // 프로필 이미지 업로드
 // "userfile"은 파일 업로드 필드의 name과 일치시켜야 함
@@ -44,7 +47,7 @@ router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 // 북마크 조회 - 프로필 페이지에서 북마크 목록 조회
 router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
-router.delete("/bookmarkDelete/:bookmarkId", controller.bookmarkDelete);
+router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
