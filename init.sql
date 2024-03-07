@@ -1,3 +1,4 @@
+-- Active: 1707112054461@@127.0.0.1@3306@sesac
 
 show tables;
 DESC Users;
