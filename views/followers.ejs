@@ -14,7 +14,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>Followings</h1>
+            <h1>Followers</h1>
             <div class="followerContainer">
                 <div class="singleFollow">
                     <div class="userData">
@@ -39,34 +39,34 @@
 
         // 검색하는 axios수행
         axios({
-            url: "/followings",
+            url: "/followers",
             method: "post",
             headers: { Authorization: "Bearer " + token },
         }).then((res) => {
             console.log("res.data >>", res.data);
-            console.log("res.data.followers >>", res.data.followings);
+            console.log("res.data.followers >>", res.data.followers);
 
             // 데이터를 받아서 화면에 출력합니다(for)
-            for (following of res.data.followings) {
+            for (follower of res.data.followers) {
                 //followerId
-                const followingId = document.createElement("a");
-                followingId.textContent = following.userId;
-                followingId.classList.add("userId");
-                followingId.href = "/userPosts/" + following.id;
+                const followerId = document.createElement("a");
+                followerId.textContent = follower.userId;
+                followerId.classList.add("userId");
+                followerId.href = "/userPosts/" + follower.id;
                 // followerUserName
-                const followingUserName = document.createElement("div");
-                followingUserName.textContent = following.userName;
-                followingUserName.classList.add("userName");
+                const followerUserName = document.createElement("div");
+                followerUserName.textContent = follower.userName;
+                followerUserName.classList.add("userName");
                 //heart
                 const heart = document.createElement("span");
                 heart.textContent = "favorite";
                 heart.classList.add("material-symbols-outlined");
-                heart.classList.add("followingIcon");
+                heart.classList.add("followIcon");
                 //userData
                 const userData = document.createElement("div");
                 userData.classList.add("userData");
-                userData.appendChild(followingId);
-                userData.appendChild(followingUserName);
+                userData.appendChild(followerId);
+                userData.appendChild(followerUserName);
                 //followIconBox
                 const followIconBox = document.createElement("div");
                 followIconBox.classList.add("followIconBox");
@@ -79,35 +79,31 @@
                 //추가
                 followerContainer.appendChild(singleFollow);
 
-                //클릭 이벤트 추가
-                (function (following) {
-                    heart.onclick = function () {
-                        // 클릭된 하트 아이콘에 대한 이벤트 처리
-                        const followDeleteCheck = confirm(
-                            `${following.userName}님을 팔로우 목록에서 삭제하시겠습니까?`
-                        );
-                        if (followDeleteCheck) {
-                            // axios삭제 이벤트
-                            axios({
-                                url: "/followDelete",
-                                method: "delete",
-                                data: { id: following.id },
-                                headers: {
-                                    Authorization: "Bearer " + token,
-                                },
-                            })
-                                .then((res) => {
-                                    console.log(res.data);
-                                    alert(res.data.msg);
-                                    location.reload(); //다시 로드함
-                                })
-                                .catch((err) => {
-                                    alert("오류 발생");
-                                    console.log("err>>", err);
-                                });
-                        }
-                    };
-                })(following);
+                //클릭 이벤트 추가(생각해보니까 팔로워라 할수가 없어)
+                // (function (follower) {
+                //     heart.onclick = function () {
+                //         // 클릭된 하트 아이콘에 대한 이벤트 처리
+                //         alert(`${follower.id}번 Heart 아이콘 클릭됨`);
+                //         // axios삭제 이벤트
+                //         axios({
+                //             url: "/followDelete",
+                //             method: "delete",
+                //             data: { id: follower.id },
+                //             headers: {
+                //                 Authorization: "Bearer " + token,
+                //             },
+                //         })
+                //             .then((res) => {
+                //                 console.log(res.data);
+                //                 alert(res.data.msg);
+                //                 location.reload(); //다시 로드함
+                //             })
+                //             .catch((err) => {
+                //                 alert("오류 발생");
+                //                 console.log("err>>", err);
+                //             });
+                //     };
+                // })(follower);
             }
         });
     </script>
