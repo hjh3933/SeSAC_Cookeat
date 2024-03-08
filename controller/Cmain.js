@@ -238,6 +238,42 @@ exports.getPosts = (req, res) => {
         res.status(500).send("서버 에러");
     }
 };
+exports.getUserPosts = (req, res) => {
+    //특정 유저의 게시글 조회
+    try {
+        const { id } = req.params;
+        console.log("검색할 유저는>>", id);
+        models.Posts.findAll({
+            where: { id },
+            attributes: ["postId", "id", "title", "createdAt"],
+            include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
+        }).then((result) => {
+            if (result.length > 0) {
+                // 날짜와 시간 포맷 변경
+                result.forEach((post) => {
+                    console.log(post.createdAt);
+                    const date = new Date(post.createdAt);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
+                    const day = date.getDate().toString().padStart(2, "0");
+                    const hour = date.getHours().toString().padStart(2, "0");
+                    const minute = date.getMinutes().toString().padStart(2, "0");
+
+                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+                });
+                // res.json({ posts: result });
+                // res.send(result);
+                console.log("result>>", result);
+                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
+            } else {
+                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
+            }
+        });
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).send("서버 에러");
+    }
+};
 
 // 게시글 작성
 exports.postRecipe = async (req, res) => {
