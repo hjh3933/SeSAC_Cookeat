@@ -115,7 +115,7 @@
                         logoutBtn.style.display = "none";
                         profileLinkBtn.style.display = "none";
 
-                        if (currentPath === "/profile") {
+                        if (currentPath === "/profile" || currentPath === "/profileEdit") {
                             alert("로그인이 필요합니다!");
                             window.location.href = "/login";
                         }

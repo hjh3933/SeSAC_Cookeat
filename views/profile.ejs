@@ -21,7 +21,7 @@
     <body>
         <div class="portfoliocard">
             <div class="coverphoto"></div>
-            <div class="profile_picture"></div>
+            <div class="profile_picture" id="profileImg"></div>
             <div class="left_col">
                 <div class="followers">
                     <div class="follow_count">1,234</div>
@@ -48,11 +48,60 @@
                     <label for="nickNameInput">Phone</label>
                     <li class="phone">1-(732)-757-2923</li> -->
                     <!-- <li class="resume"><a href="#" class="nostyle">download resume</a></li> -->
+                    <!-- 프로필 이미지 업로드 버튼 추가 -->
+                    <label for="profileImageInput">Profile Image Upload</label>
+                    <li>
+                        <input type="file" id="profileImageInput" name="profileImage" />
+                    </li>
+                    <button
+                        id="profileImgUploadBtn"
+                        class="profileImgUploadBtn"
+                        onclick="profileImgUpload()"
+                    >
+                        프로필 사진 등록
+                    </button>
                 </ul>
             </div>
         </div>
         <!-- axios CDN -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            var selectedFile;
+            var token = localStorage.getItem("user"); // 토큰을 가져옵니다.
+
+            document.getElementById("profileImageInput").addEventListener("change", function () {
+                selectedFile = this.files[0];
+            });
+
+            function profileImgUpload() {
+                if (!selectedFile) {
+                    alert("이미지를 선택해주세요");
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("userfile", selectedFile); // "userfile"로 이름 변경
+
+                axios
+                    .post("/profileUpload", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            Authorization: "Bearer " + token,
+                        },
+                    })
+                    .then(function (response) {
+                        console.log(response.data);
+                        localStorage.setItem("imgURL", JSON.stringify(response.data.url));
+                        alert("이미지 업로드 성공!");
+                        location.reload(); // 페이지 새로고침
+                        // document.location.href = "/profile/1";
+                    })
+                    .catch(function (error) {
+                        alert("이미지 업로드 실패");
+                        console.error("Error:", error);
+                    });
+            }
+        </script>
         <script>
             // 수정: Edit 버튼 클릭 시 /edit 페이지로 이동
             document.getElementById("editButton").addEventListener("click", function () {
@@ -60,26 +109,36 @@
             });
 
             // 페이지 로딩이 완료된 후 실행할 코드를 이곳에 작성합니다.
-            const token = localStorage.getItem("user");
+            const token2 = localStorage.getItem("user");
             const userId = localStorage.getItem("userId");
+            const imgURL = JSON.parse(localStorage.getItem("imgURL")); // imgURLs를 가져옴
 
             axios
                 .post(
                     "/profile/" + userId,
-                    {},
+                    {
+                        data: {
+                            imgURL: imgURL, // imgURL를 data에 추가
+                        },
+                    },
                     {
                         headers: {
-                            Authorization: "Bearer " + token,
+                            Authorization: "Bearer " + token2,
                         },
                     }
                 )
                 .then(function (response) {
                     // 서버로부터 받은 응답을 처리합니다.
                     console.log(response.data);
+                    var imageUrl = response.data.url + "?" + new Date().getTime();
+                    console.log("%%%%%%%%%%%%%%", imageUrl);
                     document.getElementById("userName").textContent = response.data.user.userId;
                     // 변경: userName을 "name" 클래스에 표기
                     document.getElementById("userId").textContent = response.data.user.userName;
                     // 변경: userId를 "nickName" 클래스에 표기
+                    // 이미지 태그의 src 속성에 이미지 URL을 할당합니다.
+                    document.getElementById("profileImg").style.backgroundImage =
+                        'url("' + imageUrl + '")';
                 })
                 .catch(function (error) {
                     // 요청 중에 오류가 발생한 경우를 처리합니다.

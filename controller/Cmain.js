@@ -21,9 +21,14 @@ const profileUpload = multer({
 // 프로필 이미지 업로드
 exports.uploadProfileImg = (req, res) => {
     // "userfile"은 파일 업로드 필드의 name과 일치시켜야함
-    console.log(req.file);
+    console.log("req.file >>>>>>>>>> ", req.file);
     console.log(req.body);
-    res.send("프로필 이미지 업로드 완료");
+    if (req.file) {
+        var url = path.join("/static/profileUploads/", req.file.filename);
+        res.send({ message: "프로밀 이미지 업로드 완료", url: url });
+    } else {
+        res.status(400).send({ error: "No file was uploaded." });
+    }
 };
 
 // 게시글 이미지 업로드 multer
@@ -212,26 +217,22 @@ exports.getPosts = (req, res) => {
             attributes: ["postId", "id", "title", "createdAt"],
             include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
         }).then((result) => {
-            if (result.length > 0) {
-                // 날짜와 시간 포맷 변경
-                result.forEach((post) => {
-                    console.log(post.createdAt);
-                    const date = new Date(post.createdAt);
-                    const year = date.getFullYear();
-                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
-                    const day = date.getDate().toString().padStart(2, "0");
-                    const hour = date.getHours().toString().padStart(2, "0");
-                    const minute = date.getMinutes().toString().padStart(2, "0");
+            // 날짜와 시간 포맷 변경
+            result.forEach((post) => {
+                console.log(post.createdAt);
+                const date = new Date(post.createdAt);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
+                const day = date.getDate().toString().padStart(2, "0");
+                const hour = date.getHours().toString().padStart(2, "0");
+                const minute = date.getMinutes().toString().padStart(2, "0");
 
-                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
-                });
-                // res.json({ posts: result });
-                // res.send(result);
-                console.log("result>>", result);
-                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
-            } else {
-                res.send("게시글이 존재하지 않습니다");
-            }
+                post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+            });
+            // res.json({ posts: result });
+            // res.send(result);
+            console.log("result>>", result);
+            res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
         });
     } catch (err) {
         console.log("err", err);
@@ -458,6 +459,9 @@ exports.getProfile = (req, res) => {
 exports.profile = async (req, res) => {
     // res.render("profile");
     try {
+        console.log(req.body);
+        const { imgURL } = req.body.data;
+        console.log("imgURL", imgURL);
         // 요청 헤더에서 토큰 추출
         console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
@@ -472,14 +476,31 @@ exports.profile = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
+        // const imgURLString = JSON.stringify(imgURL);
+
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
             where: { id: userId },
         })
-            .then((user) => {
+            .then(async (user) => {
                 if (user) {
+                    await models.Users.update(
+                        {
+                            img: imgURL,
+                        },
+                        {
+                            where: { id: user.dataValues.id },
+                        }
+                    ).then((result) => {
+                        console.log(result);
+                    });
+                    console.log("user.dataValues >>>>>>> ", user.dataValues);
                     // 사용자 정보가 있으면 프로필 페이지를 렌더링
-                    res.json({ user: user.dataValues, userId });
+                    res.json({
+                        user: user.dataValues,
+                        userId,
+                        url: user.dataValues.img, // 이미지 URL을 응답에 포함시킵니다.
+                    });
                 } else {
                     // 사용자 정보가 없는 경우
                     res.status(404).send("사용자를 찾을 수 없습니다.");
@@ -846,7 +867,7 @@ exports.getFollowings = async (req, res) => {
         // 로그인한 사용자의 id를 토큰에서 추출
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-      
+
         // 토큰 없는 경우
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");

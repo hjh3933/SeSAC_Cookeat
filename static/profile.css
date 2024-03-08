@@ -154,6 +154,15 @@ label {
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 }
+.profileImgUploadBtn {
+    position: relative;
+    left: 88px;
+    background: transparent;
+    color: #82745e;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 .userId input[type="text"],
 .location input[type="text"],
