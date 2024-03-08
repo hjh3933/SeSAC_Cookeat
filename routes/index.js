@@ -47,15 +47,17 @@ router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
+
+router.get("/followersPage", controller.getfollowersPage);
+router.get("/followingsPage", controller.getfollowingsPage);
 // 팔로잉 삭제 - 형석
 router.delete("/followDelete", controller.followDelete);
-
 // 팔로우 추가
 router.post("/followInsert", controller.followInsert);
 // 팔로워 조회
-router.get("/followers", controller.getFollowers);
+router.post("/followers", controller.getFollowers);
 // 팔로잉 조회
-router.get("/followings", controller.getFollowings);
+router.post("/followings", controller.getFollowings);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);
