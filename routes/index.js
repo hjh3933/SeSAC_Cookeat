@@ -12,6 +12,8 @@ router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
 router.get("/posts", controller.getPosts);
+//특정 유저 id를 params로 받아서 게시글 출력기능
+router.get("/userPosts/:id", controller.getUserPosts);
 // 로그아웃 라우터
 router.get("/logout", controller.logout);
 
