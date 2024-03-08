@@ -320,6 +320,9 @@ exports.patchPost = async (req, res) => {
     try {
         const { postId } = req.params;
         const { title, content, img, category } = req.body;
+        if (!title || !content || !category) {
+            return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
+        }
 
         // 로그인한 사용자의 id를 토큰에서 추출
         const tokenWithBearer = req.headers.authorization;

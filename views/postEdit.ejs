@@ -101,20 +101,11 @@
                         },
                     },
                 });
-                $("#summernote").summernote({
-                    // Summernote 에디터 기본 설정
-                    height: 300,
-                    // 기타 설정...
-                    callbacks: {
-                        onInit: function () {
-                            // 에디터 초기화 완료 후, 로컬 스토리지에서 데이터 불러와 설정
-                            const postData = JSON.parse(localStorage.getItem("editPostData"));
-                            if (postData && postData.content) {
-                                $("#content").summernote("code", postData.content);
-                            }
-                        },
-                    },
-                });
+                const postData = JSON.parse(localStorage.getItem("editPostData"));
+                if (postData && postData.content) {
+                    $("#summernote").summernote("code", postData.content);
+                }
+                localStorage.removeItem("editPostData");
             });
 
             function recipeUpdate() {
