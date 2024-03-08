@@ -866,7 +866,7 @@ exports.getFollowings = async (req, res) => {
             return res.status(404).send("사용자를 찾을 수 없습니다.");
         }
         const followings = await user.getFollowings();
-        res.json(followings);
+        res.json({ followings });
     } catch (err) {
         console.error("팔로잉 목록 조회 중 에러 발생", err);
         // 토큰 만료 외의 에러 메시지 전달

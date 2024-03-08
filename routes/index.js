@@ -19,7 +19,7 @@ router.post("/checkUsername", controller.checkUsername);
 router.post("/checkNickname", controller.checkNickname);
 
 //회원가입 - 주희
-router.post("/join", controller.postJoin);
+router.post("/postJoin", controller.postJoin);
 router.post("/login", controller.postLogin);
 
 // 회원정보 및 수정 페이지 조회 - 형석
