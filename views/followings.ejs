@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>😍FOLLOWING</title>
+        <link rel="stylesheet" href="/static/followings.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1></h1>
+            <div class="order">Order : <span id="order-type"></span></div>
+            <ul id="followers-list"></ul>
+        </div>
+        <script>
+            orderType = "🔽";
+
+            // this list is already in ascending order but you can use a first call to the sort() function if not.
+            var followers = [
+                "Andrés@ainfanteh",
+                "André Gonçalves@andrejunio",
+                "Ashley D@devashleyd",
+                "baboda212@baboda212",
+                "Cao Đình Đức@caodinhduc1996",
+                "casper392945@casper392945",
+                "Danis Zakiryanov@DanisJS",
+                "ELVS@elvs",
+                "Gabi@enxaneta",
+                "George@george-seletski",
+                "Hoffi@cv6",
+                "Jeff Bredenkamp@jeffbredenkamp",
+                "Jenny-Tany@Jenny-Tany",
+                "Lucian Encarnacion@Maximum-0616",
+                "LUN0223@lun0223",
+                "Lily@LilyAnne56",
+                "Michelle@puppylovers123",
+                "Nawawow Official@Nawawow",
+                "Pamela D.H.@pdiazh",
+                "Qui Neubauer@Qui-Neubauer",
+                "Rostislav@RostikSuslov",
+                "Shrish Sunder@shrishsunder",
+                "Silvia@ayvlis",
+                "Talha@talha-i",
+                "Tom Hermans@tomhermans",
+                "Trevor York@eerietheery",
+                "Zarko Rvovic@nocni_sovac",
+                "Zharqyy@zhaqyy",
+            ];
+
+            /* View actual sorting mode */
+            document.getElementById("order-type").innerHTML = orderType;
+            /* Number of followers in H1 */
+            document.querySelector("h1").innerHTML = followers.length + " followers";
+
+            /* Build list */
+            for (var i = 0; i < followers.length; i++) {
+                // Nb iterations
+                var ul = document.getElementById("followers-list"); // Destination
+                var li = document.createElement("li"); // list element
+                var a = document.createElement("a"); // link
+                var str = document.createElement("strong"); // Username
+                var spn = document.createElement("span"); // ID
+
+                var user = followers[i].split("@"); // split username and Id
+                li.setAttribute("data-name", user[0]); // use data-name for the sorting list
+
+                li.appendChild(a); // add the list element
+
+                str.appendChild(document.createTextNode(user[0])); // Add the username
+                a.appendChild(str);
+                spn.appendChild(document.createTextNode("@" + user[1])); // Add the ID
+                a.appendChild(spn);
+                a.setAttribute("href", "https://codepen.io/" + user[1]); // Build the link
+                ul.appendChild(li);
+            }
+
+            function sort() {
+                Array.from(document.querySelectorAll("ul > li[data-name]"))
+                    .sort(({ dataset: { name: a } }, { dataset: { name: b } }) =>
+                        orderType == "🔼" ? a.localeCompare(b) : b.localeCompare(a)
+                    )
+                    .forEach((item) => item.parentNode.appendChild(item));
+
+                this.innerText == "🔼" ? (this.innerText = "🔽") : (this.innerText = "🔼"); // Switch the sorting symbol
+                orderType == "🔼" ? (orderType = "🔽") : (orderType = "🔼"); // Switch the sorting mode
+            }
+
+            document.getElementById("order-type").addEventListener("click", sort);
+        </script>
+    </body>
+</html>
