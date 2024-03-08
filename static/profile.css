@@ -179,3 +179,20 @@ label {
     outline: none;
     background: transparent;
 }
+/* juhee */
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+    color: rgb(247, 104, 104);
+    margin-left: 5px;
+}
+.followers {
+    display: flex;
+    justify-content: flex-start;
+}
+.following {
+    display: flex;
+    justify-content: flex-start;
+}
+a {
+    text-decoration: none;
+}

@@ -15,7 +15,10 @@
             rel="stylesheet"
             type="text/css"
         />
-
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
         <link rel="stylesheet" href="/static/profile.css" />
     </head>
     <body>
@@ -24,12 +27,12 @@
             <div class="profile_picture" id="profileImg"></div>
             <div class="left_col">
                 <div class="followers">
-                    <div class="follow_count">1,234</div>
-                    Followers
+                    <a href="/followersPage" class="follow">Followers</a>
+                    <span class="material-symbols-outlined"> favorite </span>
                 </div>
                 <div class="following">
-                    <div class="follow_count">123</div>
-                    Following
+                    <a href="/followingsPage" class="follow">Following</a>
+                    <span class="material-symbols-outlined"> favorite </span>
                 </div>
                 <button id="editButton" class="edit-button">Edit</button>
             </div>
@@ -112,7 +115,7 @@
             const token2 = localStorage.getItem("user");
             const userId = localStorage.getItem("userId");
             const imgURL = JSON.parse(localStorage.getItem("imgURL")); // imgURLs를 가져옴
-
+            
             axios
                 .post(
                     "/profile/" + userId,

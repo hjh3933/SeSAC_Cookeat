@@ -12,15 +12,16 @@ router.get("/login", controller.getLogin);
 router.get("/join", controller.getJoin);
 router.get("/post", controller.getCreatePost);
 router.get("/posts", controller.getPosts);
+//특정 유저 id를 params로 받아서 게시글 출력기능
+router.get("/userPosts/:id", controller.getUserPosts);
 // 로그아웃 라우터
 router.get("/logout", controller.logout);
 
 router.post("/checkUsername", controller.checkUsername);
 router.post("/checkNickname", controller.checkNickname);
-router.post("/postJoin", controller.postJoin);
 
 //회원가입 - 주희
-router.post("/join", controller.postJoin);
+router.post("/postJoin", controller.postJoin);
 router.post("/login", controller.postLogin);
 
 // 회원정보 및 수정 페이지 조회 - 형석
@@ -48,15 +49,17 @@ router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);
 router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
-// 팔로잉 삭제 - 형석
-router.delete("/followDelete/:followingId", controller.followDelete);
 
+router.get("/followersPage", controller.getfollowersPage);
+router.get("/followingsPage", controller.getfollowingsPage);
+// 팔로잉 삭제 - 형석
+router.delete("/followDelete", controller.followDelete);
 // 팔로우 추가
 router.post("/followInsert", controller.followInsert);
 // 팔로워 조회
-router.get("/followers", controller.getFollowers);
+router.post("/followers", controller.getFollowers);
 // 팔로잉 조회
-router.get("/followings", controller.getFollowings);
+router.post("/followings", controller.getFollowings);
 
 //게시글 CRUD - 보아
 router.post("/post", controller.postRecipe);

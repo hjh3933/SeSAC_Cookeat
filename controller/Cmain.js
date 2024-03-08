@@ -165,7 +165,7 @@ exports.postLogin = (req, res) => {
                     const id = result.id;
                     const user = { id, userId: result.userName };
                     const token = jwt.sign(user, SECRET, {
-                        expiresIn: "10m",
+                        expiresIn: "1h",
                     });
                     console.log("token", token);
                     console.log("loginResult", true);
@@ -217,22 +217,62 @@ exports.getPosts = (req, res) => {
             attributes: ["postId", "id", "title", "createdAt"],
             include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
         }).then((result) => {
-            // 날짜와 시간 포맷 변경
-            result.forEach((post) => {
-                console.log(post.createdAt);
-                const date = new Date(post.createdAt);
-                const year = date.getFullYear();
-                const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
-                const day = date.getDate().toString().padStart(2, "0");
-                const hour = date.getHours().toString().padStart(2, "0");
-                const minute = date.getMinutes().toString().padStart(2, "0");
+            if (result.length > 0) {
+                // 날짜와 시간 포맷 변경
+                result.forEach((post) => {
+                    console.log(post.createdAt);
+                    const date = new Date(post.createdAt);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
+                    const day = date.getDate().toString().padStart(2, "0");
+                    const hour = date.getHours().toString().padStart(2, "0");
+                    const minute = date.getMinutes().toString().padStart(2, "0");
 
-                post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
-            });
-            // res.json({ posts: result });
-            // res.send(result);
-            console.log("result>>", result);
-            res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
+                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+                });
+                // res.json({ posts: result });
+                // res.send(result);
+                console.log("result>>", result);
+                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
+            } else {
+                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
+            }
+        });
+    } catch (err) {
+        console.log("err", err);
+        res.status(500).send("서버 에러");
+    }
+};
+exports.getUserPosts = (req, res) => {
+    //특정 유저의 게시글 조회
+    try {
+        const { id } = req.params;
+        console.log("검색할 유저는>>", id);
+        models.Posts.findAll({
+            where: { id },
+            attributes: ["postId", "id", "title", "createdAt"],
+            include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
+        }).then((result) => {
+            if (result.length > 0) {
+                // 날짜와 시간 포맷 변경
+                result.forEach((post) => {
+                    console.log(post.createdAt);
+                    const date = new Date(post.createdAt);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
+                    const day = date.getDate().toString().padStart(2, "0");
+                    const hour = date.getHours().toString().padStart(2, "0");
+                    const minute = date.getMinutes().toString().padStart(2, "0");
+
+                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+                });
+                // res.json({ posts: result });
+                // res.send(result);
+                console.log("result>>", result);
+                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
+            } else {
+                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
+            }
         });
     } catch (err) {
         console.log("err", err);
@@ -830,6 +870,12 @@ exports.followInsert = async (req, res) => {
         // res.send("다시 로그인해주세요");
     }
 };
+exports.getfollowersPage = (req, res) => {
+    res.render("followers");
+};
+exports.getfollowingsPage = (req, res) => {
+    res.render("followings");
+};
 // 팔로워 조회
 exports.getFollowers = async (req, res) => {
     try {
@@ -882,7 +928,7 @@ exports.getFollowings = async (req, res) => {
             return res.status(404).send("사용자를 찾을 수 없습니다.");
         }
         const followings = await user.getFollowings();
-        res.json(followings);
+        res.json({ followings });
     } catch (err) {
         console.error("팔로잉 목록 조회 중 에러 발생", err);
         // 토큰 만료 외의 에러 메시지 전달
@@ -899,7 +945,7 @@ exports.getFollowings = async (req, res) => {
 exports.followDelete = async (req, res) => {
     try {
         // 응답된 params 저장
-        const { followingId } = req.params;
+        const followingId = req.body.id;
         console.log("id는~~~~~~~~~", followingId);
         // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
         const tokenWithBearer = req.headers.authorization;
