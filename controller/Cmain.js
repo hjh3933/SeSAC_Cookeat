@@ -230,7 +230,7 @@ exports.getPosts = (req, res) => {
                 console.log("result>>", result);
                 res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
-                res.send("게시글이 존재하지 않습니다");
+                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
             }
         });
     } catch (err) {
@@ -790,6 +790,12 @@ exports.followInsert = async (req, res) => {
         // res.send("다시 로그인해주세요");
     }
 };
+exports.getfollowersPage = (req, res) => {
+    res.render("followers");
+};
+exports.getfollowingsPage = (req, res) => {
+    res.render("followings");
+};
 // 팔로워 조회
 exports.getFollowers = async (req, res) => {
     try {
@@ -842,7 +848,7 @@ exports.getFollowings = async (req, res) => {
             return res.status(404).send("사용자를 찾을 수 없습니다.");
         }
         const followings = await user.getFollowings();
-        res.json(followings);
+        res.json({ followings });
     } catch (err) {
         console.error("팔로잉 목록 조회 중 에러 발생", err);
         // 토큰 만료 외의 에러 메시지 전달
@@ -859,7 +865,7 @@ exports.getFollowings = async (req, res) => {
 exports.followDelete = async (req, res) => {
     try {
         // 응답된 params 저장
-        const { followingId } = req.params;
+        const followingId = req.body.id;
         console.log("id는~~~~~~~~~", followingId);
         // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
         const tokenWithBearer = req.headers.authorization;

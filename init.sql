@@ -1,3 +1,4 @@
+-- Active: 1707101290768@@127.0.0.1@3306@sesac
 
 show tables;
 DESC Users;
@@ -16,7 +17,7 @@ insert into users VALUES(null, 'allie4', '1234', '앨리4',NOW(),NOW());
 insert into users VALUES(null, 'allie5', '1234', '앨리5',NOW(),NOW());
 
 INSERT INTO posts 
-VALUES (NULL,"jisu4", "hi~~~~~",NULL,"한식",NOW(),NOW(), 10);
+VALUES (NULL,"jisu4", "hi~~~~~",NULL,"한식",NOW(),NOW(), 1);
 INSERT INTO posts 
 VALUES (NULL,"hansu", "오늘의 요리는",NULL,"중식",NOW(),NOW(), 5);
 INSERT INTO posts 
