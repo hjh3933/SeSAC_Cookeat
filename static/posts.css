@@ -21,6 +21,7 @@ body {
     text-align: center;
     border-radius: 20px;
     padding: 3rem 0;
+    margin-top: 66px;
 }
 .homeimg {
     margin-bottom: 20px;
@@ -60,6 +61,18 @@ body {
     /* border: 1px solid black; */
     border-radius: 20px;
     /* margin-bottom: 5px; */
+}
+.container .infomation .id {
+    width: 200px;
+}
+.container .infomation .title {
+    width: 380px;
+}
+.container .infomation .createdAt {
+    width: 250px;
+}
+.container .infomation .User {
+    width: 200px;
 }
 .infos {
     border: 5px solid rgb(231, 243, 205);
