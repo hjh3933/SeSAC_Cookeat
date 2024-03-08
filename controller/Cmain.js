@@ -230,7 +230,7 @@ exports.getPosts = (req, res) => {
                 console.log("result>>", result);
                 res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
-                res.send("게시글이 존재하지 않습니다");
+                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
             }
         });
     } catch (err) {
