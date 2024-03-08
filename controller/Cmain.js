@@ -205,28 +205,6 @@ exports.logout = (req, res) => {
     res.send({ msg: "로그아웃 완료", statusCode: 200, tokenDeleted: true });
 };
 
-// exports.getPosts = (req, res) => {
-
-//     try {
-//         models.Posts.findAll({
-//             attributes: ["postId", "id", "title", "createdAt"],
-//             include: [{ model: models.Users }, { model: models.Users, attributes: ["userName"] }],
-//         }).then((result) => {
-//             if (result.length > 0) {
-//                 // res.json({ posts: result });
-//                 // res.send(result);
-//                 res.render("posts", { posts: result });
-//             } else {
-//                 res.send("게시글이 존재하지 않습니다");
-//             }
-//         });
-//     } catch (err) {
-//         console.log("err", err);
-//         res.status(500).send("서버 에러");
-//     }
-// };
-
-//
 exports.getPosts = (req, res) => {
     //전체 게시글 조회
 
