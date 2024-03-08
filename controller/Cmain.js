@@ -846,7 +846,7 @@ exports.getFollowings = async (req, res) => {
         // 로그인한 사용자의 id를 토큰에서 추출
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-      
+
         // 토큰 없는 경우
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
@@ -877,7 +877,7 @@ exports.getFollowings = async (req, res) => {
 exports.followDelete = async (req, res) => {
     try {
         // 응답된 params 저장
-        const { followingId } = req.params;
+        const followingId = req.body.id;
         console.log("id는~~~~~~~~~", followingId);
         // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
         const tokenWithBearer = req.headers.authorization;

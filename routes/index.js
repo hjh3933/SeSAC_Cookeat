@@ -17,7 +17,6 @@ router.get("/logout", controller.logout);
 
 router.post("/checkUsername", controller.checkUsername);
 router.post("/checkNickname", controller.checkNickname);
-router.post("/postJoin", controller.postJoin);
 
 //회원가입 - 주희
 router.post("/join", controller.postJoin);
@@ -49,7 +48,7 @@ router.get("/profile/:userId/bookmarks", controller.getAllBookMarks);
 // 북마크 삭제 - 형석
 router.delete("/bookmarkDelete/:postId", controller.bookmarkDelete);
 // 팔로잉 삭제 - 형석
-router.delete("/followDelete/:followingId", controller.followDelete);
+router.delete("/followDelete", controller.followDelete);
 
 // 팔로우 추가
 router.post("/followInsert", controller.followInsert);
