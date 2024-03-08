@@ -158,24 +158,24 @@
         function goFollow() {
             if (isFollow) {
                 //팔로우 삭제
-                alert("팔로우 삭제");
-                // axios({
-                //     url: "/followDelete",
-                //     method: "delete",
-                //     data: { id: id },
-                //     headers: {
-                //         Authorization: "Bearer " + token,
-                //     },
-                // })
-                //     .then((res) => {
-                //         console.log(res.data);
-                //         alert(res.data.msg);
-                //         location.reload(); //다시 로드함
-                //     })
-                //     .catch((err) => {
-                //         alert("오류 발생");
-                //         console.log("err>>", err);
-                //     });
+                // alert("팔로우 삭제");
+                axios({
+                    url: "/followDelete",
+                    method: "delete",
+                    data: { id: id },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        alert(res.data.msg);
+                        location.reload(); //다시 로드함
+                    })
+                    .catch((err) => {
+                        alert("오류 발생");
+                        console.log("err>>", err);
+                    });
             } else {
                 //팔로우 추가
                 axios({
