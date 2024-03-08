@@ -808,6 +808,12 @@ exports.followInsert = async (req, res) => {
         // res.send("다시 로그인해주세요");
     }
 };
+exports.getfollowersPage = (req, res) => {
+    res.render("followers");
+};
+exports.getfollowingsPage = (req, res) => {
+    res.render("followings");
+};
 // 팔로워 조회
 exports.getFollowers = async (req, res) => {
     try {
