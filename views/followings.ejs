@@ -13,6 +13,102 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
     <body>
-        <h1>follower페이지</h1>
+        <div class="container">
+            <h1>Followings</h1>
+            <div class="followerContainer">
+                <div class="singleFollow">
+                    <div class="userData">
+                        <div class="userId">ID</div>
+                        <div class="userName">NAME</div>
+                    </div>
+                    <!-- <div class="followIconBox">
+                        <span class="material-symbols-outlined followIcon" onclick="goFollow()">
+                            favorite
+                        </span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
     </body>
+
+    <script>
+        // 나를 팔로우하는 사람을 검색합니다
+        // 토큰 값 가져오기
+        const token = localStorage.getItem("user");
+        const followerContainer = document.querySelector(".followerContainer");
+
+        // 검색하는 axios수행
+        axios({
+            url: "/followings",
+            method: "post",
+            headers: { Authorization: "Bearer " + token },
+        }).then((res) => {
+            console.log("res.data >>", res.data);
+            console.log("res.data.followers >>", res.data.followings);
+
+            // 데이터를 받아서 화면에 출력합니다(for)
+            for (following of res.data.followings) {
+                //followerId
+                const followingId = document.createElement("a");
+                followingId.textContent = following.userId;
+                followingId.classList.add("userId");
+                followingId.href = "/userPosts/" + following.id;
+                // followerUserName
+                const followingUserName = document.createElement("div");
+                followingUserName.textContent = following.userName;
+                followingUserName.classList.add("userName");
+                //heart
+                const heart = document.createElement("span");
+                heart.textContent = "favorite";
+                heart.classList.add("material-symbols-outlined");
+                heart.classList.add("followingIcon");
+                //userData
+                const userData = document.createElement("div");
+                userData.classList.add("userData");
+                userData.appendChild(followingId);
+                userData.appendChild(followingUserName);
+                //followIconBox
+                const followIconBox = document.createElement("div");
+                followIconBox.classList.add("followIconBox");
+                followIconBox.appendChild(heart);
+                //singleFollow
+                const singleFollow = document.createElement("div");
+                singleFollow.classList.add("singleFollow");
+                singleFollow.appendChild(userData);
+                singleFollow.appendChild(followIconBox);
+                //추가
+                followerContainer.appendChild(singleFollow);
+
+                //클릭 이벤트 추가
+                (function (following) {
+                    heart.onclick = function () {
+                        // 클릭된 하트 아이콘에 대한 이벤트 처리
+                        const followDeleteCheck = confirm(
+                            `${following.userName}님을 팔로우 목록에서 삭제하시겠습니까?`
+                        );
+                        if (followDeleteCheck) {
+                            // axios삭제 이벤트
+                            axios({
+                                url: "/followDelete",
+                                method: "delete",
+                                data: { id: following.id },
+                                headers: {
+                                    Authorization: "Bearer " + token,
+                                },
+                            })
+                                .then((res) => {
+                                    console.log(res.data);
+                                    alert(res.data.msg);
+                                    location.reload(); //다시 로드함
+                                })
+                                .catch((err) => {
+                                    alert("오류 발생");
+                                    console.log("err>>", err);
+                                });
+                        }
+                    };
+                })(following);
+            }
+        });
+    </script>
 </html>
