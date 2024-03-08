@@ -25,11 +25,8 @@
         <%} else{%>
 
         <section class="container">
-            <div class="homeimg">
-                <a href="/"> <img src="/static/spoon.png" alt="Home" /></a>
-            </div>
-
             <table class="lists">
+                <td class="total">총 게시물: <%=posts.length %></td>
                 <thead>
                     <tr class="top">
                         <td class="items num">번호</td>
@@ -67,9 +64,11 @@
             <button class="custom-btn btn-12" onclick="location.href = '/post' ">
                 <span>Cook eat!🍴</span><span>요리시작!🍴</span>
             </button>
+            <!-- pagination 진행예정 -->
             <%# console.log(posts[0]) %>
         </section>
         <% } %>
+        <div class="space"></div>
         <footer>
             <%- include('footer.ejs') %> <%- include('account.ejs') %>
             <!-- <script src="/js/bootstrap.min.js"></script> -->

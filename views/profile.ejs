@@ -25,7 +25,7 @@
             <div class="left_col">
                 <div class="followers">
                     <div class="follow_count">1,234</div>
-                    <a href="/followings">Followers</a>
+                    Followers
                 </div>
                 <div class="following">
                     <div class="follow_count">123</div>
@@ -62,6 +62,8 @@
             // 페이지 로딩이 완료된 후 실행할 코드를 이곳에 작성합니다.
             const token = localStorage.getItem("user");
             const userId = localStorage.getItem("userId");
+            console.log(token);
+            console.log(userId);
 
             axios
                 .post(
