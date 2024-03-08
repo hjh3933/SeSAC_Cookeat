@@ -21,9 +21,14 @@ const profileUpload = multer({
 // 프로필 이미지 업로드
 exports.uploadProfileImg = (req, res) => {
     // "userfile"은 파일 업로드 필드의 name과 일치시켜야함
-    console.log(req.file);
+    console.log("req.file >>>>>>>>>> ", req.file);
     console.log(req.body);
-    res.send("프로필 이미지 업로드 완료");
+    if (req.file) {
+        var url = path.join("/static/profileUploads/", req.file.filename);
+        res.send({ message: "프로밀 이미지 업로드 완료", url: url });
+    } else {
+        res.status(400).send({ error: "No file was uploaded." });
+    }
 };
 
 // 게시글 이미지 업로드 multer
@@ -279,6 +284,7 @@ exports.getUserPosts = (req, res) => {
 exports.postRecipe = async (req, res) => {
     try {
         const { title, content, imgURLs, category } = req.body;
+        console.log("imgURLs", imgURLs);
         // 제목, 내용, 카테고리 유효성 검사
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
@@ -494,6 +500,9 @@ exports.getProfile = (req, res) => {
 exports.profile = async (req, res) => {
     // res.render("profile");
     try {
+        console.log(req.body);
+        const { imgURL } = req.body.data;
+        console.log("imgURL", imgURL);
         // 요청 헤더에서 토큰 추출
         console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
@@ -508,14 +517,31 @@ exports.profile = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
+        // const imgURLString = JSON.stringify(imgURL);
+
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
             where: { id: userId },
         })
-            .then((user) => {
+            .then(async (user) => {
                 if (user) {
+                    await models.Users.update(
+                        {
+                            img: imgURL,
+                        },
+                        {
+                            where: { id: user.dataValues.id },
+                        }
+                    ).then((result) => {
+                        console.log(result);
+                    });
+                    console.log("user.dataValues >>>>>>> ", user.dataValues);
                     // 사용자 정보가 있으면 프로필 페이지를 렌더링
-                    res.json({ user: user.dataValues, userId });
+                    res.json({
+                        user: user.dataValues,
+                        userId,
+                        url: user.dataValues.img, // 이미지 URL을 응답에 포함시킵니다.
+                    });
                 } else {
                     // 사용자 정보가 없는 경우
                     res.status(404).send("사용자를 찾을 수 없습니다.");
