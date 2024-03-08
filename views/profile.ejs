@@ -130,7 +130,7 @@
                 .then(function (response) {
                     // 서버로부터 받은 응답을 처리합니다.
                     console.log(response.data);
-                    var imageUrl = response.data.url + "?" + new Date().getTime();
+                    var imageUrl = imgURL + "?" + new Date().getTime();
                     console.log("%%%%%%%%%%%%%%", imageUrl);
                     document.getElementById("userName").textContent = response.data.user.userId;
                     // 변경: userName을 "name" 클래스에 표기

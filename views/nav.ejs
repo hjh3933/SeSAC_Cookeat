@@ -43,8 +43,9 @@
                         <img
                             src="/static/account.png"
                             alt="Profile"
-                            style="width: 30px; height: 30px"
+                            style="width: 30px; height: 30px; border-radius: 50%"
                             class="account-image"
+                            id="profileImg1"
                         />
                         <ul>
                             <li>
@@ -76,6 +77,8 @@
                 var profileLinkBtn = document.getElementById("profileLink");
 
                 var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
+                const imgURL = JSON.parse(localStorage.getItem("imgURL")); // imgURLs를 가져옴
+                console.log(imgURL);
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
@@ -101,6 +104,9 @@
                                 console.log(decodedToken.userId);
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                                 profileLink.href = "/profile/" + userId;
+                                // document.getElementById("profileImg1").style.backgroundImage =
+                                //     'url("' + imgURL + '")';
+                                document.getElementById("profileImg1").src = imgURL;
 
                                 // 로그인 상태라면 로그인, 회원가입 버튼 숨기기
                                 loginBtn.style.display = "none";
@@ -131,7 +137,12 @@
                         window.location.href = "/login";
                     } else {
                         // 토큰이 있으면 로그아웃 수행
-                        localStorage.clear();
+                        for (var i = 0; i < localStorage.length; i++) {
+                            var key = localStorage.key(i);
+                            if (key !== "imgURL") {
+                                localStorage.removeItem(key);
+                            }
+                        }
                         alert("로그아웃 완료!");
                         window.location.href = "/";
                     }

@@ -244,6 +244,7 @@ exports.getPosts = (req, res) => {
 exports.postRecipe = async (req, res) => {
     try {
         const { title, content, imgURLs, category } = req.body;
+        console.log("imgURLs", imgURLs);
         // 제목, 내용, 카테고리 유효성 검사
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
