@@ -20,6 +20,10 @@ const Users = function (Sequelize, DataTypes) {
                 type: DataTypes.STRING(255),
                 allowNull: false,
             },
+            img: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
         },
         {
             timestamps: true,
