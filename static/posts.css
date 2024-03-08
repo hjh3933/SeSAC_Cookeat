@@ -3,10 +3,6 @@ a {
     color: black;
 }
 
-/* a:hover {
-    color: black;
-    text-decoration: underline;
-} */
 body {
     background: #f4f4f4;
     padding: 0 8px;
@@ -89,21 +85,14 @@ body {
 }
 .container .lists tbody .infomation {
     border-bottom: 1px solid rgba(59, 59, 59, 0.386);
-    /* height: 50px; */
 }
 .container .lists tbody .infomation .infos {
     height: 40px;
 }
-/* .infos > td {
-    margin-bottom: 10px;
-} */
 .top .num {
-    /* visibility: hidden; */
     display: none;
 }
 .infomation .postId {
-    /* width: 100px; */
-    /* visibility: hidden; */
     display: none;
     border: 0px;
 }
