@@ -36,7 +36,7 @@
             </div>
             <div id="cssmenu">
                 <li id="userNavItem" style="display: none">
-                    <span id="userText"></span>
+                    <!-- <span id="userText"></span> -->
                 </li>
                 <ul>
                     <li class="has-sub" id="profileBtn">
@@ -48,13 +48,13 @@
                         />
                         <ul>
                             <li>
-                                <a href="/login"><span>Login</span></a>
+                                <a href="/login" id="loginBtn"><span>Login</span></a>
                             </li>
                             <li>
-                                <a href="/Join"><span>Join</span></a>
+                                <a href="/Join" id="joinBtn"><span>Join</span></a>
                             </li>
                             <li id="profileLink">
-                                <a href="/profile"><span id="userText">Mypage</span></a>
+                                <a href="/profile"><span id="mypageBtn">Mypage</span></a>
                             </li>
                             <li>
                                 <a href="/" id="logoutBtn"><span>Logout</span></a>
@@ -70,6 +70,10 @@
                 var profileBtn = document.getElementById("profileBtn");
                 var logoutBtn = document.getElementById("logoutBtn");
                 var userNavItem = document.getElementById("userNavItem");
+                var loginBtn = document.getElementById("loginBtn"); // 로그인 버튼
+                var joinBtn = document.getElementById("joinBtn"); // 회원가입 버튼
+                var mypageBtn = document.getElementById("mypageBtn"); // 마이 페이지 버튼
+                var profileLinkBtn = document.getElementById("profileLink");
 
                 var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
 
@@ -97,14 +101,24 @@
                                 console.log(decodedToken.userId);
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                                 profileLink.href = "/profile/" + userId;
+
+                                // 로그인 상태라면 로그인, 회원가입 버튼 숨기기
+                                loginBtn.style.display = "none";
+                                joinBtn.style.display = "none";
                             }
                         } catch (error) {
                             console.error("Error decoding token:", error);
                         }
-                    } else if (currentPath === "/profile") {
-                        // 토큰이 없을 때, 프로필 페이지로 접근 시 경고
-                        alert("로그인이 필요합니다!");
-                        window.location.href = "/login";
+                    } else {
+                        // 로그인 상태가 아니라면 마이페이지, 로그아웃 버튼 숨기기
+                        mypageBtn.style.display = "none";
+                        logoutBtn.style.display = "none";
+                        profileLinkBtn.style.display = "none";
+
+                        if (currentPath === "/profile") {
+                            alert("로그인이 필요합니다!");
+                            window.location.href = "/login";
+                        }
                     }
                 }
 
@@ -117,7 +131,7 @@
                         window.location.href = "/login";
                     } else {
                         // 토큰이 있으면 로그아웃 수행
-                        localStorage.removeItem("user");
+                        localStorage.clear();
                         alert("로그아웃 완료!");
                         window.location.href = "/";
                     }
