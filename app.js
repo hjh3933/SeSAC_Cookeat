@@ -29,7 +29,7 @@ app.use(
     })
 );
 
-db.sequelize.sync({ force: false }).then((result) => {
+db.sequelize.sync({ force: true }).then((result) => {
     console.log("db연결 성공");
 });
 // app.use("/static", express.static(__dirname + "/static"));
