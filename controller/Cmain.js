@@ -503,26 +503,8 @@ exports.profile = async (req, res) => {
 };
 
 exports.getPostEdit = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const post = await models.Posts.findOne({
-            where: { postId: postId },
-            include: [
-                {
-                    model: models.Users,
-                    as: "author",
-                },
-            ],
-        });
-        if (post) {
-            res.render("postEdit", { post });
-        } else {
-            res.status(404).send("게시글이 존재하지 않습니다.");
-        }
-    } catch (err) {
-        console.error("게시글 수정 페이지 로딩 중 에러 발생", err);
-        res.status(500).send("서버오류");
-    }
+    const { postId } = req.params;
+    res.render("postEdit", { postId });
 };
 
 exports.profileEdit = (req, res) => {
@@ -846,7 +828,7 @@ exports.getFollowings = async (req, res) => {
         // 로그인한 사용자의 id를 토큰에서 추출
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-      
+
         // 토큰 없는 경우
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
