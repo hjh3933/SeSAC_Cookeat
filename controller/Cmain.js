@@ -160,7 +160,7 @@ exports.postLogin = (req, res) => {
                     const id = result.id;
                     const user = { id, userId: result.userName };
                     const token = jwt.sign(user, SECRET, {
-                        expiresIn: "10m",
+                        expiresIn: "1m",
                     });
                     console.log("token", token);
                     console.log("loginResult", true);
