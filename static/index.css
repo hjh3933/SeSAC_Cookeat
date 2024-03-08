@@ -45,7 +45,7 @@ body {
     filter: drop-shadow(0.7px -1px 0.7px #000);
 }
 .content-index {
-    width: 90vw;
+    width: 80vw;
     color: #000033;
     padding: 5vh 15.9vh;
     font-size: calc(1.2vh + 1.2vw + 1.2vmin);
