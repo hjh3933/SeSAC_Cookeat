@@ -105,7 +105,6 @@
                 if (postData && postData.content) {
                     $("#summernote").summernote("code", postData.content);
                 }
-                localStorage.removeItem("editPostData");
             });
 
             function recipeUpdate() {
@@ -144,17 +143,12 @@
             window.onload = function () {
                 // 로컬 스토리지에서 게시글 데이터 가져오기
                 const postData = JSON.parse(localStorage.getItem("editPostData"));
-                console.log("title은~~~~", postData.title);
-                console.log("content는~~~~", postData.content);
                 if (postData) {
                     // 입력 필드에 기본값 설정
-                    document.getElementById("title").value = postData.title; // 제목 필드의 ID 가정
-                    document.getElementById("content").value = $("#content").summernote(
-                        "code",
-                        postData.content
-                    ); // 제목 필드의 ID 가정
-                    document.getElementById("category").value = postData.category; // 카테고리 필드의 ID 가정
-                    // 이미지 URL 처리, 필요에 따라 추가
+                    document.getElementById("title").value = postData.title;
+                    $("#summernote").summernote("code", postData.content);
+                    $("#category").val(postData.category);
+
                     // 로컬 스토리지에서 가져온 데이터를 사용하여 이미지를 표시하거나, 추가적인 로직 수행
                     // 사용 후, 더 이상 필요하지 않은 경우 로컬 스토리지의 데이터 삭제
                     localStorage.removeItem("editPostData");
