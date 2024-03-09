@@ -46,11 +46,6 @@
                     <li class="nickName" id="userId"></li>
                     <!-- 변경: userId를 "nickName" 클래스에 표기 -->
 
-                    <!-- <label for="nickNameInput">Mail</label>
-                    <li class="mail">john.doe@apple.com</li>
-                    <label for="nickNameInput">Phone</label>
-                    <li class="phone">1-(732)-757-2923</li> -->
-                    <!-- <li class="resume"><a href="#" class="nostyle">download resume</a></li> -->
                     <!-- 프로필 이미지 업로드 버튼 추가 -->
                     <label for="profileImageInput">Profile Image Upload</label>
                     <li>
@@ -93,7 +88,6 @@
                         },
                     })
                     .then(function (response) {
-                        console.log("이미지 업로드 하는 곳", response.data);
                         localStorage.setItem("imgURL", JSON.stringify(response.data.url));
                         alert("이미지 업로드 성공!");
                         profileImageUpload(); // 프로필 이미지만 서버로 보내서 db에 저장하는 식!
@@ -105,8 +99,6 @@
             }
             function profileImageUpload() {
                 const imgURL = JSON.parse(localStorage.getItem("imgURL")); // imgURLs를 가져옴
-                // const imgURL = localStorage.getItem("imgURL").url;
-                console.log("이미지 파일 불러오는 곳", imgURL);
 
                 axios
                     .post(
@@ -124,14 +116,13 @@
                     )
                     .then(function (response) {
                         // 서버로부터 받은 응답을 처리합니다.
-                        // updateProfileView(response.data);
                         profileUpdate(); // 이미지 업로드가 성공하면 프로필 업데이트를 실행합니다.
                         window.location.reload();
                     })
                     .catch(function (error) {
                         // 요청 중에 오류가 발생한 경우를 처리합니다.
                         console.error("Error:", error);
-                        alert("토큰이 만료되었습니다~~~~");
+                        alert("토큰이 만료되었습니다.");
                         location.href = "/";
                     });
             }
@@ -162,20 +153,14 @@
                     .catch(function (error) {
                         // 요청 중에 오류가 발생한 경우를 처리합니다.
                         console.error("Error:", error);
-                        alert("토큰이 만료되었습니다~~~~");
+                        alert("토큰이 만료되었습니다.");
                         location.href = "/";
                     });
             }
 
             // 프로필 정보를 화면에 업데이트하는 함수
             function updateProfileView(data) {
-                console.log(data.url);
                 var imageUrl = data.url.replace(/['"]+/g, "") + "?" + new Date().getTime();
-                // imgURL = localStorage.setItem("imgURL", imageUrl);
-                // var imageUrl =
-                //     '"/static/profileUploads/á\x84\x89á\x85¡á\x84\x80á\x85ª1709916334918.jpeg"';
-                // imageUrl = imageUrl.replace("'", "");
-                console.log("%%%%%%%profile.ejs%%%%%%%", imageUrl);
                 document.getElementById("userName").textContent = data.user.userId;
                 document.getElementById("userId").textContent = data.user.userName;
                 document.getElementById("profileImg").style.backgroundImage =
