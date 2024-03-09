@@ -40,6 +40,13 @@
                     <li class="userName">
                         <input type="text" id="userName" />
                     </li>
+                    <label for="password">new password</label>
+                    <li class="password">
+                        <input type="password" id="nowPassword" placeholder="현재 비밀번호" />
+                    </li>
+                    <li class="password">
+                        <input type="password" id="newPassword" placeholder="새로운 비밀번호" />
+                    </li>
                 </ul>
             </div>
         </div>
@@ -61,6 +68,8 @@
             function saveUserData() {
                 const modifiedUserId = document.getElementById("userId").value;
                 const modifiedUserName = document.getElementById("userName").value;
+                const nowPassword = document.getElementById("nowPassword").value;
+                const newPassword = document.getElementById("newPassword").value;
                 const token = localStorage.getItem("user");
                 const userId = localStorage.getItem("userId");
                 console.log(token);
@@ -71,6 +80,8 @@
                         {
                             userId: modifiedUserId,
                             userName: modifiedUserName,
+                            nowPassword: nowPassword,
+                            newPassword: newPassword,
                         },
                         {
                             headers: {
@@ -81,7 +92,7 @@
                     .then(function (response) {
                         console.log("수정수정", response.data.updated);
                         localStorage.setItem("userName", response.data.updated.userName);
-                        alert("수정이 완료되었습니다.");
+                        alert(response.data.msg);
                         window.location.href = "/profile/" + userId;
                     })
                     .catch(function (error) {
