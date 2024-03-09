@@ -113,9 +113,14 @@
                 var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
                 const imgURL = localStorage.getItem("imgURL"); // imgURL를 가져옴
                 var imageUrl;
+                console.log("윈도우경로문제 해결중 >>>> ", imgURL);
 
                 if (imgURL) {
-                    imageUrl = imgURL.replace(/['"]+/g, "") + "?" + new Date().getTime();
+                    const cleanedURL = imgURL.replace(/^"|"$/g, ""); // 양쪽 큰따옴표 제거
+                    imageUrl =
+                        cleanedURL.replace(/\\\\/g, "\\").replace(/\/\//g, "/") +
+                        "?" +
+                        new Date().getTime();
                 } else {
                     imageUrl = "/static/account.png"; // 기본 이미지 URL로 변경하세요.
                     console.log("imgURL is not found in localStorage, using default image.");
