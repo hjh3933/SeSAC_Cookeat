@@ -167,6 +167,7 @@ label {
 .userId input[type="text"],
 .location input[type="text"],
 .userName input[type="text"],
+.password input[type="password"],
 .mail input[type="email"],
 .phone input[type="tel"] {
     width: 100%;

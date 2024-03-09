@@ -573,10 +573,26 @@ exports.profileUpdate = async (req, res) => {
 
         // 요청 바디에서 업데이트할 사용자 정보 추출
         // (일단 userName과 password만)
-        const { userId: id, userName, password } = req.body;
+        const { userId: id, userName, nowPassword, newPassword } = req.body;
+        console.log("nowPassword", nowPassword);
+        console.log("newPassword", newPassword);
 
         // 비밀번호 암호화
-        const hashedPw = password ? hashPw(password) : undefined;
+        const hashedPw = newPassword ? hashPw(newPassword) : undefined;
+        //검증
+        const userData = await models.Users.findOne({
+            where: { id: userId },
+        });
+        const pwFT = comparePw(nowPassword, userData.password);
+        console.log(pwFT);
+        console.log(hashedPw);
+        if (hashedPw !== undefined && !pwFT) {
+            res.json({
+                updated: userData,
+                msg: "현재 비밀번호가 일치하지 않아 수정에 실패했습니다",
+            });
+            return;
+        }
 
         // DB에서 사용자 정보 업데이트
         const [updated] = await models.Users.update(
