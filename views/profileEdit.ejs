@@ -20,7 +20,7 @@
     <body>
         <div class="portfoliocard">
             <div class="coverphoto"></div>
-            <div class="profile_picture"></div>
+            <div class="profile_picture" id="profileImg"></div>
             <div class="left_col">
                 <div class="followers">
                     <div class="follow_count">1,234</div>
@@ -46,6 +46,7 @@
         <script>
             const token = localStorage.getItem("user");
             const userId = localStorage.getItem("userId");
+
             console.log(token);
             console.log(userId);
 
@@ -53,6 +54,8 @@
                 console.log(response.data);
                 document.getElementById("userId").value = response.data.user.userId;
                 document.getElementById("userName").value = response.data.user.userName;
+                const imgURL = response.data.user.img; // imgURLs를 가져옴
+                document.getElementById("profileImg").style.backgroundImage = "url(" + imgURL + ")";
             }
 
             function saveUserData() {
@@ -76,7 +79,8 @@
                         }
                     )
                     .then(function (response) {
-                        console.log(response.data);
+                        console.log("수정수정", response.data.updated);
+                        localStorage.setItem("userName", response.data.updated.userName);
                         alert("수정이 완료되었습니다.");
                         window.location.href = "/profile/" + userId;
                     })
@@ -84,11 +88,15 @@
                         console.error("Error:", error);
                     });
             }
-
+            const imgURL = localStorage.getItem("imgURL"); // imgURLs를 가져옴
             axios
                 .post(
                     "/profile/" + userId,
-                    {},
+                    {
+                        data: {
+                            imgURL: imgURL, // imgURL를 data에 추가
+                        },
+                    },
                     {
                         headers: {
                             Authorization: "Bearer " + token,

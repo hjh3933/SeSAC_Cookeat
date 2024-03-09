@@ -20,14 +20,16 @@ router.get("/logout", controller.logout);
 router.post("/checkUsername", controller.checkUsername);
 router.post("/checkNickname", controller.checkNickname);
 
-//회원가입 - 주희
+//회원가입  및 로그인 - 주희
 router.post("/postJoin", controller.postJoin);
 router.post("/login", controller.postLogin);
 
-// 회원정보 및 수정 페이지 조회 - 형석
+// 회원정보 페이지 렌더 및 조회 - 형석
 router.get("/profile/:userId", controller.getProfile);
 router.post("/profile/:userId", controller.profile);
-router.get("/profileEdit", controller.profileEdit);
+
+// 회원정보 수정 페이지 렌더  - 보아
+router.get("/profileEdit", controller.getProfileEdit);
 
 // 회원정보 수정, 탈퇴 - 형석
 router.patch("/profileUpdate/:userId", controller.profileUpdate);
@@ -42,6 +44,11 @@ router.get("/postEdit/:postId", controller.getPostEdit);
 router.post("/profileUpload", profileUpload.single("userfile"), uploadProfileImg);
 // 게시글 이미지 업로드 - 한개의 input에 여러 파일 업로드
 router.post("/recipeUploadImg", recipeUpload.array("file"), uploadRecipeImage);
+
+// 프로필 이미지 조회 및 유저네임 조회 - login.ejs
+router.post("/profileImg", controller.getProfileImage);
+// 프로필 이미지 추가 - profile.ejs => 서버 DB img 속성으로 넣을때!
+router.post("/profileImgCreate", controller.createProfileImg);
 
 // 북마크 추가
 router.post("/bookmarkInsert/:postId", controller.bookmarkInsert);

@@ -77,6 +77,25 @@
                         // 토큰을 로컬 스토리지에 저장
                         localStorage.setItem("user", token);
                         localStorage.setItem("userId", id);
+                        console.log("Before defining imgURL");
+
+                        // 추가: 사용자 정보를 받아옵니다.
+                        const userInfo = await axios.post(
+                            "/profileImg",
+                            {},
+                            {
+                                headers: {
+                                    Authorization: "Bearer " + token,
+                                },
+                            }
+                        );
+
+                        // 받아온 사용자 정보 중 imgURL을 로컬 스토리지에 저장합니다.
+                        console.log("login.ejs >>> userInfo.data >>>>>>", userInfo.data);
+                        const imgURL = userInfo.data.profileImageUrl;
+                        console.log("Login.ejs >>>>>>> ", imgURL);
+                        localStorage.setItem("imgURL", JSON.stringify(imgURL));
+                        localStorage.setItem("userName", userInfo.data.userName);
                         // 홈으로 이동
                         location.href = "/";
                     } else {
