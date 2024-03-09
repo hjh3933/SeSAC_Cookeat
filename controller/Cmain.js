@@ -80,27 +80,18 @@ exports.getJoin = (req, res) => {
 exports.getCreatePost = (req, res) => {
     res.render("creatRecipeForm");
 };
-// exports.postJoin = (req, res) => {
-//     console.log("회원가입 정보", req.body);
-//     //암호화
-//     const hashedPw = hashPw(req.body.password);
-//     models.Users.create({
-//         userId: req.body.userId,
-//         password: hashedPw,
-//         userName: req.body.userName,
-//     }).then((result) => {
-//         console.log(result);
-//         res.send({ msg: "회원가입 완료!", statusCode: 200 });
-//     });
-// };
+
 exports.postJoin = (req, res) => {
     console.log("회원가입 정보", req.body);
+    const defaultImageURL = "/static/account.png"; // 기본 이미지 URL 설정
+
     // 암호화
     const hashedPw = hashPw(req.body.password);
     models.Users.create({
         userId: req.body.userId,
         password: hashedPw,
         userName: req.body.userName,
+        img: defaultImageURL,
     })
         .then((result) => {
             console.log(result);
@@ -114,39 +105,6 @@ exports.postJoin = (req, res) => {
         });
 };
 
-// exports.postLogin = (req, res) => {
-//     //{userId, password}
-//     console.log("로그인 데이터", req.body);
-//     const { userId, password } = req.body;
-//     models.Users.findOne({
-//         where: { userId: userId },
-//     }).then((result) => {
-//         console.log("로그인 password 조회 결과:", result);
-//         if (result) {
-//             //result.password = 해시된 비밀번호
-//             const hashedPw = result.password;
-//             const id = result.id;
-//             const loginResult = comparePw(password, hashedPw);
-//             if (loginResult) {
-//                 const token = jwt.sign({ id }, SECRET);
-//                 console.log("token", token);
-//                 console.log("loginResult", loginResult);
-//                 res.send({
-//                     result: loginResult,
-//                     msg: "로그인 완료",
-//                     statusCode: 200,
-//                     token: token,
-//                 });
-//             } else {
-//                 //비밀번호 오류
-//                 res.send({ msg: "로그인 실패", result: false });
-//             }
-//         } else {
-//             //아이디 오류
-//             res.send({ msg: "로그인 실패", result: false });
-//         }
-//     });
-// };
 exports.postLogin = (req, res) => {
     // {userId, password}
     console.log("로그인 데이터", req.body);
@@ -232,8 +190,7 @@ exports.getPosts = (req, res) => {
 
                     post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
                 });
-                // res.json({ posts: result });
-                // res.send(result);
+
                 console.log("result>>", result);
                 res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
@@ -268,8 +225,7 @@ exports.getUserPosts = (req, res) => {
 
                     post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
                 });
-                // res.json({ posts: result });
-                // res.send(result);
+
                 console.log("result>>", result);
                 res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
@@ -507,12 +463,9 @@ exports.getProfile = (req, res) => {
 
 // 회원정보 조회 - 형석
 exports.profile = async (req, res) => {
-    // res.render("profile");
     try {
         console.log(req.body);
-        const { imgURL } = req.body.data;
-        const defaultImageURL = "/static/account.png"; // 기본 이미지 URL 설정
-        const imageURL = imgURL ? imgURL : defaultImageURL; // imgURL이 null이면 기본 이미지 URL 사용
+
         // 요청 헤더에서 토큰 추출
         console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
@@ -525,7 +478,6 @@ exports.profile = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
-        // const imgURLString = JSON.stringify(imgURL);
 
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
@@ -538,7 +490,7 @@ exports.profile = async (req, res) => {
                     res.json({
                         user: user.dataValues,
                         userName: user.dataValues.userName,
-                        url: imageURL, // 이미지 URL을 응답에 포함시킵니다.
+                        url: user.dataValues.img, // 이미지 URL을 응답에 포함시킵니다.
                     });
                 } else {
                     // 사용자 정보가 없는 경우
@@ -995,8 +947,7 @@ exports.createProfileImg = async (req, res) => {
     try {
         console.log(req.body);
         const { imgURL } = req.body.data;
-        const defaultImageURL = "/static/account.png"; // 기본 이미지 URL 설정
-        const imageURL = imgURL ? imgURL : defaultImageURL; // imgURL이 null이면 기본 이미지 URL 사용
+
         // 요청 헤더에서 토큰 추출
         console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
@@ -1020,7 +971,7 @@ exports.createProfileImg = async (req, res) => {
                 if (user) {
                     await models.Users.update(
                         {
-                            img: imageURL,
+                            img: imgURL,
                         },
                         {
                             where: { id: user.dataValues.id },
@@ -1028,7 +979,6 @@ exports.createProfileImg = async (req, res) => {
                     ).then((result) => {
                         console.log(result);
                     });
-                    console.log("user.dataValues >>>>>>> ", user.dataValues);
                     // 사용자 정보가 있으면 프로필 페이지를 렌더링
                     res.json({
                         user: user.dataValues,
@@ -1061,7 +1011,6 @@ exports.createProfileImg = async (req, res) => {
 exports.getProfileImage = async (req, res) => {
     try {
         // 로그인한 사용자의 id를 토큰에서 추출
-        console.log("프로필 이미지 조회중>>>>>>", req.headers.authorization);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
 
