@@ -355,7 +355,11 @@ exports.getPostDetail = async (req, res) => {
 exports.patchPost = async (req, res) => {
     try {
         const { postId } = req.params;
+        console.log("postid ", postId);
         const { title, content, img, category } = req.body;
+        console.log(req.files);
+        console.log(req.file);
+        console.log("===============");
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
         }
@@ -380,6 +384,8 @@ exports.patchPost = async (req, res) => {
         if (existingPost.id !== userId) {
             return res.status(403).json({ error: "게시글을 수정할 권한이 없습니다." });
         }
+
+        console.log(img);
 
         // 게시글 업데이트
         await models.Posts.update(
