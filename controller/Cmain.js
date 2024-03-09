@@ -331,7 +331,7 @@ exports.getPostDetail = async (req, res) => {
                 {
                     model: models.Users,
                     as: "author", // 별칭을 'author'로 설정합니다.
-                    attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                    attributes: ["userName", "img"], // 필요한 필드만 선택하여 가져옵니다.
                 },
             ],
         });
@@ -352,7 +352,13 @@ exports.getPostDetail = async (req, res) => {
             return res.status(404).json({ error: "게시글이 존재하지 않습니다." });
         }
         // res.json(postDetail);
-        res.render("post", { post: postDetail, formattedDate });
+        const user = await models.Users.findOne({
+            where: { id: postDetail.id },
+        });
+        console.log(user.img);
+        const url = JSON.stringify(user.img);
+        //
+        res.render("post", { post: postDetail, formattedDate, url });
     } catch (err) {
         console.log("err", err);
         res.status(500).send("서버 에러");
