@@ -87,6 +87,9 @@ router.get("/nav", (req, res) => {
 router.get("/footer", (req, res) => {
     res.render("footer");
 });
+router.get("/bookmark", (req, res) => {
+    res.render("bookmark");
+});
 
 const teamMembers = [
     {
