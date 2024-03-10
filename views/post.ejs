@@ -41,6 +41,7 @@
                     </div>
                     <div class="userName"><%=post.author.userName%></div>
                     <div class="follow">
+                        <p id="followText">follow</p>
                         <span class="material-symbols-outlined followIcon" onclick="goFollow()">
                             favorite
                         </span>
@@ -73,6 +74,7 @@
                 <button type="button" onclick="getPosts()">POSTS</button>
             </div>
         </div>
+        <div class="space"></div>
     </body>
 
     <script>
@@ -91,11 +93,13 @@
             //로그인 X 북마크, 팔로우 기능 사용불가
             bookmarkIcon.style.visibility = "hidden";
             followIcon.style.visibility = "hidden";
+            document.getElementById("followText").style.visibility = "hidden";
         } else {
             if (postUserId == userId) {
                 //로그인 상태이고, 내 글일 때
                 bookmarkIcon.style.visibility = "hidden";
                 followIcon.style.visibility = "hidden";
+                document.getElementById("followText").style.visibility = "hidden";
             } else {
                 //로그인 상태, 내 글이 아닐때
                 axios({

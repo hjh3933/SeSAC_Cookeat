@@ -7,6 +7,7 @@ body {
     background-image: url(https://images.unsplash.com/photo-1575000977355-8b2a719926c9?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
     /* background: #f4f4f4; */
     padding: 0 8px;
+    background-size: cover; /* 배경 이미지를 화면에 가득 채우도록 설정 */
 }
 .space {
     height: 200px;
