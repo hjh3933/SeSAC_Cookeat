@@ -31,6 +31,7 @@
                     Following
                 </div> -->
                 <button id="saveButton" class="save-button">Save</button>
+                <button id="deleteButton" class="delete-button">Delete</button>
             </div>
             <div class="right_col">
                 <ul class="contact_information">
@@ -120,6 +121,39 @@
                 });
 
             document.getElementById("saveButton").addEventListener("click", saveUserData);
+
+            //탈퇴 버튼 클릭 시 작동 함수
+            deleteButton.addEventListener("click", () => {
+                const confirmChk = confirm(
+                    "작성한 게시물도 함께 삭제됩니다 정말 탈퇴하시겠습니까?"
+                );
+                if (confirmChk) {
+                    //현재 비밀번호 검증
+                    const nowPassword = document.getElementById("nowPassword").value;
+                    if (!nowPassword.trim()) {
+                        alert("현재 비밀번호 값을 입력해주세요!");
+                    } else {
+                        // axios로 삭제 요청
+                        axios({
+                            url: "/profile/" + userId,
+                            method: "delete",
+                            data: { password: nowPassword },
+                            headers: {
+                                Authorization: "Bearer " + token,
+                            },
+                        }).then((res) => {
+                            alert(res.data.msg);
+                            if (res.data.result) {
+                                //true면 삭제완료
+                                localStorage.clear();
+                                location.href = "/";
+                            } else {
+                                //false면 그 페이지 그대로
+                            }
+                        });
+                    }
+                }
+            });
         </script>
     </body>
 </html>

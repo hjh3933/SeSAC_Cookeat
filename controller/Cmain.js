@@ -576,11 +576,23 @@ exports.profileDelete = async (req, res) => {
         const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
-        const isDeleted = await models.Users.destroy({
+        //비밀번호 검증
+        const password = req.body.password;
+        const userData = await models.Users.findOne({
             where: { id: userId },
         });
-        if (isDeleted) {
-            res.send({ msg: "회원탈퇴 완료" });
+        const pwFT = comparePw(password, userData.password);
+        console.log(pwFT);
+        if (pwFT) {
+            //회원정보 삭제
+            const isDeleted = await models.Users.destroy({
+                where: { id: userId },
+            });
+            if (isDeleted) {
+                res.send({ msg: "회원탈퇴 완료", result: true });
+            }
+        } else {
+            res.send({ msg: "현재 비밀번호가 달라 탈퇴되지 않았습니다", result: false });
         }
     } catch (err) {
         console.log("err", err);

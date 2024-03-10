@@ -41,11 +41,15 @@ Users.hasMany(Bookmarks, {
     foreignKey: "id", // bookmarks에서 사용할 컬럼이름 (userId 로 이름을 지어주면 좋겠지만 이미 id 라고 사용하는 곳이 많을 것이기 때문에 id로 사용)
     sourceKey: "id", // users table에서 참조할 컬럼
     as: "bookmarks", // 별칭을 'bookmarks'로 설정합니다.
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
 });
 
 Bookmarks.belongsTo(Users, {
     foreignKey: "id",
     targetKey: "id",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
 });
 
 // (allie 추가) Posts와 Bookmarks는 1:N관계
@@ -54,12 +58,16 @@ Posts.hasMany(Bookmarks, {
     foreignKey: "postId",
     sourceKey: "postId", // posts table에서 참조할 컬럼
     as: "bookmarks", // 별칭을 'bookmarks'로 설정합니다.
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
 });
 
 Bookmarks.belongsTo(Posts, {
     foreignKey: "postId",
     targetKey: "postId", // posts table에서 참조할 컬럼
     as: "post", // 별칭을 'post'로 설정합니다.
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
 });
 
 Users.belongsToMany(Users, {
