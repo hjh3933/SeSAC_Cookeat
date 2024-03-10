@@ -63,7 +63,7 @@
                                         `/post/${bookmark.postId}`
                                     );
                                     const postDetail = postResponse.data;
-                                    console.log("포디데이터", postDetail);
+                                    // console.log("포디데이터", postDetail);
 
                                     // singleFollow
                                     const singleFollow = $("<div>").addClass("singleFollow");
@@ -116,12 +116,12 @@
                                     });
                             }
                         };
-                    })(following);
-                    // go to heart 링크 클릭 시 이동
-                    $("#goToHeart").on("click", function (event) {
-                        event.preventDefault();
-                        window.location.href = "/heart";
-                    });
+                    })(bookmark);
+                    // // go to heart 링크 클릭 시 이동
+                    // $("#goToHeart").on("click", function (event) {
+                    //     event.preventDefault();
+                    //     window.location.href = "/heart";
+                    // });
                 });
             </script>
         </div>
