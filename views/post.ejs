@@ -155,7 +155,7 @@
                     },
                 })
                     .then((res) => {
-                        console.log(res.data);
+                        console.log("Post 데이터:", res.data.post);
                         alert(res.data.msg);
                         location.reload(); //다시 로드함
                     })

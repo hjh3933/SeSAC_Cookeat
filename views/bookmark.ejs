@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/static/follow.css" />
+
+        <title>북마크</title>
+    </head>
+
+    <body>
+        <!-- <h1>북마크</h1> -->
+        <div class="container">
+            <h1>Bookmarks</h1>
+
+            <!-- 북마크 정보를 표시할 영역 -->
+            <div id="bookmarkContainer" class="followerContainer">
+                <!-- 맨 윗줄에는 NAME과 RECIPE라는 글씨가 고정적으로 나타나게 함 -->
+                <div class="singleFollow">
+                    <div class="userData">
+                        <div class="userId">NAME</div>
+                        <div class="userName">RECIPE</div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    // 사용자의 토큰을 로컬 스토리지에서 가져옵니다.
+                    const token = localStorage.getItem("user");
+
+                    // 토큰이 없는 경우 로그인 페이지로 이동 또는 다른 처리를 하실 수 있습니다.
+                    if (!token) {
+                        console.error("Token not found. Please log in.");
+                        return;
+                    }
+
+                    // 사용자의 ID를 로컬 스토리지에서 가져옵니다.
+                    const userId = localStorage.getItem("userId");
+
+                    // 서버에서 제공하는 API 주소를 사용하고, 토큰을 헤더에 포함시켜 요청합니다.
+                    axios
+                        .get(`/profile/${userId}/bookmarks`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        })
+                        .then(async (response) => {
+                            console.log(response.data); // 확인용 콘솔 출력
+
+                            const bookmarks = response.data;
+
+                            // 북마크 정보를 표시할 컨테이너 요소
+                            const bookmarkContainer = $("#bookmarkContainer");
+
+                            // 받아온 북마크 정보를 동적으로 HTML에 추가
+                            bookmarks.forEach(async (bookmark) => {
+                                try {
+                                    const postResponse = await axios.get(
+                                        `/post/${bookmark.postId}`
+                                    );
+                                    const postDetail = postResponse.data;
+                                    // console.log("포디데이터", postDetail);
+
+                                    // singleFollow
+                                    const singleFollow = $("<div>").addClass("singleFollow");
+
+                                    // userData
+                                    const userData = $("<div>").addClass("userData");
+
+                                    // 북마크 삭제 아이콘
+                                    const bookmarkIcon = document.createElement("span");
+                                    // bookmarkIcon.textContent = "ㅇ";
+
+                                    // bookmarkIcon.classList.add("material-symbols-outlined");
+                                    // bookmarkIcon.classList.add("followingIcon");
+
+                                    // Append NAME and RECIPE dynamically
+                                    userData.append(`
+                                        <div class="userId">${bookmark.authorName}</div>
+                                        <div class="userName">
+                                            <a href="/post/${bookmark.postId}">${bookmark.title}</a>
+                                        </div>
+                                    `);
+
+                                    // 북마크 삭제 아이콘을 userData에 추가
+                                    userData.append(bookmarkIcon);
+
+                                    singleFollow.append(userData);
+
+                                    bookmarkContainer.append(singleFollow);
+
+                                    // 클릭 이벤트 처리
+                                    $(bookmarkIcon).on("click", function () {
+                                        const bookmarkDeleteCheck = confirm(
+                                            `${bookmark.title} 북마크를 목록에서 삭제하시겠습니까?`
+                                        );
+
+                                        if (bookmarkDeleteCheck) {
+                                            // axios를 사용하여 북마크 삭제 요청
+                                            axios({
+                                                url: `/bookmarkDelete/${bookmark.postId}`,
+                                                method: "delete",
+                                                headers: {
+                                                    Authorization: `Bearer ${token}`,
+                                                },
+                                            })
+                                                .then((res) => {
+                                                    console.log(res.data);
+                                                    alert(res.data.msg);
+                                                    location.reload(); // 페이지 새로고침
+                                                })
+                                                .catch((err) => {
+                                                    alert("오류 발생");
+                                                    console.log("err>>", err);
+                                                });
+                                        }
+                                    });
+                                } catch (postError) {
+                                    console.error("포스트 조회 중 에러:", postError);
+                                }
+                            });
+                        })
+                        .catch((error) => {
+                            console.error("북마크 조회 중 에러:", error);
+                        });
+                });
+            </script>
+        </div>
+    </body>
+</html>
