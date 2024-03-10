@@ -15,9 +15,10 @@
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/posts.css" />
         <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('account.ejs') %>
     </head>
     <body>
-        <%- include('nav.ejs') %>
+        <!-- <%#- include('nav.ejs') %> -->
         <br />
         <% if(!isData){%>
         <p class="noData"><%=message %></p>
@@ -25,41 +26,93 @@
         <%} else{%>
 
         <section class="container">
+            <h1 style="color: #495057">ALL RECIPES</h1>
             <table class="lists">
-                <td class="total">총 게시물: <%=posts.length %></td>
+                <button
+                    class="custom-btn btn-12"
+                    onclick="location.href = '/post' "
+                    style="justify-content: center"
+                >
+                    <span>Cook eat!🍴</span><span>요리시작!🍴</span>
+                    <br />
+                </button>
+                <td class="total">총 게시물: <%=totalPosts %></td>
                 <thead>
                     <tr class="top">
-                        <td class="items num">번호</td>
-                        <td class="items identi">ID</td>
+                        <!-- <td class="items num">번호</td>
+                        <td class="items identi">ID</td> -->
+                        <td class="items category">카테고리</td>
                         <td class="items postsTitle">제목</td>
-                        <td class="items postsDate">작성일자</td>
                         <td class="items writer">요리사</td>
+                        <td class="items postsDate">작성일자</td>
                     </tr>
                 </thead>
 
                 <tbody>
                     <% for(let post of posts){ %>
                     <tr class="infomation">
-                        <td class="infos postId"><%=post.postId%></td>
-                        <td class="infos id"><%=post.id%></td>
+                        <td class="infos postId"><%=post.id%></td>
+                        <td class="infos id"><%=post.category%></td>
                         <td class="infos title">
                             <a href="/post/<%=post.postId%>"><%=post.title%></a>
                         </td>
-                        <td class="infos createdAt"><%=post.dataValues.formattedDate%></td>
                         <td class="infos User"><%=post.author.userName%></td>
+                        <td class="infos createdAt"><%=post.dataValues.formattedDate%></td>
                     </tr>
                     <% } %>
                 </tbody>
             </table>
-            <button class="custom-btn btn-12" onclick="location.href = '/post' ">
-                <span>Cook eat!🍴</span><span>요리시작!🍴</span>
-            </button>
+            <br />
             <!-- pagination 진행예정 -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <!-- 이전 버튼 -->
+                    <% if (currentPage > 1) { %>
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="/posts?page=<%= currentPage - 1 %>"
+                            aria-label="Previous"
+                        >
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% } else { %>
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&laquo;</span>
+                    </li>
+                    <% } %>
+
+                    <!-- 페이지 버튼들 -->
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="/posts?page=<%= i %>"><%= i %></a>
+                    </li>
+                    <% } %>
+
+                    <!-- 이후 버튼 -->
+                    <% if (currentPage < totalPages) { %>
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="/posts?page=<%= currentPage + 1 %>"
+                            aria-label="Next"
+                        >
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <% } else { %>
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&raquo;</span>
+                    </li>
+                    <% } %>
+                </ul>
+            </nav>
         </section>
         <% } %>
         <div class="space"></div>
         <footer>
-            <%- include('footer.ejs') %> <%- include('account.ejs') %>
+            <!-- <%#- include('footer.ejs') %> <%#- include('account.ejs') %> -->
             <!-- <script src="/js/bootstrap.min.js"></script> -->
             <script
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

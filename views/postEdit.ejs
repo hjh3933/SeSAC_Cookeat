@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>레시피 업로드</title>
+        <title>레시피 수정</title>
         <!-- include libraries(jQuery, bootstrap) -->
         <link
             href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
@@ -34,7 +34,7 @@
 
             //
             var notice_form = `
-                <h4> 양식에 맞게 레시피를 작성해 주세요.</h4>
+                <h4> 양식에 맞게 레시피를 수정해 주세요.</h4>
                 <p style="color: gray;">⚠️ 이미지는 복사, 붙여넣기 해서 첨부해 주세요.</p>
                 `;
 
@@ -49,7 +49,7 @@
                 <br />
                 `;
             $(document).ready(function () {
-                var imgURLs = []; // 이미지 URL들을 저장할 배열
+                var imgURLs = JSON.parse(localStorage.getItem("imgURLs")) || []; // 이미지 URL들을 저장할 배열
 
                 function uploadImage(file) {
                     var data = new FormData();
@@ -72,7 +72,7 @@
                 }
 
                 $("#summernote").summernote({
-                    placeholder: "- 나만의 레시피를 작성해 주세요",
+                    placeholder: "- 나만의 레시피를 수정해 주세요",
                     tabsize: 2,
                     height: 740,
                     toolbar: [
@@ -166,7 +166,7 @@
         <div class="container" style="margin-top: 20px; margin-bottom: 20px">
             <div>
                 <div class="form-group">
-                    <h2><label for="title">레시피 작성하기</label></h2>
+                    <h2><label for="title">레시피 수정하기</label></h2>
                     <!-- placeholder 속성 입력한 데이터가 없는 경우 배경으로 나타난다.실제적으로 입력을 100자까지로 지정 -->
                     <!-- required 속성을 설정하면 필수입력 사항이된다. -->
                     <!-- pattern 속성을 이용한 정규표현식으로 데이터의 유효성 검사를 할 수 있다. -->
@@ -209,13 +209,31 @@
                 <button type="button" class="btn btn-secondary" onclick="recipeUpdate()">
                     레시피 수정
                 </button>
-                <button type="button" class="btn btn-outline-secondary">작성 취소</button>
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    onclick="cancelRecipeEdit()"
+                >
+                    작성 취소
+                </button>
             </div>
             <br />
             <br />
             <br />
         </div>
         <%- include('footer.ejs') %>
-        <script></script>
+        <script>
+            function cancelRecipeEdit() {
+                // 사용자에게 경고 메시지 표시
+                var isConfirmed = confirm(
+                    "작성 중인 내용이 저장되지 않을 수 있습니다. 정말로 뒤로 가시겠습니까?"
+                );
+
+                // 사용자가 확인을 눌렀을 경우 뒤로 가기 실행
+                if (isConfirmed) {
+                    window.history.back();
+                }
+            }
+        </script>
     </body>
 </html>
