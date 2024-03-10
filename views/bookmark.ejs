@@ -21,6 +21,7 @@
                     <div class="userData">
                         <div class="userId">NAME</div>
                         <div class="userName">RECIPE</div>
+                        <div></div>
                     </div>
                 </div>
             </div>
@@ -71,16 +72,54 @@
                                     // userData
                                     const userData = $("<div>").addClass("userData");
 
+                                    // 북마크 삭제 아이콘
+                                    const bookmarkIcon = document.createElement("span");
+                                    // bookmarkIcon.textContent = "ㅇ";
+
+                                    // bookmarkIcon.classList.add("material-symbols-outlined");
+                                    // bookmarkIcon.classList.add("followingIcon");
+
                                     // Append NAME and RECIPE dynamically
                                     userData.append(`
-                                    <div class="userId">${bookmark.authorName}</div>
-                                    <div class="userName">
-                                        <a href="/post/${bookmark.postId}">${bookmark.title}</a>
-                                    </div>
-                                `);
+                                        <div class="userId">${bookmark.authorName}</div>
+                                        <div class="userName">
+                                            <a href="/post/${bookmark.postId}">${bookmark.title}</a>
+                                        </div>
+                                    `);
+
+                                    // 북마크 삭제 아이콘을 userData에 추가
+                                    userData.append(bookmarkIcon);
+
                                     singleFollow.append(userData);
 
                                     bookmarkContainer.append(singleFollow);
+
+                                    // 클릭 이벤트 처리
+                                    $(bookmarkIcon).on("click", function () {
+                                        const bookmarkDeleteCheck = confirm(
+                                            `${bookmark.title} 북마크를 목록에서 삭제하시겠습니까?`
+                                        );
+
+                                        if (bookmarkDeleteCheck) {
+                                            // axios를 사용하여 북마크 삭제 요청
+                                            axios({
+                                                url: `/bookmarkDelete/${bookmark.postId}`,
+                                                method: "delete",
+                                                headers: {
+                                                    Authorization: `Bearer ${token}`,
+                                                },
+                                            })
+                                                .then((res) => {
+                                                    console.log(res.data);
+                                                    alert(res.data.msg);
+                                                    location.reload(); // 페이지 새로고침
+                                                })
+                                                .catch((err) => {
+                                                    alert("오류 발생");
+                                                    console.log("err>>", err);
+                                                });
+                                        }
+                                    });
                                 } catch (postError) {
                                     console.error("포스트 조회 중 에러:", postError);
                                 }
@@ -89,39 +128,6 @@
                         .catch((error) => {
                             console.error("북마크 조회 중 에러:", error);
                         });
-                    (function (bookmark) {
-                        heart.onclick = function () {
-                            // 클릭된 하트 아이콘에 대한 이벤트 처리
-                            const followDeleteCheck = confirm(
-                                `${bookmark.title}님을 팔로우 목록에서 삭제하시겠습니까?`
-                            );
-                            if (followDeleteCheck) {
-                                // axios삭제 이벤트
-                                axios({
-                                    url: "/Delete",
-                                    method: "delete",
-                                    data: { id: bookmark.id },
-                                    headers: {
-                                        Authorization: "Bearer " + token,
-                                    },
-                                })
-                                    .then((res) => {
-                                        console.log(res.data);
-                                        alert(res.data.msg);
-                                        location.reload(); //다시 로드함
-                                    })
-                                    .catch((err) => {
-                                        alert("오류 발생");
-                                        console.log("err>>", err);
-                                    });
-                            }
-                        };
-                    })(bookmark);
-                    // // go to heart 링크 클릭 시 이동
-                    // $("#goToHeart").on("click", function (event) {
-                    //     event.preventDefault();
-                    //     window.location.href = "/heart";
-                    // });
                 });
             </script>
         </div>
