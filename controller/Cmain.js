@@ -170,36 +170,43 @@ exports.logout = (req, res) => {
     res.send({ msg: "로그아웃 완료", statusCode: 200, tokenDeleted: true });
 };
 
-exports.getPosts = (req, res) => {
-    //전체 게시글 조회
+exports.getPosts = async (req, res) => {
     try {
-        models.Posts.findAll({
-            attributes: ["postId", "id", "title", "createdAt"],
+        const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
+        const perPage = 10; // 페이지당 표시할 게시물 수
+
+        const posts = await models.Posts.findAll({
+            offset: (page - 1) * perPage, // 시작 위치 계산
+            limit: perPage, // 표시할 게시물 수
+            attributes: ["postId", "id", "title", "createdAt", "category"],
             include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
-        }).then((result) => {
-            if (result.length > 0) {
-                // 날짜와 시간 포맷 변경
-                result.forEach((post) => {
-                    console.log(post.createdAt);
-                    const date = new Date(post.createdAt);
-                    const year = date.getFullYear();
-                    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
-                    const day = date.getDate().toString().padStart(2, "0");
-                    const hour = date.getHours().toString().padStart(2, "0");
-                    const minute = date.getMinutes().toString().padStart(2, "0");
-
-                    post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
-                });
-
-                console.log("result>>", result);
-                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
-            } else {
-                res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
-            }
+            order: [["createdAt", "DESC"]],
         });
-    } catch (err) {
-        console.log("err", err);
-        res.status(500).send("서버 에러");
+
+        // 날짜 포맷 변경
+        posts.forEach((post) => {
+            const date = new Date(post.createdAt);
+            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+
+            post.dataValues.formattedDate = formattedDate;
+        });
+
+        // 전체 페이지 수 계산
+        const totalPosts = await models.Posts.count();
+        const totalPages = Math.ceil(totalPosts / perPage);
+        console.log(posts);
+        res.render("posts", {
+            posts,
+            isData: posts.length > 0,
+            currentPage: parseInt(page),
+            totalPages,
+            totalPosts, // 전체 게시글 개수를 전달
+        });
+    } catch (error) {
+        console.error("게시물 조회 중 에러 발생", error);
+        res.send({ message: "에러 발생", error });
     }
 };
 exports.getUserPosts = (req, res) => {

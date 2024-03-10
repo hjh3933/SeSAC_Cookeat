@@ -4,7 +4,8 @@ a {
 }
 
 body {
-    background: #f4f4f4;
+    background-image: url(https://images.unsplash.com/photo-1575000977355-8b2a719926c9?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    /* background: #f4f4f4; */
     padding: 0 8px;
 }
 .space {
@@ -46,7 +47,7 @@ body {
     top: -30px;
 }
 .container .top {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #dbdfaa;
 }
 
 .container .items {
@@ -88,6 +89,7 @@ body {
 }
 .container .lists tbody .infomation .infos {
     height: 40px;
+    text-align: center;
 }
 .top .num {
     display: none;
@@ -101,9 +103,10 @@ body {
     width: 1100px;
 }
 .btn-12 {
+    background-color: #f7f5ec;
     position: relative;
-    right: 20px;
-    bottom: 20px;
+    right: 0px;
+    bottom: 25px;
     border: none;
     box-shadow: none;
     width: 130px;
@@ -112,10 +115,11 @@ body {
     -webkit-perspective: 230px;
     perspective: 230px;
     margin-top: 30px;
+    left: 297px;
 }
 .btn-12 span {
-    background: rgb(222, 243, 139);
-    background: linear-gradient(0deg, rgb(239, 251, 152) 0%, rgb(239, 251, 173) 100%);
+    background-color: #d7cdc2;
+    background: #f5f0bb;
     display: block;
     position: absolute;
     width: 130px;
@@ -155,4 +159,78 @@ body {
     -webkit-transform: rotateX(-90deg);
     -moz-transform: rotateX(-90deg);
     transform: rotateX(-90deg);
+}
+/* 페이지네이션 버튼 클릭 시 효과 비활성화 */
+.pagination .page-link:focus,
+.pagination .page-link:active {
+    box-shadow: none;
+    border: 2px solid darkgreen;
+    transform: translateY(0) !important; /* 클릭 시 움직임 비활성화 */
+}
+
+/* 페이지네이션 글씨 정렬 및 위치 조절 */
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* 페이지네이션 버튼 클릭 시 숫자 글씨의 위치 조절 */
+.pagination .page-link span {
+    margin-top: 0;
+}
+
+/* 페이지네이션 버튼 글씨 색상 변경 */
+.pagination .page-link {
+    color: olivedrab; /* 원하는 글씨 색상으로 변경 */
+    border: 0px solid olivedrab;
+    border-radius: 20%; /* border-radius를 50%로 조절하여 원형으로 만듭니다. */
+    width: 40px; /* 고정된 너비로 설정 */
+    height: 40px; /* 고정된 높이로 설정 */
+    margin-top: 10px; /* 각 페이지네이션 버튼 간의 우측 마진을 조절합니다. */
+    padding: 0.5rem 0.75rem; /* 기존 여백 조정 */
+}
+
+/* 페이지네이션 버튼 클릭 시 효과 비활성화 */
+.pagination .page-link:focus,
+.pagination .page-link:active {
+    box-shadow: none;
+    border: 2px solid darkgreen;
+    transform: translateY(0) !important; /* 클릭 시 움직임 비활성화 */
+}
+
+/* 페이지네이션 바탕색 변경 */
+.pagination .page-item:not(.disabled) .page-link {
+    background-color: #dbdfaa; /* 원하는 바탕색으로 변경 */
+}
+
+/* 페이지네이션 간격 조절 */
+.pagination .page-item {
+    margin-right: 10px; /* 각 페이지네이션 버튼 간의 우측 마진을 조절합니다. */
+}
+
+/* 페이지네이션 이전/다음 버튼 초기에 숨김 */
+.pagination .page-item.prev,
+.pagination .page-item.next {
+    display: none;
+}
+
+/* 페이지네이션 클릭된 페이지 스타일 */
+.pagination .page-item.active .page-link {
+    background-color: olivedrab; /* 클릭된 페이지네이션 버튼의 바탕색을 변경합니다. */
+    color: white; /* 클릭된 페이지네이션 버튼의 글씨 색상을 변경합니다. */
+    border-color: olivedrab; /* 클릭된 페이지네이션 버튼의 테두리 색상을 변경합니다. */
+}
+
+/* 페이지네이션 비활성 상태 버튼 스타일 */
+.pagination .page-item.disabled .page-link {
+    background-color: lightgray; /* 비활성 상태 버튼의 바탕색을 변경합니다. */
+    color: #f7f5ec; /* 비활성 상태 버튼의 글씨 색상을 변경합니다. */
+    border-color: #f7f5ec; /* 비활성 상태 버튼의 테두리 색상을 변경합니다. */
+}
+
+/* 마지막 페이지네이션 버튼은 마진을 적용하지 않습니다. */
+.pagination .page-item:last-child {
+    margin-right: 0;
 }
