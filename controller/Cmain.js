@@ -721,6 +721,7 @@ exports.getAllBookMarks = async (req, res) => {
             include: [
                 {
                     model: models.Bookmarks,
+                    as: "bookmarks", // 별칭 'bookmarks'를 사용
                     attributes: ["createdAt"], // Bookmarks 테이블의 타임스탬프 정보
                     include: [
                         {
@@ -744,11 +745,12 @@ exports.getAllBookMarks = async (req, res) => {
             return res.status(404).json({ message: "회원을 찾을 수 없습니다." });
         }
 
-        const bookmarks = user.Bookmarks.map((bookmark) => ({
+        // 수정된 부분: 별칭 'bookmarks'를 사용
+        const bookmarks = user.bookmarks.map((bookmark) => ({
             postId: bookmark.post.postId,
             title: bookmark.post.title,
-            authorName: bookmark.post.author.userName, // 'author' 별칭을 사용하여 접근합니다.
-            bookmarkCreatedAt: bookmark.createdAt, // Bookmarks 테이블의 createdAt 정보
+            authorName: bookmark.post.author.userName,
+            bookmarkCreatedAt: bookmark.createdAt,
         }));
 
         return res.status(200).json(bookmarks);
