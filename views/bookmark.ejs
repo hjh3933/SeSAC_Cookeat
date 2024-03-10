@@ -5,7 +5,10 @@
         <%- include('nav.ejs') %> <%- include('footer.ejs') %>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/follow.css" />
-
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
         <title>북마크</title>
     </head>
 
@@ -74,10 +77,9 @@
 
                                     // 북마크 삭제 아이콘
                                     const bookmarkIcon = document.createElement("span");
-                                    // bookmarkIcon.textContent = "ㅇ";
-
-                                    // bookmarkIcon.classList.add("material-symbols-outlined");
-                                    // bookmarkIcon.classList.add("followingIcon");
+                                    bookmarkIcon.textContent = "bookmark";
+                                    bookmarkIcon.classList.add("material-symbols-outlined");
+                                    bookmarkIcon.classList.add("bookmarkIcon");
 
                                     // Append NAME and RECIPE dynamically
                                     userData.append(`
