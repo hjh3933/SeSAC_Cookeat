@@ -21,9 +21,14 @@ const profileUpload = multer({
 // 프로필 이미지 업로드
 exports.uploadProfileImg = (req, res) => {
     // "userfile"은 파일 업로드 필드의 name과 일치시켜야함
-    console.log(req.file);
+    console.log("req.file >>>>>>>>>> ", req.file);
     console.log(req.body);
-    res.send("프로필 이미지 업로드 완료");
+    if (req.file) {
+        var url = path.join("/static/profileUploads/", req.file.filename);
+        res.send({ message: "프로밀 이미지 업로드 완료", url: url });
+    } else {
+        res.status(400).send({ error: "No file was uploaded." });
+    }
 };
 
 // 게시글 이미지 업로드 multer
@@ -75,27 +80,18 @@ exports.getJoin = (req, res) => {
 exports.getCreatePost = (req, res) => {
     res.render("creatRecipeForm");
 };
-// exports.postJoin = (req, res) => {
-//     console.log("회원가입 정보", req.body);
-//     //암호화
-//     const hashedPw = hashPw(req.body.password);
-//     models.Users.create({
-//         userId: req.body.userId,
-//         password: hashedPw,
-//         userName: req.body.userName,
-//     }).then((result) => {
-//         console.log(result);
-//         res.send({ msg: "회원가입 완료!", statusCode: 200 });
-//     });
-// };
+
 exports.postJoin = (req, res) => {
     console.log("회원가입 정보", req.body);
+    const defaultImageURL = "/static/account.png"; // 기본 이미지 URL 설정
+
     // 암호화
     const hashedPw = hashPw(req.body.password);
     models.Users.create({
         userId: req.body.userId,
         password: hashedPw,
         userName: req.body.userName,
+        img: defaultImageURL,
     })
         .then((result) => {
             console.log(result);
@@ -109,39 +105,6 @@ exports.postJoin = (req, res) => {
         });
 };
 
-// exports.postLogin = (req, res) => {
-//     //{userId, password}
-//     console.log("로그인 데이터", req.body);
-//     const { userId, password } = req.body;
-//     models.Users.findOne({
-//         where: { userId: userId },
-//     }).then((result) => {
-//         console.log("로그인 password 조회 결과:", result);
-//         if (result) {
-//             //result.password = 해시된 비밀번호
-//             const hashedPw = result.password;
-//             const id = result.id;
-//             const loginResult = comparePw(password, hashedPw);
-//             if (loginResult) {
-//                 const token = jwt.sign({ id }, SECRET);
-//                 console.log("token", token);
-//                 console.log("loginResult", loginResult);
-//                 res.send({
-//                     result: loginResult,
-//                     msg: "로그인 완료",
-//                     statusCode: 200,
-//                     token: token,
-//                 });
-//             } else {
-//                 //비밀번호 오류
-//                 res.send({ msg: "로그인 실패", result: false });
-//             }
-//         } else {
-//             //아이디 오류
-//             res.send({ msg: "로그인 실패", result: false });
-//         }
-//     });
-// };
 exports.postLogin = (req, res) => {
     // {userId, password}
     console.log("로그인 데이터", req.body);
@@ -168,6 +131,8 @@ exports.postLogin = (req, res) => {
                     // 로그인 성공 시 유저 이름과 함께 응답
                     res.send({
                         id,
+                        userName: result.userName,
+                        img: result.img,
                         result: true,
                         msg: `환영합니다, ${result.userName}님!`,
                         statusCode: 200,
@@ -225,8 +190,7 @@ exports.getPosts = (req, res) => {
 
                     post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
                 });
-                // res.json({ posts: result });
-                // res.send(result);
+
                 console.log("result>>", result);
                 res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
@@ -261,8 +225,7 @@ exports.getUserPosts = (req, res) => {
 
                     post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
                 });
-                // res.json({ posts: result });
-                // res.send(result);
+
                 console.log("result>>", result);
                 res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
@@ -279,6 +242,7 @@ exports.getUserPosts = (req, res) => {
 exports.postRecipe = async (req, res) => {
     try {
         const { title, content, imgURLs, category } = req.body;
+        console.log("imgURLs", imgURLs);
         // 제목, 내용, 카테고리 유효성 검사
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
@@ -323,7 +287,7 @@ exports.getPostDetail = async (req, res) => {
                 {
                     model: models.Users,
                     as: "author", // 별칭을 'author'로 설정합니다.
-                    attributes: ["userName"], // 필요한 필드만 선택하여 가져옵니다.
+                    attributes: ["userName", "img"], // 필요한 필드만 선택하여 가져옵니다.
                 },
             ],
         });
@@ -344,7 +308,13 @@ exports.getPostDetail = async (req, res) => {
             return res.status(404).json({ error: "게시글이 존재하지 않습니다." });
         }
         // res.json(postDetail);
-        res.render("post", { post: postDetail, formattedDate });
+        const user = await models.Users.findOne({
+            where: { id: postDetail.id },
+        });
+        console.log(user.img);
+        const url = JSON.stringify(user.img);
+        //
+        res.render("post", { post: postDetail, formattedDate, url });
     } catch (err) {
         console.log("err", err);
         res.status(500).send("서버 에러");
@@ -495,21 +465,21 @@ exports.postData = async (req, res) => {
         res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
     }
 };
+// 회원정보 조회 페이지 렌더
 exports.getProfile = (req, res) => {
     res.render("profile");
 };
 
-// 회원정보 및 수정 페이지 조회 - 형석
+// 회원정보 조회 - 형석
 exports.profile = async (req, res) => {
-    // res.render("profile");
     try {
+        console.log(req.body);
+
         // 요청 헤더에서 토큰 추출
         console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-        // jwt.verify(token, SECRET)
-        // const decodedToken1 = jwt.verify(token, SECRET);
-        // console.log("decodedToken>>", decodedToken);
+
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
@@ -517,14 +487,20 @@ exports.profile = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
+
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
             where: { id: userId },
         })
-            .then((user) => {
+            .then(async (user) => {
+                console.log(user);
                 if (user) {
                     // 사용자 정보가 있으면 프로필 페이지를 렌더링
-                    res.json({ user: user.dataValues, userId });
+                    res.json({
+                        user: user.dataValues,
+                        userName: user.dataValues.userName,
+                        url: user.dataValues.img, // 이미지 URL을 응답에 포함시킵니다.
+                    });
                 } else {
                     // 사용자 정보가 없는 경우
                     res.status(404).send("사용자를 찾을 수 없습니다.");
@@ -539,23 +515,68 @@ exports.profile = async (req, res) => {
         console.error("회원정보 조회 중 에러 발생", err);
         // 토큰 만료 외의 에러 메시지 전달
         if (err instanceof jwt.TokenExpiredError) {
-            console.log("토큰이 만료되었습니다");
+            console.log("토큰이 만료되었습니다", err);
             res.send("다시 로그인해주세요");
         } else {
             res.send({ message: "에러 발생", error: err });
         }
     }
 };
-
-exports.getPostEdit = async (req, res) => {
-    const { postId } = req.params;
-    res.render("postEdit", { postId });
-};
-
-exports.profileEdit = (req, res) => {
+// 회원정보 수정 페이지 렌더
+exports.getProfileEdit = (req, res) => {
     res.render("profileEdit");
 };
+// 회원정보 수정
+exports.profileUpdate = async (req, res) => {
+    try {
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
 
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        // 요청 바디에서 업데이트할 사용자 정보 추출
+        // (일단 userName과 password만)
+        const { userId: id, userName, nowPassword, newPassword } = req.body;
+        console.log("nowPassword", nowPassword);
+        console.log("newPassword", newPassword);
+
+        // 비밀번호 암호화
+        const hashedPw = newPassword ? hashPw(newPassword) : undefined;
+        //검증
+        const userData = await models.Users.findOne({
+            where: { id: userId },
+        });
+        const pwFT = comparePw(nowPassword, userData.password);
+        console.log(pwFT);
+        console.log(hashedPw);
+        if (hashedPw !== undefined && !pwFT) {
+            res.json({
+                updated: userData,
+                msg: "현재 비밀번호가 일치하지 않아 수정에 실패했습니다",
+            });
+            return;
+        }
+
+        // DB에서 사용자 정보 업데이트
+        const [updated] = await models.Users.update(
+            { userId: id, userName, password: hashedPw },
+            { where: { id: userId }, individualHooks: true }
+        );
+        if (updated) {
+            const updatedUser = await models.Users.findOne({ where: { id: userId } });
+            res.status(200).json({ updated: updatedUser, msg: "회원정보가 수정되었습니다." });
+        } else {
+            res.status(404).send("사용자를 찾을 수 없습니다.");
+        }
+    } catch (err) {
+        console.error("회원정보 수정 중 에러 발생", err);
+        res.status(500).send("서버 에러");
+    }
+};
 // 회원 탈퇴
 exports.profileDelete = async (req, res) => {
     try {
@@ -564,11 +585,23 @@ exports.profileDelete = async (req, res) => {
         const token = tokenWithBearer.split(" ")[1];
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
-        const isDeleted = await models.Users.destroy({
+        //비밀번호 검증
+        const password = req.body.password;
+        const userData = await models.Users.findOne({
             where: { id: userId },
         });
-        if (isDeleted) {
-            res.send({ msg: "회원탈퇴 완료" });
+        const pwFT = comparePw(password, userData.password);
+        console.log(pwFT);
+        if (pwFT) {
+            //회원정보 삭제
+            const isDeleted = await models.Users.destroy({
+                where: { id: userId },
+            });
+            if (isDeleted) {
+                res.send({ msg: "회원탈퇴 완료", result: true });
+            }
+        } else {
+            res.send({ msg: "현재 비밀번호가 달라 탈퇴되지 않았습니다", result: false });
         }
     } catch (err) {
         console.log("err", err);
@@ -578,6 +611,11 @@ exports.profileDelete = async (req, res) => {
         }
         res.status(500).send("회원 탈퇴 중 오류 발생.");
     }
+};
+
+exports.getPostEdit = async (req, res) => {
+    const { postId } = req.params;
+    res.render("postEdit", { postId });
 };
 
 // ID중복 확인 기능 추가중
@@ -622,40 +660,7 @@ exports.checkNickname = (req, res) => {
             res.status(500).send("서버 오류로 ID 중복 확인에 실패하였습니다.");
         });
 };
-// 회원정보 수정
-exports.profileUpdate = async (req, res) => {
-    try {
-        const tokenWithBearer = req.headers.authorization;
-        const token = tokenWithBearer.split(" ")[1];
 
-        if (!token) {
-            return res.status(401).send("로그인이 필요합니다.");
-        }
-        const decodedToken = jwt.verify(token, SECRET);
-        const userId = decodedToken.id;
-
-        // 요청 바디에서 업데이트할 사용자 정보 추출
-        // (일단 userName과 password만)
-        const { userId: id, userName, password } = req.body;
-
-        // 비밀번호 암호화
-        const hashedPw = password ? hashPw(password) : undefined;
-
-        // DB에서 사용자 정보 업데이트
-        const [updated] = await models.Users.update(
-            { userId: id, userName, password: hashedPw },
-            { where: { id: userId }, individualHooks: true }
-        );
-        if (updated) {
-            res.status(200).json({ updated, meg: "회원정보가 수정되었습니다." });
-        } else {
-            res.status(404).send("사용자를 찾을 수 없습니다.");
-        }
-    } catch (err) {
-        console.error("회원정보 수정 중 에러 발생", err);
-        res.status(500).send("서버 에러");
-    }
-};
 // 북마크 추가
 exports.bookmarkInsert = async (req, res) => {
     try {
@@ -937,5 +942,103 @@ exports.followDelete = async (req, res) => {
     } catch (err) {
         console.error("오류 상세 정보:", err);
         return res.status(500).send("서버 에러, 상세 정보를 확인하세요.");
+    }
+};
+
+// 프로필 이미지 DB img 속성에 추가
+exports.createProfileImg = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { imgURL } = req.body.data;
+
+        // 요청 헤더에서 토큰 추출
+        console.log("req.headers", req.headers);
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        // 토큰을 검증하고 사용자 ID 추출
+        const decodedToken = jwt.verify(token, SECRET);
+        console.log("decodedToken", decodedToken);
+        const userId = decodedToken.id;
+        // const imgURLString = JSON.stringify(imgURL);
+
+        // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
+        models.Users.findOne({
+            where: { id: userId },
+        })
+            .then(async (user) => {
+                console.log(user);
+                if (user) {
+                    await models.Users.update(
+                        {
+                            img: imgURL,
+                        },
+                        {
+                            where: { id: user.dataValues.id },
+                        }
+                    ).then((result) => {
+                        console.log(result);
+                    });
+                    // 사용자 정보가 있으면 프로필 페이지를 렌더링
+                    res.json({
+                        user: user.dataValues,
+                        userName: user.dataValues.userName,
+                        url: user.dataValues.img, // 이미지 URL을 응답에 포함시킵니다.
+                    });
+                } else {
+                    // 사용자 정보가 없는 경우
+                    res.status(404).send("사용자를 찾을 수 없습니다.");
+                }
+            })
+            .catch((err) => {
+                // 데이터베이스 조회 중 오류 발생
+                console.error("프로필 조회 중 에러 발생", err);
+                res.status(500).send("서버 에러");
+            });
+    } catch (err) {
+        console.error("프로필 이미지를 DB img 속성에 추가중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
+    }
+};
+
+// 프로필 이미지 조회 -> login.ejs에 프로필 로고에 연동
+exports.getProfileImage = async (req, res) => {
+    try {
+        // 로그인한 사용자의 id를 토큰에서 추출
+        const tokenWithBearer = req.headers.authorization;
+        const token = tokenWithBearer.split(" ")[1];
+
+        // 토큰 없는 경우
+        if (!token) {
+            return res.status(401).send("로그인이 필요합니다.");
+        }
+        const decodedToken = jwt.verify(token, SECRET);
+        const userId = decodedToken.id;
+
+        const user = await models.Users.findByPk(userId);
+        const profileInfo = {
+            userName: user.userName,
+            profileImageUrl: user.img,
+        };
+
+        res.json(profileInfo);
+    } catch (err) {
+        console.error("프로필 이미지 조회 중 에러 발생", err);
+        // 토큰 만료 외의 에러 메시지 전달
+        if (err instanceof jwt.TokenExpiredError) {
+            console.log("토큰이 만료되었습니다");
+            res.send("다시 로그인해주세요");
+        } else {
+            res.send({ message: "에러 발생", error: err });
+        }
     }
 };

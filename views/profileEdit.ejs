@@ -20,17 +20,18 @@
     <body>
         <div class="portfoliocard">
             <div class="coverphoto"></div>
-            <div class="profile_picture"></div>
+            <div class="profile_picture" id="profileImg"></div>
             <div class="left_col">
-                <div class="followers">
+                <!-- <div class="followers">
                     <div class="follow_count">1,234</div>
                     Followers
                 </div>
                 <div class="following">
                     <div class="follow_count">123</div>
                     Following
-                </div>
+                </div> -->
                 <button id="saveButton" class="save-button">Save</button>
+                <button id="deleteButton" class="delete-button">Delete</button>
             </div>
             <div class="right_col">
                 <ul class="contact_information">
@@ -40,12 +41,20 @@
                     <li class="userName">
                         <input type="text" id="userName" />
                     </li>
+                    <label for="password">new password</label>
+                    <li class="password">
+                        <input type="password" id="nowPassword" placeholder="현재 비밀번호" />
+                    </li>
+                    <li class="password">
+                        <input type="password" id="newPassword" placeholder="새로운 비밀번호" />
+                    </li>
                 </ul>
             </div>
         </div>
         <script>
             const token = localStorage.getItem("user");
             const userId = localStorage.getItem("userId");
+
             console.log(token);
             console.log(userId);
 
@@ -53,11 +62,15 @@
                 console.log(response.data);
                 document.getElementById("userId").value = response.data.user.userId;
                 document.getElementById("userName").value = response.data.user.userName;
+                const imgURL = response.data.user.img; // imgURLs를 가져옴
+                document.getElementById("profileImg").style.backgroundImage = "url(" + imgURL + ")";
             }
 
             function saveUserData() {
                 const modifiedUserId = document.getElementById("userId").value;
                 const modifiedUserName = document.getElementById("userName").value;
+                const nowPassword = document.getElementById("nowPassword").value;
+                const newPassword = document.getElementById("newPassword").value;
                 const token = localStorage.getItem("user");
                 const userId = localStorage.getItem("userId");
                 console.log(token);
@@ -68,6 +81,8 @@
                         {
                             userId: modifiedUserId,
                             userName: modifiedUserName,
+                            nowPassword: nowPassword,
+                            newPassword: newPassword,
                         },
                         {
                             headers: {
@@ -76,19 +91,24 @@
                         }
                     )
                     .then(function (response) {
-                        console.log(response.data);
-                        alert("수정이 완료되었습니다.");
+                        console.log("수정수정", response.data.updated);
+                        localStorage.setItem("userName", response.data.updated.userName);
+                        alert(response.data.msg);
                         window.location.href = "/profile/" + userId;
                     })
                     .catch(function (error) {
                         console.error("Error:", error);
                     });
             }
-
+            const imgURL = localStorage.getItem("imgURL"); // imgURLs를 가져옴
             axios
                 .post(
                     "/profile/" + userId,
-                    {},
+                    {
+                        data: {
+                            imgURL: imgURL, // imgURL를 data에 추가
+                        },
+                    },
                     {
                         headers: {
                             Authorization: "Bearer " + token,
@@ -101,6 +121,39 @@
                 });
 
             document.getElementById("saveButton").addEventListener("click", saveUserData);
+
+            //탈퇴 버튼 클릭 시 작동 함수
+            deleteButton.addEventListener("click", () => {
+                const confirmChk = confirm(
+                    "작성한 게시물도 함께 삭제됩니다 정말 탈퇴하시겠습니까?"
+                );
+                if (confirmChk) {
+                    //현재 비밀번호 검증
+                    const nowPassword = document.getElementById("nowPassword").value;
+                    if (!nowPassword.trim()) {
+                        alert("현재 비밀번호 값을 입력해주세요!");
+                    } else {
+                        // axios로 삭제 요청
+                        axios({
+                            url: "/profile/" + userId,
+                            method: "delete",
+                            data: { password: nowPassword },
+                            headers: {
+                                Authorization: "Bearer " + token,
+                            },
+                        }).then((res) => {
+                            alert(res.data.msg);
+                            if (res.data.result) {
+                                //true면 삭제완료
+                                localStorage.clear();
+                                location.href = "/";
+                            } else {
+                                //false면 그 페이지 그대로
+                            }
+                        });
+                    }
+                }
+            });
         </script>
     </body>
 </html>

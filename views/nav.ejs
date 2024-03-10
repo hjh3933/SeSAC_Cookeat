@@ -43,8 +43,9 @@
                         <img
                             src="/static/account.png"
                             alt="Profile"
-                            style="width: 30px; height: 30px"
+                            style="width: 30px; height: 30px; border-radius: 50%"
                             class="account-image"
+                            id="profileImg1"
                         />
                         <ul>
                             <li>
@@ -64,7 +65,6 @@
                 </ul>
             </div>
         </div>
-
         <script>
             (function () {
                 function isTokenExpired() {
@@ -90,7 +90,7 @@
                 function logout() {
                     // 여기에 로그아웃 처리 코드를 추가합니다.
                     // 예를 들어, 로컬 스토리지에서 토큰을 제거하고 로그인 페이지로 리디렉션할 수 있습니다.
-                    localStorage.clear(); // 로컬 스토리지에서 토큰 제거
+                    localStorage.clear();
                     alert("로그인 시간이 만료되었습니다 다시 로그인해주세요");
                     window.location.href = "/login"; // 로그인 페이지로 리디렉션
                 }
@@ -111,6 +111,19 @@
                 var profileLinkBtn = document.getElementById("profileLink");
 
                 var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
+                const imgURL = localStorage.getItem("imgURL"); // imgURL를 가져옴
+                var imageUrl;
+
+                if (imgURL) {
+                    const cleanedURL = imgURL.replace(/^"|"$/g, ""); // 양쪽 큰따옴표 제거
+                    imageUrl =
+                        cleanedURL.replace(/\\\\/g, "\\").replace(/\/\//g, "/") +
+                        "?" +
+                        new Date().getTime();
+                } else {
+                    imageUrl = "/static/account.png"; // 기본 이미지 URL로 변경하세요.
+                    console.log("imgURL is not found in localStorage, using default image.");
+                }
 
                 profileBtn.addEventListener("click", function () {
                     profileBtn.classList.toggle("active");
@@ -119,6 +132,7 @@
                 function updateNavbarWithUserData() {
                     var token = localStorage.getItem("user");
                     var userId = localStorage.getItem("userId");
+                    var userName = localStorage.getItem("userName");
                     var currentPath = window.location.pathname;
 
                     if (token) {
@@ -132,10 +146,10 @@
 
                             if (decodedToken && decodedToken.userId) {
                                 userNavItem.style.display = "block";
-                                userNavItem.textContent = "Welcome, " + decodedToken.userId;
-                                console.log(decodedToken.userId);
+                                userNavItem.textContent = "Welcome, " + userName;
                                 profileLink.style.display = "block"; // 토큰이 있는 경우 프로필 페이지로 이동하는 링크를 표시
                                 profileLink.href = "/profile/" + userId;
+                                document.getElementById("profileImg1").src = imageUrl;
 
                                 // 로그인 상태라면 로그인, 회원가입 버튼 숨기기
                                 loginBtn.style.display = "none";
@@ -150,7 +164,7 @@
                         logoutBtn.style.display = "none";
                         profileLinkBtn.style.display = "none";
 
-                        if (currentPath === "/profile") {
+                        if (currentPath === "/profile" || currentPath === "/profileEdit") {
                             alert("로그인이 필요합니다!");
                             window.location.href = "/login";
                         }
@@ -167,7 +181,7 @@
                     } else {
                         // 토큰이 있으면 로그아웃 수행
                         localStorage.clear();
-                        alert("로그아웃 완료!");
+                        alert("로그아웃 완료!~~");
                         window.location.href = "/";
                     }
                 });

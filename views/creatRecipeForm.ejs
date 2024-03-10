@@ -116,9 +116,7 @@
             function recipeSummit() {
                 var title = $("#title").val();
                 var content = $("#summernote").summernote("code"); // 에디터의 내용을 HTML 문자열로 가져옴
-                console.log("1", content);
                 content = content.replace(notice_form, "");
-                console.log("2", content);
                 var category = $("#category").val();
                 var accessToken = localStorage.getItem("user");
                 var imgURLs = JSON.parse(localStorage.getItem("imgURLs")); // imgURLs를 가져옴

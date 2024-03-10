@@ -30,6 +30,15 @@
                 <div class="navContent">
                     <!-- <div class="postId"><%#=post.id %></div> -->
                     <div class="postId" hidden><%=post.postId %></div>
+                    <div class="img">
+                        <img
+                            src="/static/account.png"
+                            alt="Profile"
+                            style="width: 30px; height: 30px; border-radius: 50%"
+                            class="account-image"
+                            id="postProfileImg"
+                        />
+                    </div>
                     <div class="userName"><%=post.author.userName%></div>
                     <div class="follow">
                         <span class="material-symbols-outlined followIcon" onclick="goFollow()">
@@ -247,5 +256,18 @@
                 //삭제취소
             }
         }
+
+        // const imgURL = localStorage.getItem("imgURL"); // imgURL를 가져옴
+        const imgURL = "<%=url%>"; // imgURL를 가져옴
+        var imageUrl;
+
+        if (imgURL.length > 5) {
+            imageUrl = imgURL.replace(/^&#34;|&#34;$/g, "").replace(/\\/g, "/");
+        } else {
+            imageUrl = "/static/account.png"; // 기본 이미지 URL로 변경하세요.
+            console.log("imgURL is not found in localStorage, using default image.");
+        }
+        console.log("nav.ejs >>>> ", imageUrl);
+        document.getElementById("postProfileImg").src = imageUrl;
     </script>
 </html>

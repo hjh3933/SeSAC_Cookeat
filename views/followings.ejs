@@ -18,8 +18,8 @@
             <div class="followerContainer">
                 <div class="singleFollow">
                     <div class="userData">
-                        <div class="userId">ID</div>
-                        <div class="userName">NAME</div>
+                        <!-- <div class="userId">ID</div>
+                        <div class="userName">NAME</div> -->
                     </div>
                     <!-- <div class="followIconBox">
                         <span class="material-symbols-outlined followIcon" onclick="goFollow()">
@@ -48,15 +48,25 @@
 
             // 데이터를 받아서 화면에 출력합니다(for)
             for (following of res.data.followings) {
+                //img
+                const userImg = document.createElement("img");
+                if (following.img) {
+                    userImg.src = following.img;
+                } else {
+                    userImg.src = "/static/account.png";
+                }
+                userImg.alt = "Profile";
+                userImg.classList.add("userImg");
                 //followerId
                 const followingId = document.createElement("a");
                 followingId.textContent = following.userId;
                 followingId.classList.add("userId");
                 followingId.href = "/userPosts/" + following.id;
                 // followerUserName
-                const followingUserName = document.createElement("div");
+                const followingUserName = document.createElement("a");
                 followingUserName.textContent = following.userName;
                 followingUserName.classList.add("userName");
+                followingUserName.href = "/userPosts/" + following.id;
                 //heart
                 const heart = document.createElement("span");
                 heart.textContent = "favorite";
@@ -65,7 +75,8 @@
                 //userData
                 const userData = document.createElement("div");
                 userData.classList.add("userData");
-                userData.appendChild(followingId);
+                userData.appendChild(userImg);
+                // userData.appendChild(followingId);
                 userData.appendChild(followingUserName);
                 //followIconBox
                 const followIconBox = document.createElement("div");

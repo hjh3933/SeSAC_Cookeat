@@ -8,6 +8,7 @@ DESC bookmarks;
 SELECT * from posts;
 SELECT * from users;
 SELECT * from bookmarks;
+SELECT * from FOLLOWS;
 -- postId, title, content, img, category createdAt, updatedAt, id
 insert into users
 VALUES(null, 'allie', '1234', '앨리',null, NOW(),NOW());

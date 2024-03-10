@@ -24,7 +24,7 @@
     <body>
         <div class="portfoliocard">
             <div class="coverphoto"></div>
-            <div class="profile_picture"></div>
+            <div class="profile_picture" id="profileImg"></div>
             <div class="left_col">
                 <div class="followers">
                     <a href="/followersPage" class="follow">Followers</a>
@@ -46,52 +46,136 @@
                     <li class="nickName" id="userId"></li>
                     <!-- 변경: userId를 "nickName" 클래스에 표기 -->
 
-                    <!-- <label for="nickNameInput">Mail</label>
-                    <li class="mail">john.doe@apple.com</li>
-                    <label for="nickNameInput">Phone</label>
-                    <li class="phone">1-(732)-757-2923</li> -->
-                    <!-- <li class="resume"><a href="#" class="nostyle">download resume</a></li> -->
+                    <!-- 프로필 이미지 업로드 버튼 추가 -->
+                    <label for="profileImageInput">Profile Image Upload</label>
+                    <li>
+                        <input type="file" id="profileImageInput" name="profileImage" />
+                    </li>
+                    <button
+                        id="profileImgUploadBtn"
+                        class="profileImgUploadBtn"
+                        onclick="profileImgUpload()"
+                    >
+                        프로필 사진 등록
+                    </button>
                 </ul>
             </div>
         </div>
         <!-- axios CDN -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
+            var selectedFile;
+            var token = localStorage.getItem("user"); // 토큰을 가져옵니다.
+
+            document.getElementById("profileImageInput").addEventListener("change", function () {
+                selectedFile = this.files[0];
+            });
+
+            function profileImgUpload() {
+                if (!selectedFile) {
+                    alert("이미지를 선택해주세요");
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("userfile", selectedFile); // "userfile"로 이름 변경
+
+                axios
+                    .post("/profileUpload", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            Authorization: "Bearer " + token,
+                        },
+                    })
+                    .then(function (response) {
+                        localStorage.setItem("imgURL", JSON.stringify(response.data.url));
+                        alert("이미지 업로드 성공!");
+                        profileImageUpload(); // 프로필 이미지만 서버로 보내서 db에 저장하는 식!
+                    })
+                    .catch(function (error) {
+                        alert("이미지 업로드 실패");
+                        console.error("Error:", error);
+                    });
+            }
+            function profileImageUpload() {
+                const imgURL = JSON.parse(localStorage.getItem("imgURL")); // imgURLs를 가져옴
+
+                axios
+                    .post(
+                        "/profileImgCreate",
+                        {
+                            data: {
+                                imgURL: imgURL, // imgURL를 data에 추가
+                            },
+                        },
+                        {
+                            headers: {
+                                Authorization: "Bearer " + token,
+                            },
+                        }
+                    )
+                    .then(function (response) {
+                        // 서버로부터 받은 응답을 처리합니다.
+                        profileUpdate(); // 이미지 업로드가 성공하면 프로필 업데이트를 실행합니다.
+                        window.location.reload();
+                    })
+                    .catch(function (error) {
+                        // 요청 중에 오류가 발생한 경우를 처리합니다.
+                        console.error("Error:", error);
+                        alert("토큰이 만료되었습니다.");
+                        location.href = "/";
+                    });
+            }
+
+            function profileUpdate() {
+                const imgURL = localStorage.getItem("imgURL"); // imgURLs를 가져옴
+                const token2 = localStorage.getItem("user"); // 토큰을 가져옵니다.
+                const userId = localStorage.getItem("userId");
+
+                axios
+                    .post(
+                        "/profile/" + userId,
+                        {
+                            data: {
+                                imgURL: imgURL, // imgURL를 data에 추가
+                            },
+                        },
+                        {
+                            headers: {
+                                Authorization: "Bearer " + token2,
+                            },
+                        }
+                    )
+                    .then(function (response) {
+                        // 서버로부터 받은 응답을 처리합니다.
+                        updateProfileView(response.data);
+                    })
+                    .catch(function (error) {
+                        // 요청 중에 오류가 발생한 경우를 처리합니다.
+                        console.error("Error:", error);
+                        alert("토큰이 만료되었습니다.");
+                        location.href = "/";
+                    });
+            }
+
+            // 프로필 정보를 화면에 업데이트하는 함수
+            function updateProfileView(data) {
+                var imageUrl = data.url.replace(/['"]+/g, "") + "?" + new Date().getTime();
+                document.getElementById("userName").textContent = data.user.userId;
+                document.getElementById("userId").textContent = data.user.userName;
+                document.getElementById("profileImg").style.backgroundImage =
+                    "url(" + imageUrl + ")";
+            }
+
+            // 페이지 로드 시 프로필 정보를 불러옴
+            window.onload = function () {
+                profileUpdate();
+            };
+
             // 수정: Edit 버튼 클릭 시 /edit 페이지로 이동
             document.getElementById("editButton").addEventListener("click", function () {
                 window.location.href = "/profileEdit";
             });
-
-            // 페이지 로딩이 완료된 후 실행할 코드를 이곳에 작성합니다.
-            const token = localStorage.getItem("user");
-            const userId = localStorage.getItem("userId");
-            console.log(token);
-            console.log(userId);
-
-            axios
-                .post(
-                    "/profile/" + userId,
-                    {},
-                    {
-                        headers: {
-                            Authorization: "Bearer " + token,
-                        },
-                    }
-                )
-                .then(function (response) {
-                    // 서버로부터 받은 응답을 처리합니다.
-                    console.log(response.data);
-                    document.getElementById("userName").textContent = response.data.user.userId;
-                    // 변경: userName을 "name" 클래스에 표기
-                    document.getElementById("userId").textContent = response.data.user.userName;
-                    // 변경: userId를 "nickName" 클래스에 표기
-                })
-                .catch(function (error) {
-                    // 요청 중에 오류가 발생한 경우를 처리합니다.
-                    alert("토큰이 만료되었습니다");
-                    location.href = "/";
-                    console.error("Error:", error);
-                });
         </script>
     </body>
 </html>
