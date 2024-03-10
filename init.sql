@@ -39,4 +39,4 @@ SELECT * from follows;
 INSERT into bookmarks
 VALUES(NULL, Now(),now(),10,2)
 
-select img from `Posts` WHERE postId=23;
+select img from `Posts` WHERE postId=1;
