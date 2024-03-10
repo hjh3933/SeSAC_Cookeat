@@ -209,16 +209,21 @@ exports.getPosts = async (req, res) => {
         res.send({ message: "에러 발생", error });
     }
 };
-exports.getUserPosts = (req, res) => {
+exports.getUserPosts = async (req, res) => {
     //특정 유저의 게시글 조회
     try {
+        const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
+        const perPage = 10; // 페이지당 표시할 게시물 수
         const { id } = req.params;
         console.log("검색할 유저는>>", id);
-        models.Posts.findAll({
+        const posts = await models.Posts.findAll({
+            offset: (page - 1) * perPage, // 시작 위치 계산
+            limit: perPage, // 표시할 게시물 수
             where: { id },
-            attributes: ["postId", "id", "title", "createdAt"],
+            attributes: ["postId", "id", "title", "createdAt", "category"],
             include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
-        }).then((result) => {
+            order: [["createdAt", "DESC"]],
+        }).then(async (result) => {
             if (result.length > 0) {
                 // 날짜와 시간 포맷 변경
                 result.forEach((post) => {
@@ -232,9 +237,16 @@ exports.getUserPosts = (req, res) => {
 
                     post.dataValues.formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
                 });
+                const totalPosts = await models.Posts.count({ where: { id } });
+                const totalPages = Math.ceil(totalPosts / perPage);
 
-                console.log("result>>", result);
-                res.render("posts", { posts: result, isData: result.length > 0 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
+                res.render("posts", {
+                    posts: result,
+                    isData: result.length > 0,
+                    currentPage: parseInt(page),
+                    totalPages,
+                    totalPosts,
+                }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
                 res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
             }
