@@ -122,8 +122,8 @@
                 var imgURLs = JSON.parse(localStorage.getItem("imgURLs")); // imgURLs를 가져옴
 
                 //input창 점검 추가
-                if (!title.trim()) {
-                    alert("제목을 입력해주세요!");
+                if (!title.trim() || title.length > 20) {
+                    alert("제목은 20자 이내로 입력해주세요.");
                 } else if (!category) {
                     alert("카테고리를 선택해주세요!");
                 } else {
@@ -173,6 +173,7 @@
                         maxlength="150"
                         required="required"
                         pattern=".{4,150}"
+                        required
                     />
                 </div>
                 <div class="form-group">
@@ -184,11 +185,12 @@
                         id="summernote"
                         name="content"
                         placeholder="내용 작성"
+                        required
                     ></textarea>
                 </div>
                 <div class="form-group">
                     <label for="category">Cooking Style</label>
-                    <select class="form-control" id="category" name="category">
+                    <select class="form-control" id="category" name="category" required>
                         <option selected disabled>카테고리를 선택해주세요.</option>
                         <option value="한식">한식</option>
                         <option value="양식">양식</option>
