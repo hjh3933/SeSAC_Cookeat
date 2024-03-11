@@ -5,12 +5,21 @@
 body {
     height: auto;
     position: relative;
+    background-image: url(https://images.unsplash.com/photo-1575000977355-8b2a719926c9?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
 }
 div {
     /* border: 1px solid pink; */
 }
 .container {
-    margin-top: 100px;
+    background-color: #f7f5ec;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-shadow: 0px 0px 15px rgba(112, 111, 111, 0.775);
+    text-align: center;
+    border-radius: 20px;
+    padding: 54px 20px;
+    margin-top: 120px;
+    /* margin-top: 100px; */
     padding-bottom: 50px;
     /* min-width: 1100px; */
     position: absolute;
@@ -34,8 +43,8 @@ div {
     /* border: 1px solid blue; */
     margin-top: 20px;
     padding: 10px 30px 5px 30px;
-    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.3);
-    background-color: rgb(243, 237, 237);
+    /* box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.3); */
+    background-color: #f5f7ec;
 }
 .singleFollow {
     display: flex;
@@ -46,6 +55,7 @@ div {
 }
 .userData {
     display: flex;
+    width: 100%;
 }
 .userData > * {
     font-size: 1.3rem;
@@ -64,10 +74,24 @@ a:hover {
     color: rgb(249, 101, 101);
 }
 .userImg {
-    min-width: 0;
     max-width: 30px;
+    min-width: 30px;
     max-height: 30px;
+    min-height: 30px;
     border-radius: 50%;
     box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.3);
     margin-right: 30px;
+}
+
+h1 {
+    color: #495057;
+    margin-top: 20px;
+}
+.bookmarkIcon {
+    scale: 1.5;
+    margin-left: auto;
+}
+.bookmarkIcon:hover {
+    cursor: pointer;
+    color: rgb(174, 172, 172);
 }
