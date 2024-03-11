@@ -1142,7 +1142,9 @@ exports.getSearchByAuthor = async (req, res) => {
         // 작성자 정보 검색
         const user = await models.Users.findOne({
             where: {
-                userName: author,
+                [models.Sequelize.Op.or]: [
+                    { userName: { [models.Sequelize.Op.like]: `%${author}%` } },
+                ],
             },
         });
         console.log(user);
