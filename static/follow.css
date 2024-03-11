@@ -95,3 +95,6 @@ h1 {
     cursor: pointer;
     color: rgb(174, 172, 172);
 }
+.userName {
+    text-align: left;
+}

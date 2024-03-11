@@ -31,6 +31,9 @@
                         <li>
                             <a href="/posts">Community</a>
                         </li>
+                        <li>
+                            <a class="mypost">MyPost</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -109,6 +112,9 @@
                 var joinBtn = document.getElementById("joinBtn"); // 회원가입 버튼
                 var mypageBtn = document.getElementById("mypageBtn"); // 마이 페이지 버튼
                 var profileLinkBtn = document.getElementById("profileLink");
+                var mypost = document.querySelector(".mypost");
+                var userId = localStorage.getItem("userId");
+                mypost.href = "/userPosts/" + userId;
 
                 var profileLink = document.querySelector("#profileLink a"); // 프로필 페이지로 이동하는 a 태그를 가져옴
                 const imgURL = localStorage.getItem("imgURL"); // imgURL를 가져옴
@@ -163,6 +169,7 @@
                         mypageBtn.style.display = "none";
                         logoutBtn.style.display = "none";
                         profileLinkBtn.style.display = "none";
+                        mypost.style.display = "none";
 
                         if (currentPath === "/profile" || currentPath === "/profileEdit") {
                             alert("로그인이 필요합니다!");
