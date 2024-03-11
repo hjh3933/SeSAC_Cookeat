@@ -59,73 +59,83 @@
 
                             // 북마크 정보를 표시할 컨테이너 요소
                             const bookmarkContainer = $("#bookmarkContainer");
+                            if (bookmarks && bookmarks.length > 0) {
+                                // 받아온 북마크 정보를 동적으로 HTML에 추가
+                                bookmarks.forEach(async (bookmark) => {
+                                    try {
+                                        const postResponse = await axios.get(
+                                            `/post/${bookmark.postId}`
+                                        );
+                                        const postDetail = postResponse.data;
+                                        // console.log("포디데이터", postDetail);
 
-                            // 받아온 북마크 정보를 동적으로 HTML에 추가
-                            bookmarks.forEach(async (bookmark) => {
-                                try {
-                                    const postResponse = await axios.get(
-                                        `/post/${bookmark.postId}`
-                                    );
-                                    const postDetail = postResponse.data;
-                                    // console.log("포디데이터", postDetail);
+                                        // singleFollow
+                                        const singleFollow = $("<div>").addClass("singleFollow");
 
-                                    // singleFollow
-                                    const singleFollow = $("<div>").addClass("singleFollow");
+                                        // userData
+                                        const userData = $("<div>").addClass("userData");
 
-                                    // userData
-                                    const userData = $("<div>").addClass("userData");
+                                        // 북마크 삭제 아이콘
+                                        const bookmarkIcon = document.createElement("span");
+                                        bookmarkIcon.textContent = "bookmark";
+                                        bookmarkIcon.classList.add("material-symbols-outlined");
+                                        bookmarkIcon.classList.add("bookmarkIcon");
 
-                                    // 북마크 삭제 아이콘
-                                    const bookmarkIcon = document.createElement("span");
-                                    bookmarkIcon.textContent = "bookmark";
-                                    bookmarkIcon.classList.add("material-symbols-outlined");
-                                    bookmarkIcon.classList.add("bookmarkIcon");
-
-                                    // Append NAME and RECIPE dynamically
-                                    userData.append(`
+                                        // Append NAME and RECIPE dynamically
+                                        userData.append(`
                                         <div class="userId">${bookmark.authorName}</div>
                                         <div class="userName">
                                             <a href="/post/${bookmark.postId}">${bookmark.title}</a>
                                         </div>
                                     `);
 
-                                    // 북마크 삭제 아이콘을 userData에 추가
-                                    userData.append(bookmarkIcon);
+                                        // 북마크 삭제 아이콘을 userData에 추가
+                                        userData.append(bookmarkIcon);
 
-                                    singleFollow.append(userData);
+                                        singleFollow.append(userData);
 
-                                    bookmarkContainer.append(singleFollow);
+                                        bookmarkContainer.append(singleFollow);
 
-                                    // 클릭 이벤트 처리
-                                    $(bookmarkIcon).on("click", function () {
-                                        const bookmarkDeleteCheck = confirm(
-                                            `${bookmark.title} 북마크를 목록에서 삭제하시겠습니까?`
-                                        );
+                                        // 클릭 이벤트 처리
+                                        $(bookmarkIcon).on("click", function () {
+                                            const bookmarkDeleteCheck = confirm(
+                                                `${bookmark.title} 북마크를 목록에서 삭제하시겠습니까?`
+                                            );
 
-                                        if (bookmarkDeleteCheck) {
-                                            // axios를 사용하여 북마크 삭제 요청
-                                            axios({
-                                                url: `/bookmarkDelete/${bookmark.postId}`,
-                                                method: "delete",
-                                                headers: {
-                                                    Authorization: `Bearer ${token}`,
-                                                },
-                                            })
-                                                .then((res) => {
-                                                    console.log(res.data);
-                                                    alert(res.data.msg);
-                                                    location.reload(); // 페이지 새로고침
+                                            if (bookmarkDeleteCheck) {
+                                                // axios를 사용하여 북마크 삭제 요청
+                                                axios({
+                                                    url: `/bookmarkDelete/${bookmark.postId}`,
+                                                    method: "delete",
+                                                    headers: {
+                                                        Authorization: `Bearer ${token}`,
+                                                    },
                                                 })
-                                                .catch((err) => {
-                                                    alert("오류 발생");
-                                                    console.log("err>>", err);
-                                                });
-                                        }
-                                    });
-                                } catch (postError) {
-                                    console.error("포스트 조회 중 에러:", postError);
-                                }
-                            });
+                                                    .then((res) => {
+                                                        console.log(res.data);
+                                                        alert(res.data.msg);
+                                                        location.reload(); // 페이지 새로고침
+                                                    })
+                                                    .catch((err) => {
+                                                        alert("오류 발생");
+                                                        console.log("err>>", err);
+                                                    });
+                                            }
+                                        });
+                                    } catch (postError) {
+                                        console.error("포스트 조회 중 에러:", postError);
+                                    }
+                                });
+                            } else {
+                                const userData = document.createElement("div");
+                                userData.classList.add("userData");
+                                userData.classList.add("notFound");
+                                userData.textContent = "There are no bookmarks";
+                                const singleFollow = document.createElement("div");
+                                singleFollow.classList.add("singleFollow");
+                                singleFollow.appendChild(userData);
+                                bookmarkContainer.append(singleFollow);
+                            }
                         })
                         .catch((error) => {
                             console.error("북마크 조회 중 에러:", error);

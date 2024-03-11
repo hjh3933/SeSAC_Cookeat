@@ -45,77 +45,61 @@
         }).then((res) => {
             console.log("res.data >>", res.data);
             console.log("res.data.followers >>", res.data.followers);
-
-            // 데이터를 받아서 화면에 출력합니다(for)
-            for (follower of res.data.followers) {
-                //img
-                const userImg = document.createElement("img");
-                if (follower.img) {
-                    userImg.src = follower.img;
-                } else {
-                    userImg.src = "/static/account.png";
+            if (res.data.followers && res.data.followers.length > 0) {
+                // 데이터를 받아서 화면에 출력합니다(for)
+                for (follower of res.data.followers) {
+                    //img
+                    const userImg = document.createElement("img");
+                    if (follower.img) {
+                        userImg.src = follower.img;
+                    } else {
+                        userImg.src = "/static/account.png";
+                    }
+                    userImg.alt = "Profile";
+                    userImg.classList.add("userImg");
+                    console.log("hi~~", userImg.src);
+                    //followerId
+                    const followerId = document.createElement("a");
+                    followerId.textContent = follower.userId;
+                    followerId.classList.add("userId");
+                    followerId.href = "/userPosts/" + follower.id;
+                    // followerUserName
+                    const followerUserName = document.createElement("a");
+                    followerUserName.textContent = follower.userName;
+                    followerUserName.classList.add("userName");
+                    followerUserName.href = "/userPosts/" + follower.id;
+                    //heart
+                    const heart = document.createElement("span");
+                    heart.textContent = "favorite";
+                    heart.classList.add("material-symbols-outlined");
+                    heart.classList.add("followIcon");
+                    //userData
+                    const userData = document.createElement("div");
+                    userData.classList.add("userData");
+                    userData.appendChild(userImg);
+                    // userData.appendChild(followerId);
+                    userData.appendChild(followerUserName);
+                    //followIconBox
+                    const followIconBox = document.createElement("div");
+                    followIconBox.classList.add("followIconBox");
+                    followIconBox.appendChild(heart);
+                    //singleFollow
+                    const singleFollow = document.createElement("div");
+                    singleFollow.classList.add("singleFollow");
+                    singleFollow.appendChild(userData);
+                    singleFollow.appendChild(followIconBox);
+                    //추가
+                    followerContainer.appendChild(singleFollow);
                 }
-                userImg.alt = "Profile";
-                userImg.classList.add("userImg");
-                console.log("hi~~", userImg.src);
-                //followerId
-                const followerId = document.createElement("a");
-                followerId.textContent = follower.userId;
-                followerId.classList.add("userId");
-                followerId.href = "/userPosts/" + follower.id;
-                // followerUserName
-                const followerUserName = document.createElement("a");
-                followerUserName.textContent = follower.userName;
-                followerUserName.classList.add("userName");
-                followerUserName.href = "/userPosts/" + follower.id;
-                //heart
-                const heart = document.createElement("span");
-                heart.textContent = "favorite";
-                heart.classList.add("material-symbols-outlined");
-                heart.classList.add("followIcon");
-                //userData
+            } else {
                 const userData = document.createElement("div");
                 userData.classList.add("userData");
-                userData.appendChild(userImg);
-                // userData.appendChild(followerId);
-                userData.appendChild(followerUserName);
-                //followIconBox
-                const followIconBox = document.createElement("div");
-                followIconBox.classList.add("followIconBox");
-                followIconBox.appendChild(heart);
-                //singleFollow
+                userData.classList.add("notFound");
+                userData.textContent = "There are no followers";
                 const singleFollow = document.createElement("div");
                 singleFollow.classList.add("singleFollow");
                 singleFollow.appendChild(userData);
-                singleFollow.appendChild(followIconBox);
-                //추가
                 followerContainer.appendChild(singleFollow);
-
-                //클릭 이벤트 추가(생각해보니까 팔로워라 할수가 없어)
-                // (function (follower) {
-                //     heart.onclick = function () {
-                //         // 클릭된 하트 아이콘에 대한 이벤트 처리
-                //         alert(`${follower.id}번 Heart 아이콘 클릭됨`);
-                //         // axios삭제 이벤트
-                //         axios({
-                //             url: "/followDelete",
-                //             method: "delete",
-                //             data: { id: follower.id },
-                //             headers: {
-                //                 Authorization: "Bearer " + token,
-                //             },
-                //         })
-                //             .then((res) => {
-                //                 console.log(res.data);
-                //                 alert(res.data.msg);
-                //                 location.reload(); //다시 로드함
-                //             })
-                //             .catch((err) => {
-                //                 alert("오류 발생");
-                //                 console.log("err>>", err);
-                //             });
-                //     };
-                // })(follower);
             }
         });
     </script>
