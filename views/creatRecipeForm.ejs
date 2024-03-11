@@ -121,28 +121,36 @@
                 var accessToken = localStorage.getItem("user");
                 var imgURLs = JSON.parse(localStorage.getItem("imgURLs")); // imgURLs를 가져옴
 
-                axios({
-                    method: "post",
-                    url: "/post",
-                    headers: {
-                        Authorization: "Bearer " + accessToken,
-                        "Content-Type": "application/json",
-                    },
-                    data: {
-                        title: title,
-                        content: content,
-                        imgURLs: imgURLs, // imgURLs를 data에 추가
-                        category: category,
-                    },
-                })
-                    .then(function (response) {
-                        alert("레시피 등록이 완료되었습니다.");
-                        localStorage.setItem("createPostId", response.data.postId); // response에서 postId 가져와서 저장
-                        window.location = "/post/" + response.data.postId;
+                //input창 점검 추가
+                if (!title.trim()) {
+                    alert("제목을 입력해주세요!");
+                } else if (!category) {
+                    alert("카테고리를 선택해주세요!");
+                } else {
+                    axios({
+                        method: "post",
+                        url: "/post",
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                            "Content-Type": "application/json",
+                        },
+                        data: {
+                            title: title,
+                            content: content,
+                            imgURLs: imgURLs, // imgURLs를 data에 추가
+                            category: category,
+                        },
                     })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                        .then(function (response) {
+                            alert("레시피 등록이 완료되었습니다.");
+                            localStorage.setItem("createPostId", response.data.postId); // response에서 postId 가져와서 저장
+                            window.location = "/post/" + response.data.postId;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    //axios끝
+                }
             }
         </script>
     </head>
