@@ -98,3 +98,8 @@ h1 {
 .userName {
     text-align: left;
 }
+.notFound {
+    justify-content: center;
+    font-weight: bold;
+    color: #495057;
+}
