@@ -4,6 +4,7 @@ const SECRET = "DWB0jOga2jrAozUXUsLCQ1e4EeeQH8"; //랜덤문자열 env관리 예
 const bcrypt = require("bcrypt");
 const path = require("path");
 const multer = require("multer");
+const { Op } = require("sequelize");
 
 // 프로필 이미지 업로드 multer
 const profileUpload = multer({
@@ -174,7 +175,7 @@ exports.getPosts = async (req, res) => {
     try {
         const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
         const perPage = 10; // 페이지당 표시할 게시물 수
-
+        const pageTitle = "ALL RECIPES";
         const posts = await models.Posts.findAll({
             offset: (page - 1) * perPage, // 시작 위치 계산
             limit: perPage, // 표시할 게시물 수
@@ -203,6 +204,7 @@ exports.getPosts = async (req, res) => {
             currentPage: parseInt(page),
             totalPages,
             totalPosts, // 전체 게시글 개수를 전달
+            pageTitle,
         });
     } catch (error) {
         console.error("게시물 조회 중 에러 발생", error);
@@ -239,13 +241,14 @@ exports.getUserPosts = async (req, res) => {
                 });
                 const totalPosts = await models.Posts.count({ where: { id } });
                 const totalPages = Math.ceil(totalPosts / perPage);
-
+                const pageTitle = result[0].author.userName + "의 레시피";
                 res.render("posts", {
                     posts: result,
                     isData: result.length > 0,
                     currentPage: parseInt(page),
                     totalPages,
                     totalPosts,
+                    pageTitle,
                 }); // isData 변수를 정의하고, posts가 있는지 여부를 값으로 전달합니다.
             } else {
                 res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
@@ -1058,5 +1061,141 @@ exports.getProfileImage = async (req, res) => {
         } else {
             res.send({ message: "에러 발생", error: err });
         }
+    }
+};
+
+exports.getSearchResults = (req, res) => {
+    res.render("searchResults");
+};
+
+// 제목 + 내용 검색
+exports.getTitleAndContent = async (req, res) => {
+    try {
+        const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
+        const perPage = 10; // 페이지당 표시할 게시물 수
+        const { query } = req.query;
+        const pageTitle = "검색 결과";
+
+        const posts = await models.Posts.findAll({
+            where: {
+                [models.Sequelize.Op.or]: [
+                    { title: { [models.Sequelize.Op.like]: `%${query}%` } },
+                    { content: { [models.Sequelize.Op.like]: `%${query}%` } },
+                ],
+            },
+            offset: (page - 1) * perPage, // 시작 위치 계산
+            limit: perPage, // 표시할 게시물 수
+            attributes: ["postId", "id", "title", "createdAt", "category"],
+            include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
+            order: [["createdAt", "DESC"]],
+        });
+        console.log("posts >>>>>>>>>>>>", posts);
+        // 날짜 포맷 변경
+        posts.forEach((post) => {
+            const date = new Date(post.createdAt);
+            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+
+            post.dataValues.formattedDate = formattedDate;
+        });
+
+        // 전체 페이지 수 계산
+        // 전체 페이지 수 계산
+        const totalPosts = await models.Posts.count({
+            where: {
+                [models.Sequelize.Op.or]: [
+                    { title: { [models.Sequelize.Op.like]: `%${query}%` } },
+                    { content: { [models.Sequelize.Op.like]: `%${query}%` } },
+                ],
+            },
+        });
+        const totalPages = Math.ceil(totalPosts / perPage);
+        console.log(posts);
+        if (posts.length > 0) {
+            res.render("posts", {
+                posts,
+                isData: posts.length > 0,
+                currentPage: parseInt(page),
+                totalPages,
+                totalPosts, // 전체 게시글 개수를 전달
+                pageTitle,
+            });
+        } else {
+            res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
+        }
+    } catch (error) {
+        console.error("제목 + 내용 검색 중 에러 발생", error);
+        res.status(500).json({ error: "서버 에러" });
+    }
+};
+// 작성자만 검색
+exports.getSearchByAuthor = async (req, res) => {
+    try {
+        const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
+        const perPage = 10; // 페이지당 표시할 게시물 수
+        console.log(req.query);
+        const pageTitle = "검색 결과";
+
+        const { query: author } = req.query;
+
+        // 작성자 정보 검색
+        const user = await models.Users.findOne({
+            where: {
+                userName: author,
+            },
+        });
+        console.log(user);
+
+        if (!user) {
+            // 작성자가 존재하지 않을 경우 빈 배열 반환 또는 에러 처리
+            return res.status(404).json({ message: "작성자를 찾을 수 없습니다." });
+        }
+
+        // 작성자 검색
+        const posts = await models.Posts.findAll({
+            where: {
+                id: user.id, // 사용자 ID로 검색
+            },
+            offset: (page - 1) * perPage, // 시작 위치 계산
+            limit: perPage, // 표시할 게시물 수
+            attributes: ["postId", "id", "title", "createdAt", "category"],
+            include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
+            order: [["createdAt", "DESC"]],
+        });
+        // 날짜 포맷 변경
+        posts.forEach((post) => {
+            const date = new Date(post.createdAt);
+            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+
+            post.dataValues.formattedDate = formattedDate;
+        });
+
+        // 전체 페이지 수 계산
+        // 전체 페이지 수 계산
+        const totalPosts = await models.Posts.count({
+            where: {
+                id: user.id, // 작성자 ID로 검색
+            },
+        });
+        const totalPages = Math.ceil(totalPosts / perPage);
+        console.log(posts);
+        if (posts.length > 0) {
+            res.render("posts", {
+                posts,
+                isData: posts.length > 0,
+                currentPage: parseInt(page),
+                totalPages,
+                totalPosts, // 전체 게시글 개수를 전달
+                pageTitle,
+            });
+        } else {
+            res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
+        }
+    } catch (error) {
+        console.error("작성자 검색 중 에러 발생", error);
+        res.status(500).json({ error: "서버 에러" });
     }
 };
