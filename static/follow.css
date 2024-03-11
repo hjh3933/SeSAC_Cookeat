@@ -95,3 +95,11 @@ h1 {
     cursor: pointer;
     color: rgb(174, 172, 172);
 }
+.userName {
+    text-align: left;
+}
+.notFound {
+    justify-content: center;
+    font-weight: bold;
+    color: #495057;
+}
