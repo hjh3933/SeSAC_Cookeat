@@ -95,6 +95,9 @@ router.get("/footer", (req, res) => {
 router.get("/bookMark", (req, res) => {
     res.render("bookmark");
 });
+router.get("/rotate", (req, res) => {
+    res.render("rotate");
+});
 
 const teamMembers = [
     {
