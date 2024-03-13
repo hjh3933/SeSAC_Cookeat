@@ -80,7 +80,7 @@ p {
     outline: none;
     overflow: hidden;
     position: absolute;
-    left: 38vw;
+    left: 40vw;
     bottom: 11vw;
     color: #fff;
     font-weight: 1000;
@@ -125,4 +125,8 @@ p {
 .link a {
     color: #000;
     font-size: 25px;
+}
+
+#gorecipes:hover {
+    color: #262238;
 }
