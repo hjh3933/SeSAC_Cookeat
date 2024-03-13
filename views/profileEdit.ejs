@@ -7,8 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ProfileEdit</title>
         <link rel="stylesheet" type="text/CSS" href="style.css" />
-        <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('fryingPan.ejs') %> <%-
-        include('account.ejs') %>
+        <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('account.ejs') %>
         <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600,700,800"
             rel="stylesheet"
@@ -16,6 +15,10 @@
         />
         <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="/static/profile.css" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
     </head>
     <body>
         <div class="portfoliocard">
@@ -30,8 +33,9 @@
                     <div class="follow_count">123</div>
                     Following
                 </div> -->
-                <button id="saveButton" class="save-button">Save</button>
-                <button id="deleteButton" class="delete-button">탈퇴</button>
+                <button id="saveButton" class="save-button">Save Profile</button>
+                <button id="deleteButton" class="delete-button">Delete Account</button>
+                <a class="material-symbols-outlined" id="cancel"> arrow_back </a>
             </div>
             <div class="right_col">
                 <ul class="contact_information">
@@ -54,7 +58,8 @@
         <script>
             const token = localStorage.getItem("user");
             const userId = localStorage.getItem("userId");
-
+            const atag = document.getElementById("cancel");
+            atag.href = "/profile/" + userId;
             console.log(token);
             console.log(userId);
 

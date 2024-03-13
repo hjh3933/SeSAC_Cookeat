@@ -160,7 +160,8 @@ label {
     font-size: 12px;
 }
 .save-button,
-.edit-button {
+.edit-button,
+.delete-button {
     position: relative;
     top: 130px;
     right: 0;
@@ -221,6 +222,7 @@ label {
 .material-symbols-outlined.bookmarkIcon {
     font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
     color: rgb(247, 223, 104);
+    position: absolute;
     /* margin-left: 5px; */
 }
 .followers {
@@ -233,10 +235,11 @@ label {
 }
 a {
     text-decoration: none;
+    color: black;
 }
 #deleteButton {
 }
-.delete-button {
+/* .delete-button {
     position: absolute;
     top: 380px;
     right: 340px;
@@ -248,4 +251,8 @@ a {
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
+} */
+#cancel {
+    color: #82745e;
+    margin-top: 150px;
 }
