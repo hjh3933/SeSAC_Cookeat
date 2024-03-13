@@ -147,13 +147,19 @@
             window.onload = function () {
                 // 로컬 스토리지에서 게시글 데이터 가져오기
                 const postData = JSON.parse(localStorage.getItem("editPostData"));
-                if (postData && postData.content) {
-                    // 입력 필드에 기본값 설정
-                    document.getElementById("title").value = postData.title;
-                    $("#summernote").summernote("code", postData.content);
-                    $("#category").val(postData.category);
-                    // 사용 후, 더 이상 필요하지 않은 경우 로컬 스토리지의 데이터 삭제
-                    localStorage.removeItem("editPostData");
+                const userId = localStorage.getItem("userId");
+                if (postData == "null" || postData == null) {
+                    alert("정상적인 접근이 아닙니다!");
+                    location.href = "/";
+                } else {
+                    if (postData && postData.content) {
+                        // 입력 필드에 기본값 설정
+                        document.getElementById("title").value = postData.title;
+                        $("#summernote").summernote("code", postData.content);
+                        $("#category").val(postData.category);
+                        // 사용 후, 더 이상 필요하지 않은 경우 로컬 스토리지의 데이터 삭제
+                        localStorage.removeItem("editPostData");
+                    }
                 }
             };
         </script>

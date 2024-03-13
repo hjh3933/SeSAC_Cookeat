@@ -75,6 +75,11 @@ router.get("/post/:postId", controller.getPostDetail);
 router.patch("/post/:postId", controller.patchPost);
 router.delete("/post/:postId", controller.deletePost);
 
+// 제목 + 내용 검색 - 보아
+router.get("/searchResults", controller.getTitleAndContent);
+// 작성자만 검색 - 보아
+router.get("/searchResultsByAuthor", controller.getSearchByAuthor);
+
 router.get("/food", (req, res) => {
     res.render("food");
 });

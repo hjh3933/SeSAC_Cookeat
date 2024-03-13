@@ -1,3 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@100..900&display=swap");
+* {
+    font-family: "Noto Sans KR", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+.items {
+    font-weight: 700;
+}
+
 a {
     text-decoration: none;
     color: black;
@@ -40,6 +50,7 @@ body {
 .container .lists {
     margin: 0 auto;
     position: relative;
+    min-width: 900px;
 }
 
 .container .lists .total {
@@ -116,7 +127,7 @@ body {
     -webkit-perspective: 230px;
     perspective: 230px;
     margin-top: 30px;
-    left: 297px;
+    left: 390px;
 }
 .btn-12 span {
     background-color: #d7cdc2;
@@ -234,4 +245,63 @@ body {
 /* 마지막 페이지네이션 버튼은 마진을 적용하지 않습니다. */
 .pagination .page-item:last-child {
     margin-right: 0;
+}
+
+.search-container {
+    width: 500px;
+    display: flex; /* flex를 사용하여 수평 정렬 */
+    margin: 0 auto;
+}
+
+#search-bar {
+    flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    margin: 0 auto;
+    width: 100%;
+    height: 45px;
+    padding: 0 20px;
+    font-size: 1rem;
+    border: 1px solid #d0cfce;
+    outline: none;
+}
+
+#search-bar:focus {
+    border: 1px solid darkgreen;
+    transition: 0.35s ease;
+    color: darkgreen;
+}
+
+#search-bar:focus::-webkit-input-placeholder {
+    transition: opacity 0.45s ease;
+    opacity: 0;
+}
+
+#search-bar:focus::-moz-placeholder {
+    transition: opacity 0.45s ease;
+    opacity: 0;
+}
+
+#search-bar:focus:-ms-placeholder {
+    transition: opacity 0.45s ease;
+    opacity: 0;
+}
+
+.search-icon {
+    position: relative;
+    float: right;
+    width: 75px;
+    height: 75px;
+    top: -15px;
+    right: -25px;
+    margin-left: -40px; /* 여백 조정을 통해 위치 조정 */
+}
+select {
+    height: 45px;
+    border: 1px solid #d0cfce;
+    color: #a0a0a0;
+    margin-right: 10px;
+    text-align: center;
+}
+select:focus {
+    border: 1px solid darkgreen;
+    outline: none; /* 클릭 효과의 outline 제거 */
 }

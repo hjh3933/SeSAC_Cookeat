@@ -26,7 +26,21 @@
         <%} else{%>
 
         <section class="container">
-            <h1 style="color: #495057">ALL RECIPES</h1>
+            <h1 style="color: #495057"><%=pageTitle %></h1>
+            <br />
+            <form class="search-container">
+                <select id="search-type">
+                    <option value="title-content">제목 + 내용</option>
+                    <option value="author">작성자</option>
+                </select>
+                <input type="text" id="search-bar" placeholder="검색어를 입력해 주세요" />
+                <a href="#"
+                    ><img
+                        class="search-icon"
+                        src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"
+                /></a>
+            </form>
+            <br />
             <table class="lists">
                 <button
                     class="custom-btn btn-12"
@@ -121,5 +135,53 @@
             ></script>
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         </footer>
+        <script>
+            // 검색 버튼 클릭 및 엔터 키 이벤트 처리
+            document.querySelector(".search-icon").addEventListener("click", handleSearch);
+            document.getElementById("search-bar").addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // 기본 엔터 키 동작을 방지
+                    handleSearch();
+                }
+            });
+
+            async function handleSearch() {
+                // 검색 타입과 검색어 가져오기
+                const searchType = document.getElementById("search-type").value;
+                const searchTerm = document.getElementById("search-bar").value;
+
+                // 옵션 선택 여부 확인
+                if (!searchType) {
+                    alert("검색 옵션을 선택해주세요.");
+                    return; // 옵션이 선택되지 않았다면 검색을 중단
+                }
+
+                // 서버에 요청 보내기
+                try {
+                    if (searchType === "title-content") {
+                        // 제목 + 내용 검색 요청
+                        const response = await axios.get(`/searchResults?query=${searchTerm}`);
+                        // 성공적으로 응답을 받았을 때 처리
+                        // console.log(response.data);
+                        // TODO: 응답을 가지고 렌더링 또는 다른 동작 수행
+                        window.location.href = `/searchResults?query=${searchTerm}`;
+                    } else if (searchType === "author") {
+                        // 작성자 검색 요청
+                        const response = await axios.get(
+                            `/searchResultsByAuthor?query=${searchTerm}`
+                        );
+                        // 성공적으로 응답을 받았을 때 처리
+                        console.log(response.data);
+                        // TODO: 응답을 가지고 렌더링 또는 다른 동작 수행
+                        window.location.href = `/searchResultsByAuthor?query=${searchTerm}&type=${searchType}`;
+                    }
+                    document.querySelector("h1").innerText = "검색 결과";
+                } catch (error) {
+                    // 오류가 발생했을 때 처리
+                    console.error("서버 요청 중 오류:", error);
+                    // TODO: 오류 처리 로직 추가
+                }
+            }
+        </script>
     </body>
 </html>
