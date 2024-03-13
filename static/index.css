@@ -54,8 +54,11 @@ body {
     font-family: raleway;
     transform: rotate(-3.5deg);
 }
-h1 {
+.cookh1 {
     text-align: center;
+    position: absolute;
+    top: -200%;
+    left: 48%;
 }
 h3 {
     line-height: 0.8em;

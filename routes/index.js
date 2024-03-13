@@ -95,6 +95,9 @@ router.get("/footer", (req, res) => {
 router.get("/bookMark", (req, res) => {
     res.render("bookmark");
 });
+router.get("/rotate", (req, res) => {
+    res.render("rotate");
+});
 
 const teamMembers = [
     {
@@ -107,7 +110,7 @@ const teamMembers = [
     {
         name: "윤대정",
         title: "Front-End Developer",
-        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        imageUrl: "https://i.imgur.com/KBeyiVf.jpeg",
         githubUsername: "beussae",
         googleEmail: "dbseowjd12@gmail.com",
     },
@@ -115,14 +118,14 @@ const teamMembers = [
         name: "홍주희",
         title: "Back-End Developer",
         teamleader: "TeamLeader",
-        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        imageUrl: "https://i.imgur.com/1noH3BI.jpeg",
         githubUsername: "hjh3933",
         googleEmail: "hkh3933@naver.com",
     },
     {
         name: "김보아",
         title: "Back-End Developer",
-        imageUrl: "https://i.imgur.com/jtXnFZc.png",
+        imageUrl: "https://i.imgur.com/4QnlUo9.jpeg",
         githubUsername: "SOROKKIM",
         googleEmail: "ksl7593@gmail.com",
     },

@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --rotatingListWidth: 3700px;
+}
+
+.rotatingList {
+    width: 100%;
+    height: 300px;
+    position: relative;
+}
+
+.list,
+.list-bis {
+    width: var(--rotatingListWidth);
+    position: absolute;
+    white-space: nowrap;
+    display: inline-block;
+    animation-name: pan;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.list-bis {
+    left: calc(var(--rotatingListWidth) / 2);
+}
+
+.card {
+    height: 200px;
+    width: 340px;
+    display: inline-block;
+    margin-top: 500px;
+    margin-left: 30px;
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    padding-top: 100px;
+    color: white;
+}
+
+.card1 {
+    background-image: url("https://blog.kakaocdn.net/dn/b2TDgQ/btqHoqWUX6c/GvwfI1XE7VneoP5fT82z40/img.jpg");
+    background-size: cover; /* 배경 이미지 크기 조절 */
+}
+
+.card2 {
+    background-image: url("https://recipe1.ezmember.co.kr/cache/recipe/2019/02/15/165b6ae1e847cc1ff6e0c0f5880c3cee1.jpg");
+    background-size: cover; /* 배경 이미지 크기 조절 */
+}
+
+.card3 {
+    background-image: url("https://rimage.gnst.jp/livejapan.com/public/article/detail/a/20/00/a2000641/img/ko/a2000641_parts_6163a58ebd19c.jpg?20211011103126&q=80&rw=686&rh=490");
+    background-size: cover; /* 배경 이미지 크기 조절 */
+}
+
+.card4 {
+    background-image: url("https://olive.tokyo/wp-content/uploads/2021/02/IMG_2525_2.jpg");
+    background-size: cover; /* 배경 이미지 크기 조절 */
+}
+
+.card5 {
+    background-image: url("https://www.siruane.co.kr/shopimages/siruane/015000000016.jpg?1595299384");
+    background-size: cover; /* 배경 이미지 크기 조절 */
+}
+
+@keyframes pan {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-1 * var(--rotatingListWidth) / 2));
+    }
+}
