@@ -1151,7 +1151,7 @@ exports.getSearchByAuthor = async (req, res) => {
 
         if (!user) {
             // 작성자가 존재하지 않을 경우 빈 배열 반환 또는 에러 처리
-            return res.status(404).json({ message: "작성자를 찾을 수 없습니다." });
+            return res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
         }
 
         // 작성자 검색
