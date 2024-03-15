@@ -4,8 +4,6 @@
 <html lang="ko">
     <head>
         <meta charset="UTF-8" />
-        <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
             content="사용자가 회원가입을 할 수 있는 페이지.
@@ -13,6 +11,18 @@
          모든 입력이 유효한 경우 제출 버튼을 통해 회원가입 정보를 서버로 전송함.
          사용자 입력에 따른 실시간 유효성 검사와 서버 응답을 처리하는 함수로 이루어져 있음."
         />
+        <link rel="egg icon" href="/static/favicon.png" type="image/png" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="http://localhost:8080/" />
+        <meta property="og:title" content="Cook! Eat!" />
+        <meta property="og:image" content="/static/free-icon-fried-egg.png" />
+        <meta property="og:description" content="나만의 레시피를 자랑해보세요!" />
+        <meta property="og:site_name" content="Cook Eat" />
+        <!-- 다음의 태그는 필수는 아니지만, 포함하는 것을 추천함 -->
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <link rel="stylesheet" type="text/css" href="/static/join.css" />
         <title>Join Page</title>
         <%- include('nav.ejs') %> <%- include('footer.ejs') %>
