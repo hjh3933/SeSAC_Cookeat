@@ -27,13 +27,7 @@
             <h2>로그인</h2>
             <form>
                 <div class="user-box">
-                    <input
-                        type="text"
-                        name="userId"
-                        required
-                        value="<%#= userId %>"
-                        oninput="setUserId(this.value)"
-                    />
+                    <input type="text" name="userId" required oninput="setUserId(this.value)" />
                     <label>아이디</label>
                 </div>
                 <div class="user-box">
@@ -41,7 +35,6 @@
                         type="password"
                         name="password"
                         required
-                        value="<%#= password %>"
                         oninput="setPassword(this.value)"
                     />
                     <label>비밀번호</label>
@@ -61,11 +54,11 @@
 
         <script>
             const setUserId = (value) => {
-                // 클라이언트 측 리액트 코드에서 사용되는 setUserId 함수
+                // 클라이언트 측 코드에서 사용되는 setUserId 함수
             };
 
             const setPassword = (value) => {
-                // 클라이언트 측 리액트 코드에서 사용되는 setPassword 함수
+                // 클라이언트 측 코드에서 사용되는 setPassword 함수
             };
 
             const handleLogin = async (event) => {
@@ -82,7 +75,6 @@
                             withCredentials: true,
                         }
                     );
-                    console.log("여기여기", response.data);
                     const { result, msg, statusCode, token, id } = response.data;
                     if (statusCode === 200 && result) {
                         // 로그인 성공 시
@@ -91,7 +83,6 @@
                         // 토큰을 로컬 스토리지에 저장
                         localStorage.setItem("user", token);
                         localStorage.setItem("userId", id);
-                        console.log("Before defining imgURL");
 
                         // 추가: 사용자 정보를 받아옵니다.
                         const userInfo = await axios.post(
@@ -112,7 +103,6 @@
                         location.href = "/";
                     } else {
                         // 로그인 실패 시
-                        console.error("로그인 실패:", msg);
                         alert(msg);
                     }
                 } catch (error) {

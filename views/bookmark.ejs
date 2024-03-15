@@ -70,8 +70,6 @@
                             },
                         })
                         .then(async (response) => {
-                            console.log(response.data); // 확인용 콘솔 출력
-
                             const bookmarks = response.data;
 
                             // 북마크 정보를 표시할 컨테이너 요소
@@ -129,7 +127,6 @@
                                                     },
                                                 })
                                                     .then((res) => {
-                                                        console.log(res.data);
                                                         alert(res.data.msg);
                                                         location.reload(); // 페이지 새로고침
                                                     })

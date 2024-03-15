@@ -1,6 +1,6 @@
 const models = require("../models");
 const jwt = require("jsonwebtoken");
-const SECRET = "DWB0jOga2jrAozUXUsLCQ1e4EeeQH8"; //랜덤문자열 env관리 예정
+const SECRET = "DWB0jOga2jrAozUXUsLCQ1e4EeeQH8";
 const bcrypt = require("bcrypt");
 const path = require("path");
 const multer = require("multer");
@@ -10,7 +10,7 @@ const { Op } = require("sequelize");
 const profileUpload = multer({
     storage: multer.diskStorage({
         destination(req, file, done) {
-            done(null, path.join(__dirname, "../static/profileUploads/")); // 프로필 이미지를 저장할 디렉토리
+            done(null, path.join(__dirname, "../static/profileUploads/"));
         },
         filename(req, file, done) {
             const ext = path.extname(file.originalname);
@@ -22,8 +22,6 @@ const profileUpload = multer({
 // 프로필 이미지 업로드
 exports.uploadProfileImg = (req, res) => {
     // "userfile"은 파일 업로드 필드의 name과 일치시켜야함
-    console.log("req.file >>>>>>>>>> ", req.file);
-    console.log(req.body);
     if (req.file) {
         var url = path.join("/static/profileUploads/", req.file.filename);
         res.send({ message: "프로밀 이미지 업로드 완료", url: url });
@@ -36,7 +34,7 @@ exports.uploadProfileImg = (req, res) => {
 const recipeUpload = multer({
     storage: multer.diskStorage({
         destination(req, file, done) {
-            done(null, path.join(__dirname, "../static/recipeUploadImg/")); // 게시글 이미지를 저장할 디렉토리
+            done(null, path.join(__dirname, "../static/recipeUploadImg/"));
         },
         filename(req, file, done) {
             const ext = path.extname(file.originalname);
@@ -47,8 +45,6 @@ const recipeUpload = multer({
 });
 // 게시글 이미지 업로드
 exports.uploadRecipeImage = (req, res) => {
-    console.log(req.files);
-    console.log(req.body);
     if (req.files.length > 0) {
         var url = path.join("/static/recipeUploadImg/", req.files[0].filename);
         res.send({ message: "게시글 이미지 업로드 완료", url: url });
@@ -83,7 +79,6 @@ exports.getCreatePost = (req, res) => {
 };
 
 exports.postJoin = (req, res) => {
-    console.log("회원가입 정보", req.body);
     const defaultImageURL = "/static/account.png"; // 기본 이미지 URL 설정
 
     // 암호화
@@ -95,9 +90,6 @@ exports.postJoin = (req, res) => {
         img: defaultImageURL,
     })
         .then((result) => {
-            console.log(result);
-            console.log("회원가입 성공! 생성된 사용자 정보:", result);
-
             res.send({ msg: "회원가입 완료!", statusCode: 200 });
         })
         .catch((error) => {
@@ -107,14 +99,10 @@ exports.postJoin = (req, res) => {
 };
 
 exports.postLogin = (req, res) => {
-    // {userId, password}
-    console.log("로그인 데이터", req.body);
     const { userId, password } = req.body;
-
     models.Users.findOne({
         where: { userId: userId },
     }).then((result) => {
-        console.log("로그인 password 조회 결과:", result);
         if (result) {
             const hashedPw = result.password;
 
@@ -126,8 +114,6 @@ exports.postLogin = (req, res) => {
                     const token = jwt.sign(user, SECRET, {
                         expiresIn: "1h",
                     });
-                    console.log("token", token);
-                    console.log("loginResult", true);
 
                     // 로그인 성공 시 유저 이름과 함께 응답
                     res.send({
@@ -151,7 +137,7 @@ exports.postLogin = (req, res) => {
     });
 };
 
-//로그아웃 기능 추가중..(3/3, 명현)
+//로그아웃 기능
 exports.logout = (req, res) => {
     // 클라이언트의 쿠키를 삭제
     res.clearCookie("login");
@@ -197,7 +183,6 @@ exports.getPosts = async (req, res) => {
         // 전체 페이지 수 계산
         const totalPosts = await models.Posts.count();
         const totalPages = Math.ceil(totalPosts / perPage);
-        console.log(posts);
         res.render("posts", {
             posts,
             isData: posts.length > 0,
@@ -217,7 +202,6 @@ exports.getUserPosts = async (req, res) => {
         const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
         const perPage = 10; // 페이지당 표시할 게시물 수
         const { id } = req.params;
-        console.log("검색할 유저는>>", id);
         const posts = await models.Posts.findAll({
             offset: (page - 1) * perPage, // 시작 위치 계산
             limit: perPage, // 표시할 게시물 수
@@ -229,7 +213,6 @@ exports.getUserPosts = async (req, res) => {
             if (result.length > 0) {
                 // 날짜와 시간 포맷 변경
                 result.forEach((post) => {
-                    console.log(post.createdAt);
                     const date = new Date(post.createdAt);
                     const year = date.getFullYear();
                     const month = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth는 0부터 시작하므로 1을 더해주어야 합니다.
@@ -264,7 +247,6 @@ exports.getUserPosts = async (req, res) => {
 exports.postRecipe = async (req, res) => {
     try {
         const { title, content, imgURLs, category } = req.body;
-        console.log("imgURLs", imgURLs);
         // 제목, 내용, 카테고리 유효성 검사
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
@@ -323,7 +305,6 @@ exports.getPostDetail = async (req, res) => {
         const minute = date.getMinutes().toString().padStart(2, "0");
 
         const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`; // 시간과 분을 추가합니다.
-        console.log(formattedDate);
 
         // 게시글이 존재하지 않는 경우
         if (!postDetail) {
@@ -333,12 +314,9 @@ exports.getPostDetail = async (req, res) => {
         const user = await models.Users.findOne({
             where: { id: postDetail.id },
         });
-        console.log(user.img);
         const url = JSON.stringify(user.img);
-        //
         res.render("post", { post: postDetail, formattedDate, url });
     } catch (err) {
-        console.log("err", err);
         res.status(500).send("서버 에러");
     }
 };
@@ -347,9 +325,7 @@ exports.getPostDetail = async (req, res) => {
 exports.patchPost = async (req, res) => {
     try {
         const { postId } = req.params;
-        console.log("postid ", postId);
         const { title, content, imgURLs, category } = req.body;
-        console.log("===============");
         if (!title || !content || !category) {
             return res.status(400).json({ error: "제목, 내용, 카테고리는 필수입니다." });
         }
@@ -411,13 +387,10 @@ exports.deletePost = async (req, res) => {
         const decodedToken = jwt.verify(token, SECRET);
         const userId = decodedToken.id;
 
-        console.log("삭제 진행중", postId);
-
         // 게시글이 존재하는지 확인
         const existingPost = await models.Posts.findOne({
             where: { postId },
         });
-        console.log("existingPost", existingPost);
 
         // 게시글이 존재하지 않는 경우
         if (!existingPost) {
@@ -470,17 +443,12 @@ exports.postData = async (req, res) => {
         const followData = await models.Follows.findOne({
             where: { followerId: userId, followingId: postsData.id },
         });
-        console.log("followData", followData);
         if (followData) {
             isFollow = true;
         }
         res.send({ isBookmark, isFollow });
     } catch (err) {
         console.log("err", err);
-        // // 토큰 유효성 검사 에러
-        // if (err.name === "JsonWebTokenError") {
-        //     return res.status(401).json({ error: "로그인이 필요합니다." });
-        // }
         res.status(500).send("게시글 삭제 중에 오류가 발생했습니다.");
     }
 };
@@ -489,13 +457,10 @@ exports.getProfile = (req, res) => {
     res.render("profile");
 };
 
-// 회원정보 조회 - 형석
+// 회원정보 조회
 exports.profile = async (req, res) => {
     try {
-        console.log(req.body);
-
         // 요청 헤더에서 토큰 추출
-        console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
 
@@ -504,7 +469,6 @@ exports.profile = async (req, res) => {
         }
         // 토큰을 검증하고 사용자 ID 추출
         const decodedToken = jwt.verify(token, SECRET);
-        console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
 
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
@@ -512,7 +476,6 @@ exports.profile = async (req, res) => {
             where: { id: userId },
         })
             .then(async (user) => {
-                console.log(user);
                 if (user) {
                     // 사용자 정보가 있으면 프로필 페이지를 렌더링
                     res.json({
@@ -560,8 +523,6 @@ exports.profileUpdate = async (req, res) => {
         // 요청 바디에서 업데이트할 사용자 정보 추출
         // (일단 userName과 password만)
         const { userId: id, userName, nowPassword, newPassword } = req.body;
-        console.log("nowPassword", nowPassword);
-        console.log("newPassword", newPassword);
 
         // 비밀번호 암호화
         const hashedPw = newPassword ? hashPw(newPassword) : undefined;
@@ -570,8 +531,6 @@ exports.profileUpdate = async (req, res) => {
             where: { id: userId },
         });
         const pwFT = comparePw(nowPassword, userData.password);
-        console.log(pwFT);
-        console.log(hashedPw);
         if (hashedPw !== undefined && !pwFT) {
             res.json({
                 updated: userData,
@@ -610,7 +569,6 @@ exports.profileDelete = async (req, res) => {
             where: { id: userId },
         });
         const pwFT = comparePw(password, userData.password);
-        console.log(pwFT);
         if (pwFT) {
             //회원정보 삭제
             const isDeleted = await models.Users.destroy({
@@ -684,10 +642,8 @@ exports.checkNickname = (req, res) => {
 exports.bookmarkInsert = async (req, res) => {
     try {
         const { postId } = req.params;
-        console.log("postId", postId);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-        console.log("token", token);
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
@@ -830,10 +786,8 @@ exports.bookmarkDelete = async (req, res) => {
 exports.followInsert = async (req, res) => {
     try {
         const id = req.body.id;
-        console.log("id>>", id); //팔로우할 아이디
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
-        console.log("token", token);
         if (!token) {
             return res.status(401).send("로그인이 필요합니다.");
         }
@@ -857,8 +811,6 @@ exports.followInsert = async (req, res) => {
     } catch (e) {
         console.log("error발생", e);
         return res.status(500).send("server error");
-        // console.log("토큰이 만료되었습니다");
-        // res.send("다시 로그인해주세요");
     }
 };
 exports.getfollowersPage = (req, res) => {
@@ -935,18 +887,12 @@ exports.getFollowings = async (req, res) => {
 // 팔로잉 삭제
 exports.followDelete = async (req, res) => {
     try {
-        // 응답된 params 저장
         const followingId = req.body.id;
-        console.log("id는~~~~~~~~~", followingId);
-        // 요청 헤더에서 Authorization 값 추출, (bearer[token] 형식)
         const tokenWithBearer = req.headers.authorization;
-        // bearer와 token을 공백으로 분리해서 실제 토큰만 token 변수에 담음
         const token = tokenWithBearer.split(" ")[1];
-        // 토큰 디코드하고 디코드된 토큰에서 사용자 id 추출
         const decodedToken = jwt.verify(token, SECRET);
         const userid = decodedToken.id;
-        console.log("userid는~~~~", userid); // Follows의 followerId = users의 기본키
-        // Follows 모델에서 userId와 id가 위 응답값과 같은지 확인
+
         const checkfollow = await models.Follows.findOne({
             where: { followerId: userid, followingId: followingId },
         });
@@ -969,11 +915,9 @@ exports.followDelete = async (req, res) => {
 // 프로필 이미지 DB img 속성에 추가
 exports.createProfileImg = async (req, res) => {
     try {
-        console.log(req.body);
         const { imgURL } = req.body.data;
 
         // 요청 헤더에서 토큰 추출
-        console.log("req.headers", req.headers);
         const tokenWithBearer = req.headers.authorization;
         const token = tokenWithBearer.split(" ")[1];
 
@@ -982,9 +926,7 @@ exports.createProfileImg = async (req, res) => {
         }
         // 토큰을 검증하고 사용자 ID 추출
         const decodedToken = jwt.verify(token, SECRET);
-        console.log("decodedToken", decodedToken);
         const userId = decodedToken.id;
-        // const imgURLString = JSON.stringify(imgURL);
 
         // 추출한 사용자 ID로 데이터베이스에서 사용자 정보 조회
         models.Users.findOne({
@@ -1089,7 +1031,6 @@ exports.getTitleAndContent = async (req, res) => {
             include: [{ model: models.Users, as: "author", attributes: ["userName"] }],
             order: [["createdAt", "DESC"]],
         });
-        console.log("posts >>>>>>>>>>>>", posts);
         // 날짜 포맷 변경
         posts.forEach((post) => {
             const date = new Date(post.createdAt);
@@ -1101,7 +1042,6 @@ exports.getTitleAndContent = async (req, res) => {
         });
 
         // 전체 페이지 수 계산
-        // 전체 페이지 수 계산
         const totalPosts = await models.Posts.count({
             where: {
                 [models.Sequelize.Op.or]: [
@@ -1111,7 +1051,6 @@ exports.getTitleAndContent = async (req, res) => {
             },
         });
         const totalPages = Math.ceil(totalPosts / perPage);
-        console.log(posts);
         if (posts.length > 0) {
             res.render("posts", {
                 posts,
@@ -1134,7 +1073,6 @@ exports.getSearchByAuthor = async (req, res) => {
     try {
         const page = req.query.page || 1; // 클라이언트에서 페이지 번호를 받아옴 (query string으로 전달)
         const perPage = 10; // 페이지당 표시할 게시물 수
-        console.log(req.query);
         const pageTitle = "검색 결과";
 
         const { query: author } = req.query;
@@ -1151,7 +1089,7 @@ exports.getSearchByAuthor = async (req, res) => {
 
         if (!user) {
             // 작성자가 존재하지 않을 경우 빈 배열 반환 또는 에러 처리
-            return res.render("posts", { isData: false, message: "게시글이 존재하지 않습니다" });
+            return res.render("posts", { isData: false, message: "작성자가 존재하지 않습니다" });
         }
 
         // 작성자 검색
@@ -1183,7 +1121,6 @@ exports.getSearchByAuthor = async (req, res) => {
             },
         });
         const totalPages = Math.ceil(totalPosts / perPage);
-        console.log(posts);
         if (posts.length > 0) {
             res.render("posts", {
                 posts,

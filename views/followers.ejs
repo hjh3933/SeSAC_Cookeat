@@ -35,15 +35,7 @@
             <h1>Followers</h1>
             <div class="followerContainer">
                 <div class="singleFollow">
-                    <div class="userData">
-                        <!-- <div class="userId">ID</div>
-                        <div class="userName">NAME</div> -->
-                    </div>
-                    <!-- <div class="followIconBox">
-                        <span class="material-symbols-outlined followIcon" onclick="goFollow()">
-                            favorite
-                        </span>
-                    </div> -->
+                    <div class="userData"></div>
                 </div>
             </div>
         </div>
@@ -51,7 +43,6 @@
 
     <script>
         // 나를 팔로우하는 사람을 검색합니다
-        // 토큰 값 가져오기
         const token = localStorage.getItem("user");
         const followerContainer = document.querySelector(".followerContainer");
 
@@ -61,8 +52,6 @@
             method: "post",
             headers: { Authorization: "Bearer " + token },
         }).then((res) => {
-            console.log("res.data >>", res.data);
-            console.log("res.data.followers >>", res.data.followers);
             if (res.data.followers && res.data.followers.length > 0) {
                 // 데이터를 받아서 화면에 출력합니다(for)
                 for (follower of res.data.followers) {
@@ -75,7 +64,6 @@
                     }
                     userImg.alt = "Profile";
                     userImg.classList.add("userImg");
-                    console.log("hi~~", userImg.src);
                     //followerId
                     const followerId = document.createElement("a");
                     followerId.textContent = follower.userId;
