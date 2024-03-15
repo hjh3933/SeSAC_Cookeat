@@ -27,14 +27,6 @@
             <div class="coverphoto"></div>
             <div class="profile_picture" id="profileImg"></div>
             <div class="left_col">
-                <!-- <div class="followers">
-                    <div class="follow_count">1,234</div>
-                    Followers
-                </div>
-                <div class="following">
-                    <div class="follow_count">123</div>
-                    Following
-                </div> -->
                 <button id="saveButton" class="save-button">Save Profile</button>
                 <button id="deleteButton" class="delete-button">Delete Account</button>
                 <a class="material-symbols-outlined" id="cancel"> arrow_back </a>
@@ -62,11 +54,8 @@
             const userId = localStorage.getItem("userId");
             const atag = document.getElementById("cancel");
             atag.href = "/profile/" + userId;
-            console.log(token);
-            console.log(userId);
 
             function displayUserData(response) {
-                console.log(response.data);
                 document.getElementById("userId").value = response.data.user.userId;
                 document.getElementById("userName").value = response.data.user.userName;
                 const imgURL = response.data.user.img; // imgURLs를 가져옴
@@ -80,8 +69,6 @@
                 const newPassword = document.getElementById("newPassword").value;
                 const token = localStorage.getItem("user");
                 const userId = localStorage.getItem("userId");
-                console.log(token);
-                console.log(userId);
                 axios
                     .patch(
                         "/profileUpdate/" + userId,
@@ -98,7 +85,6 @@
                         }
                     )
                     .then(function (response) {
-                        console.log("수정수정", response.data.updated);
                         localStorage.setItem("userName", response.data.updated.userName);
                         alert(response.data.msg);
                         window.location.href = "/profile/" + userId;

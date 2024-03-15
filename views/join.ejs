@@ -19,13 +19,7 @@
                 <button class="join-check-button" onclick="handleUsernameDuplicationCheck()">
                     ID 확인
                 </button>
-                <input
-                    id="userId"
-                    type="text"
-                    value="<%#= username %>"
-                    oninput="setUserId(this.value)"
-                    required
-                />
+                <input id="userId" type="text" oninput="setUserId(this.value)" required />
                 <label for="userId">아이디</label>
             </div>
 
@@ -33,31 +27,18 @@
                 <button class="join-check-button" onclick="handleNicknameDuplicationCheck()">
                     닉네임 확인
                 </button>
-                <input
-                    id="userName"
-                    type="text"
-                    value="<%#= nickName %>"
-                    oninput="setUserName(this.value)"
-                    required
-                />
+                <input id="userName" type="text" oninput="setUserName(this.value)" required />
                 <label for="userName">닉네임</label>
             </div>
 
             <div class="join-input-container">
-                <input
-                    id="password"
-                    type="password"
-                    value="<%#= password %>"
-                    oninput="setPassword(this.value)"
-                    required
-                />
+                <input id="password" type="password" oninput="setPassword(this.value)" required />
                 <label for="password">비밀번호</label>
             </div>
             <div class="join-input-container">
                 <input
                     id="confirm-password"
                     type="password"
-                    value="<%#= confirmPassword %>"
                     oninput="setConfirmPassword(this.value); checkPasswordMatch();"
                     required
                 />

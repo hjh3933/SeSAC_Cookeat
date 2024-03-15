@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
     cors({
-        origin: "http://localhost:8080", // 클라이언트의 도메인
+        origin: "http://cookeat.shop:8080", // 클라이언트의 도메인
         credentials: true, // `Authorization` 헤더를 포함한 요청을 허용함
     })
 );
@@ -45,6 +45,8 @@ app.get("*", (req, res) => {
     res.render("404");
 });
 app.listen(PORT, () => {
+    // localhost
     console.log(`Server is running on http://localhost:${PORT}`);
-    console.log(`http://118.67.133.199:${PORT}`);
+    // npc 공인ip: 118.67.133.199
+    console.log(`http://cookeat.shop:${PORT}`);
 });

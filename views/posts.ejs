@@ -20,7 +20,6 @@
         <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('account.ejs') %>
     </head>
     <body>
-        <!-- <%#- include('nav.ejs') %> -->
         <br />
         <% if(!isData){%>
         <p class="noData"><%=message %></p>
@@ -55,8 +54,6 @@
                 <td class="total">총 게시물: <%=totalPosts %></td>
                 <thead>
                     <tr class="top">
-                        <!-- <td class="items num">번호</td>
-                        <td class="items identi">ID</td> -->
                         <td class="items category">카테고리</td>
                         <td class="items postsTitle">제목</td>
                         <td class="items writer">요리사</td>
@@ -79,7 +76,7 @@
                 </tbody>
             </table>
             <br />
-            <!-- pagination 진행예정 -->
+            <!-- pagination -->
             <nav aria-label="Page navigation" class="d-flex justify-content-center">
                 <ul class="pagination">
                     <!-- 이전 버튼 -->
@@ -128,8 +125,6 @@
         <% } %>
         <div class="space"></div>
         <footer>
-            <!-- <%#- include('footer.ejs') %> <%#- include('account.ejs') %> -->
-            <!-- <script src="/js/bootstrap.min.js"></script> -->
             <script
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -172,8 +167,6 @@
                         const response = await axios.get(
                             `/searchResultsByAuthor?query=${searchTerm}`
                         );
-                        // 성공적으로 응답을 받았을 때 처리
-                        console.log(response.data);
                         // TODO: 응답을 가지고 렌더링 또는 다른 동작 수행
                         window.location.href = `/searchResultsByAuthor?query=${searchTerm}&type=${searchType}`;
                     }

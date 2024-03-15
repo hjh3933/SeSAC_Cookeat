@@ -15,22 +15,13 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
     <body>
-        <!-- {
-        'postId" : 1, 
-        "username" :"banana1234", 
-        "title" : "blah", 
-        ”content” : “ababla”,
-        ”createdAt” : ”2024/02/28” 
-        } -->
         <div class="container">
-            <!-- 제목 -->
             <div class="titleCategoryBox">
                 <h1><%=post.title %></h1>
                 <div class="category"><%=post.category%></div>
             </div>
             <div class="postNav">
                 <div class="navContent">
-                    <!-- <div class="postId"><%#=post.id %></div> -->
                     <div class="postId" hidden><%=post.postId %></div>
                     <div class="img">
                         <img
@@ -47,9 +38,7 @@
                         <span class="material-symbols-outlined followIcon" onclick="goFollow()">
                             favorite
                         </span>
-                        <!-- <button type="button">FOLLOW</button> -->
                     </div>
-                    <!-- <div class="category"><%#=post.category%></div> -->
                 </div>
                 <div class="time">
                     <div class="createdAt"><%=formattedDate %></div>
@@ -68,7 +57,6 @@
                         <span class="material-symbols-outlined bookmarkIcon" onclick="goBookmark()">
                             bookmark
                         </span>
-                        <!-- <button type="button">BOOKMARK</button> -->
                     </div>
                 </div>
             </div>
@@ -88,8 +76,6 @@
         const followIcon = document.querySelector(".followIcon");
         let isBookmark;
         let isFollow;
-        console.log("token", token);
-        console.log("userId", userId); //User테이블의 id임
 
         if (!token) {
             //로그인 X 북마크, 팔로우 기능 사용불가
@@ -110,17 +96,13 @@
                     headers: { Authorization: "Bearer " + token },
                 })
                     .then((res) => {
-                        console.log(res.data.isBookmark);
-                        console.log(res.data.isFollow);
                         isBookmark = res.data.isBookmark;
                         isFollow = res.data.isFollow;
                         if (isBookmark) {
                             bookmarkIcon.style.color = "red";
-                            // bookmarkIcon.style.scale = "1.5";
                         }
                         if (isFollow) {
                             followIcon.style.color = "red";
-                            // followIcon.style.scale = "1.5";
                         }
                     })
                     .catch((err) => {
@@ -140,7 +122,6 @@
                     },
                 })
                     .then((res) => {
-                        console.log(res.data);
                         alert(res.data.msg);
                         location.reload(); //다시 로드함
                     })
@@ -157,7 +138,6 @@
                     },
                 })
                     .then((res) => {
-                        console.log("Post 데이터:", res.data.post);
                         alert(res.data.msg);
                         location.reload(); //다시 로드함
                     })
@@ -173,7 +153,6 @@
         function goFollow() {
             if (isFollow) {
                 //팔로우 삭제
-                // alert("팔로우 삭제");
                 axios({
                     url: "/followDelete",
                     method: "delete",
@@ -183,7 +162,6 @@
                     },
                 })
                     .then((res) => {
-                        console.log(res.data);
                         alert(res.data.msg);
                         location.reload(); //다시 로드함
                     })
@@ -202,7 +180,6 @@
                     },
                 })
                     .then((res) => {
-                        console.log(res.data);
                         alert(res.data.msg);
                         location.reload(); //다시 로드함
                     })
@@ -271,9 +248,7 @@
             imageUrl = imgURL.replace(/^&#34;|&#34;$/g, "").replace(/\\/g, "/");
         } else {
             imageUrl = "/static/account.png"; // 기본 이미지 URL로 변경하세요.
-            console.log("imgURL is not found in localStorage, using default image.");
         }
-        console.log("nav.ejs >>>> ", imageUrl);
         document.getElementById("postProfileImg").src = imageUrl;
     </script>
 </html>
