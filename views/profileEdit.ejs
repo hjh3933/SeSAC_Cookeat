@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
-
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="사용자가 자신의 프로필 정보를 수정할 수 있게 해주며,
+        계정 삭제 기능도 포함됨. 사용자는 자신의 아이디, 이름을 변경할 수 있고
+        새 비밀번호를 설정할 수 있음. 변경사항을 저장하거나 변경을 취소하고 이전 페이지로 돌아갈 수 있는 버튼이 있음"
+        />
         <title>ProfileEdit</title>
         <link rel="stylesheet" type="text/CSS" href="style.css" />
         <%- include('nav.ejs') %> <%- include('footer.ejs') %> <%- include('account.ejs') %>

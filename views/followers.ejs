@@ -3,8 +3,13 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="egg icon" href="/static/favicon.ico" type="image/x-icon" />
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="사용자의 팔로워 목록을 보여주는 페이지.
+        Axios를 이용해 서버로부터 팔로워 정보를 요청하고, 받아온 데이터를 화면에 동적으로
+        표시하는 기능이 구현되어 있음.(팔로워의 프로필 이미지, 사용자 이름을 보여주며, 'favorite' 아이콘)"
+        />
         <title>Follow</title>
         <%- include('nav.ejs') %> <%- include('footer.ejs') %>
         <link rel="stylesheet" href="/static/follow.css" />
